@@ -1,0 +1,70 @@
+html, body {
+    width: 100vw;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    background: #333;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+
+  
+.card > .background {
+
+    /* Positioning */
+    position: relative;
+
+    /* Box Model */
+    height: 40%;
+    margin: 0px auto;
+
+
+    
+    
+    /* border: solid; */
+}
+  
+  /* Bonus for you: center a background image! */
+.background > .avatar {
+
+    /* Positioning */
+    position: absolute;
+    top: 94px;
+    left: 86px;
+
+
+    /* Box Model */
+    width: 128px;
+    height: 156px;
+    border-radius: 50%;
+
+    /* Font or other */
+    background-image: url(https://assets-lighthouse.alphacamp.co/uploads/image/file/14990/Bernard_keyer.png);
+    background-size: cover;
+    background-position: center center;
+}
+  
+
+  /* begin your styles here!*/
+
+  .card {
+    /* Box Model */
+    width: 300px;
+    height: 500px;
+    margin: 100px auto;
+
+    /* Font or other */
+    background: linear-gradient(161.98deg, #07E3A1 13.65%, rgba(11, 111, 218, 0) 87.85%);
+
+  }
+
+  .card > .profile {
+
+    /* Box Model */
+    height: 60%;
+
+    /* Font or other */
+    
+  }

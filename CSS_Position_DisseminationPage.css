@@ -1,0 +1,119 @@
+html, body {
+    padding: 0;
+    margin: 0;
+    background: #eee;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #000;
+  }
+  
+  
+  /* header 區段 */
+  .header {
+    position: relative;
+    top: 0px;
+    width: 100%;
+    height: 60px;
+    background: #333;
+    padding: 10px 20px;
+  }
+  .header > .nav-container {
+    width: max-content;
+    height: 40px;
+    background: #ccc;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .header > .nav-container > li {
+    float: left;
+    height: 40px;
+    line-height: 40px;
+    padding: 0px 10px;
+    margin: 0px 10px;
+    color: #000;
+    list-style: none;
+    cursor: pointer;
+    transition-duration: 0.3s;
+  }
+  .header > .nav-container > li:hover {
+    color: #fff;
+    transition-duration: 0.3s;
+  }
+  .header > .ac-logo {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background-image: url(https://media.cakeresume.com/image/upload/s--yvVYN9sa--/c_pad,fl_png8,h_200,w_200/v1548316744/ribjsyna9cm9tm4pkv63.png);
+    background-size: cover;
+    background-position: center center;
+  }
+  
+  
+  /* content 區段 */
+  .content {
+    width: 80%;
+    margin: 100px auto;
+    padding: 50px;
+    background: #fff;
+  }
+  .content > h1 {
+    font-size: 5vmin;
+  }
+  .content > span.date {
+    display: inline-block;
+    width: auto;
+    height: 30px;
+    line-height: 30px;
+    padding: 0px 10px;
+    margin: 0px;
+    border-radius: 0px;
+    color: #fff;
+    background: #333;
+  }
+  .content > p {
+    margin: 50px 0px;
+    text-indent: 20px;
+    letter-spacing: 0px;
+  }
+  .content > span {
+    margin: 50px 0px;
+    letter-spacing: 1px;
+  }
+  .content .contact {
+    position: relative;
+    left: 50%;
+    margin-left: -25px;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    background: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 50%;
+    box-shadow: 1px 1px 5px 0px #666;
+    cursor: pointer;
+  }
+  .content .contact:hover {
+    transform: translateY(-5px);
+    transition-duration: 0.3s;
+  }
+  
+  
+  /* footer 區段 */
+  .footer {
+    width: 100%;
+    height: 80px;
+    color: #fff;
+    background: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }

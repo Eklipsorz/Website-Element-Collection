@@ -16,6 +16,7 @@ html, body {
   h2, 
   h3,
   p {
+    /* Font or other */
     font-family: Roboto;
     font-weight: normal;
   }
@@ -127,7 +128,6 @@ html, body {
      display: flex;
      flex-direction: column;
      align-items: center;
-     /* justify-content: center; */
 
      /* Box Model */
      width: 100%;
@@ -148,20 +148,28 @@ html, body {
     line-height: 35px;
     color: #000000;
   }
-
-  .user-info > .job-name {
-
+  .user-info > .job-background {
     /* Box Model */
     width: 134px;
     height: 20px;
-    border-radius: 30px;
     margin-top: 7px;
+    border-radius: 30px;
+
     /* Font or other */
-    text-align: center;
-    font-size: 12px;
-    line-height: 17px;
-    color: #FFFFFF;
     background: #000000;
+  }
+  .user-info > .job-background > .job-name {
+
+    /* Box Model */
+    width: 116px;
+    height: 14px;
+    margin: 3px 8px 3px 10px;
+    /* Font or other */
+    
+    font-size: 12px;
+    line-height: 14px;
+    color: #FFFFFF;
+    
   }
 
   .user-info > .description {
@@ -170,7 +178,9 @@ html, body {
     width: 231px;
     height: 112px;
     margin: 20px 35px 38px 34px;
+
     /* Font or other */
+    font-style: normal;
     font-size: 14px;
     line-height: 16px;
     color: #000000;

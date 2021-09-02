@@ -43,15 +43,21 @@ addBtn.addEventListener('click', function addContent() {
 /* 從項目清單中移除指定項目 */
 
 
+/* 由list元素去監聽子元素的事件 */
 list.addEventListener('click', function(event) {
 
     let target = event.target
 
+    /* 處理 delete btn元素 */
     if (target.classList.contains('delete'))
     {
         let listItem = target.parentElement
         listItem.remove()
     }
-
+    
+    /* 處理task name的元素 */
+    if (target.tagName === 'LABEL') {
+        target.classList.toggle('checked')
+    }
 })
 

@@ -23,14 +23,35 @@ function addItem (text) {
 
 // write your code here
 
-addBtn.addEventListener('click', addContent)
 
 
-function addContent () {
-  let inputValue = input.value
+
+/* 增加項目至項目清單中 */
+
+
+/* 額外添加function 是為了以後方便釋放而與addEventListener分開 */
+addBtn.addEventListener('click', function addContent() {
+    let inputValue = input.value
   
-  if (inputValue.length > 0) {
-      addItem(inputValue)
-  }
-  
-}
+    /* 判斷input內部的值是否為空字串，若不是才加入至list */
+    if (inputValue.length > 0) {
+        addItem(inputValue)
+    }
+})
+
+
+/* 從項目清單中移除指定項目 */
+
+
+list.addEventListener('click', function(event) {
+
+    let target = event.target
+
+    if (target.classList.contains('delete'))
+    {
+        let listItem = target.parentElement
+        listItem.remove()
+    }
+
+})
+

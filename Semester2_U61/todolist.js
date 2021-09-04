@@ -59,5 +59,5 @@ list.addEventListener('click', function(event) {
     if (target.tagName === 'LABEL') {
         target.classList.toggle('checked')
     }
-})
+}, true)
 

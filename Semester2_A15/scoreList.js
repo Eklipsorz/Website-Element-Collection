@@ -9,5 +9,40 @@ let players = [
   const dataPanel = document.querySelector('#data-panel')
   
   // write your code here
+  function displayPlayerList (players) {
+      let htmlContent = ``
+
+
+      players.forEach( player => {
+
+          htmlContent += `
+              <tr>
+          `
+       
+          for (let key in player) {
+        
+                if (isNaN(player[key])) {
+                  htmlContent += `
+                      <td>${player[key]}</td>
+                  `
+                } else {
+                  htmlContent += `
+                      <td>${player[key]} <i class="fa fa-plus-circle up"> <i class="fa fa-minus-circle down"></i></td>
+                  `
+                }
+
+          }
+
+          htmlContent += `
+              </tr>
+          `
+
+      });
+
+      dataPanel.innerHTML = htmlContent
+  }
+
+
+
   
   displayPlayerList(players)

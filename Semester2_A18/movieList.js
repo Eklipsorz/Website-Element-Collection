@@ -61,7 +61,8 @@ function displayMovieList (movies) {
 
 dataPanel.innerHTML = displayMovieList(movies)
 
+/* */
 dataPanel.addEventListener('click', function (event) {
 
-  
+
 })

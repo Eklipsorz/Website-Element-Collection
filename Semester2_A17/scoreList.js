@@ -6,10 +6,11 @@ let players = [
     { name: '三井壽', pts: 21, reb: 4, ast: 3, stl: 0, blk: 0 }
   ]
   
-  const dataPanel = document.querySelector('#data-panel')
+const dataPanel = document.querySelector('#data-panel')
   
+
   // write your code here
-  function displayPlayerList (players) {
+function displayPlayerList (players) {
       let htmlContent = ``
 
 
@@ -44,9 +45,22 @@ let players = [
       });
 
       dataPanel.innerHTML = htmlContent
-  }
+}
 
+dataPanel.addEventListener('click', function (event) {
+    let target = event.targe
+    let dataCell = target.parentElement
+    
+    if (target.classList.contains('fa-plus-circle')) {
+        let score = +(dataCell.children[0].innerHTML)
+        dataCell.children[0].innerHTML = '' + (score + 1)
+    } else if (target.classList.contains('fa-minus-circle')) {
+        let score = +(dataCell.children[0].innerHTML)
+        dataCell.children[0].innerHTML = '' + (score - 1)
+    }
 
+    
+})
 
   
   displayPlayerList(players)

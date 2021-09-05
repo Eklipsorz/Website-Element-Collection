@@ -27,7 +27,11 @@ let players = [
                   `
                 } else {
                   htmlContent += `
-                      <td>${player[key]} <i class="fa fa-plus-circle up"> <i class="fa fa-minus-circle down"></i></td>
+                        <td>
+                            <span style="font-size: 25px">${player[key]}</span>
+                            <i class="fa fa-plus-circle up"></i>
+                            <i class="fa fa-minus-circle down"></i>
+                        </td>
                   `
                 }
 

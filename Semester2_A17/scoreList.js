@@ -48,16 +48,16 @@ function displayPlayerList (players) {
 }
 
 dataPanel.addEventListener('click', function (event) {
-    let target = event.targe
-    let dataCell = target.parentElement
-    
-    if (target.classList.contains('fa-plus-circle')) {
-        let score = +(dataCell.children[0].innerHTML)
-        dataCell.children[0].innerHTML = '' + (score + 1)
-    } else if (target.classList.contains('fa-minus-circle')) {
-        let score = +(dataCell.children[0].innerHTML)
-        dataCell.children[0].innerHTML = '' + (score - 1)
+    let target = event.target 
+    let isClassWeWant = target.matches('.fa-plus-circle') ? 1 : target.matches('.fa-minus-circle') ? -1 : 0
+
+    if (isClassWeWant) {
+      let scoreCell = target.parentElement.firstElementChild
+      let score = parseInt(scoreCell.innerHTML, 10) + isClassWeWant
+      scoreCell.innerHTML = '' + (score > 0 ? score : 0)
+
     }
+
 
     
 })

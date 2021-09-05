@@ -69,8 +69,8 @@ dataPanel.addEventListener('click', function (event) {
 
   if (isClassWeWant) {
     let ratingCell = target.parentElement.lastElementChild
-    let score = parseInt(ratingCell.innerHTML, 10)
-    ratingCell.innerHTML = '' + (score + isClassWeWant)
+    let score = parseInt(ratingCell.innerHTML, 10) + isClassWeWant
+    ratingCell.innerHTML = '' + (score > 0 ? score : 0)
   }
 
 

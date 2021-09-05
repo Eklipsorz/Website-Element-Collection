@@ -63,6 +63,20 @@ dataPanel.innerHTML = displayMovieList(movies)
 
 /* */
 dataPanel.addEventListener('click', function (event) {
+  let target = event.target
+  
+  let isClassWeWant = target.matches('.fa-thumbs-up') ? 1 : target.matches('.fa-thumbs-down') ? -1 : 0
 
+  if (isClassWeWant) {
+    let ratingCell = target.parentElement.lastElementChild
+    let score = parseInt(ratingCell.innerHTML, 10)
+    ratingCell.innerHTML = '' + (score + isClassWeWant)
+  }
+
+
+  if (target.matches('.btn-danger')) {
+    let movie = target.parentElement.parentElement
+    movie.remove()
+  }
 
 })

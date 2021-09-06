@@ -17,45 +17,45 @@ const players = [
   ]
     // write your code
     
-    let lengthBlackList = blackList.length
-    let blackListEmail = []
-    
-    // 先在新的陣列放入黑名單中每個人的email
-    for (let blackListIndex = 0; blackListIndex < lengthBlackList; blackListIndex++) {
-      blackListEmail.push(blackList[blackListIndex]['email'])
-    }
-    
-    
+    // 該程式是以”name、email、ticket皆和黑名單顯示的資料一樣“的標準來挑出在黑名單的人
+
+
+
+    // 比對抽獎者名單的每一個人是否在黑名單中
     for (let playerIndex = 0; playerIndex < players.length; playerIndex++) {
     
-        // 利用存放黑名單的email來比對每個人的email是否一致，若下一個還一致就繼續比對，直到不一致
-        while (blackListEmail.includes(players[playerIndex]['email'])) {
     
-            // 比對在黑名單的每一個人
-            for (let blackListIndex = 0; blackListIndex < lengthBlackList; blackListIndex++) {
+        // 用黑名單的每一個人來比對目前所選定的人
+        for (let blackListIndex = 0; blackListIndex < blackList.length; blackListIndex++) {
   
-                // 記錄符合黑名單的人之資料相同數，一開始宣告為1是因為只有email和黑名單的人一致才能進來，
-                // 所以可以先宣告為1，接著之後再比對其他屬性的時候，若一樣就+1，直到比完所有屬性
-                let samePoint = 1
-                for (let property in blackList[blackListIndex]) {
-                    
-                    // 只比對email以外的屬性
-                    if (property !== 'email') {
-                        // 記錄相同數
-                        samePoint += Number(players[playerIndex][property] === blackList[blackListIndex][property])
-                    }
-                    
+    
+            // 利用isSame變數來表示目前所選定的人所擁有的資料是否和黑名單的人一樣，若一樣為true；若不一樣則為false
+            // 預設該變數為true
+            let isSame = true  
+            // 比對黑名單的人所擁有的資料是否目前所選定人的所擁有的資料一樣
+            for (let property in blackList[blackListIndex]) {
+
+                 
+                // 若不一樣則不把目前所選的人當成黑名單的人，直接設定isSame為false並跳出
+                if (players[playerIndex][property] !== blackList[blackListIndex][property]) {
+                    // 記錄相同數
+                    isSame = false
+                    break
                 }
-                // 若全相同的話，就刪除這筆，然後跳過黑名單資料比較
-                if (samePoint === Object.keys(blackList[blackListIndex]).length) {
-                  players.splice(playerIndex, 1)
-                  // 將 for (let blackListIndex = 0; ...) 這段迴圈中斷
-                  break
-                }  
                 
             }
-    
+
+            // isSame為true時，表示目前選定的人就是按照標準所挑出的(在黑名單出現的)人
+            if (isSame === true) {
+                players.splice(playerIndex, 1)
+                // 由於刪除後的index就是原本被刪除的元素之後一個元素，所以必須扣1
+                playerIndex--
+                break
+            }  
+                
         }
+    
+       
     }
     
     

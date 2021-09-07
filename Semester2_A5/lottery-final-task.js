@@ -19,7 +19,7 @@ let ticketSet = []
 // FUNCTIONS /////////////////////////////////////
 // drawWiner -> announceMsg
 
-// drawWinner 功能為從抽獎者中抽出一位贏家，並給予特定獎項，最後印出贏家資訊
+// drawWinner(parameter1, parameter2) 功能為從抽獎者中抽出一位贏家，並給予特定獎項，最後印出贏家資訊
 // 參數說明：parameter1 是指存放所有抽獎者的陣列，parameter2 是指定發放獎項是什麼
 function drawWinner (players, prize) {
 
@@ -32,21 +32,21 @@ function drawWinner (players, prize) {
   announceMsg(winner, prize)
 }
 
-// announceMsg 功能為印出贏家資訊、獎項
+// announceMsg(parameter1, parameter2) 功能為印出贏家資訊、獎項
 // 參數說明：parameter1 是指贏家，parameter2 是指定獲取的獎項是什麼
 function announceMsg (winner, prize) {
   // 印出贏家資訊、贏家獲取的獎項是為何
   console.log(`${winner.ticket} | ${encodeName(winner.name)} | ${encodeEmail(winner.email)} | ${prize}`)
 }
 
-// encodeName 功能為加密接收到的名字
+// encodeName(parameter1) 功能為加密接收到的名字
 // 參數說明： parameter1 是指要被加密的名字
 function encodeName (name) {
   // 以明碼顯示名字前兩個字元，後續字元全用*符號表示
   return  name.substr(0, 2) + '*'.repeat(name.length - 2)
 }
 
-// encodeEmail 功能為加密接收到的email
+// encodeEmail(parameter1) 功能為加密接收到的email
 // 參數說明： parameter1 是指要被加密的email
 function encodeEmail (email) {
   // 請封裝你之前寫好的程式碼，並設計必要參數
@@ -65,8 +65,8 @@ function encodeEmail (email) {
     return econdedEmail
 }
 
-// generateTicketNumber 功能為產生獨立且不重複的抽獎券號碼給抽獎者
-// 格式為xxxyyy，xxx代表要填入的英文字母，而yyy代表要填入的數字 
+// generateTicketNumber(parameter1, parameter2) 功能為產生獨立且不重複的抽獎
+// 券號碼給抽獎者，格式為xxxyyy，xxx代表要填入的英文字母，而yyy代表要填入的數字 
 // 參數說明：parameter1~2 是指定抽獎券的號碼格式分別要填多少個英文字母和數字
 function generateTicketNumber (literalLength, digitLength) {
 
@@ -92,7 +92,6 @@ function generateTicketNumber (literalLength, digitLength) {
 
             // 將獨立不重複的號碼放到ticketSet
             ticketSet.push(ticket)
-            
             return ticket
         }
     }
@@ -107,10 +106,10 @@ function generateTicketNumber (literalLength, digitLength) {
 
 // 幫每位抽獎者產生一組獨立不重複的抽獎券號碼，號碼預設填入2個大寫英文字母和4個數字
 for (let player of players) {
-  player['ticket'] = generateTicketNumber(2, 5)
+  player['ticket'] = generateTicketNumber(2, 4)
 }
 
-console.log(ticketSet)
+
 
 // draw 3 winners and announce the results
 drawWinner(players, '頭獎')

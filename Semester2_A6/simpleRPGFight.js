@@ -5,7 +5,7 @@ function createPlayer(name, hp, mp) {
       mp: mp,
       cure: function (hp) {
         // write your code
-        let demendMP = hp * 2
+        const demendMP = hp * 2
         // 自己hp還有剩且mp還足夠補血的話
         if (this.mp >= demendMP && this.hp > 0) {
   
@@ -24,7 +24,7 @@ function createPlayer(name, hp, mp) {
         // 自己的hp還有剩的話，可以繼續攻擊
         if (this.hp > 0) {
           // 計算隨機傷害
-          let damage = Math.floor(Math.random() * 100) + 1
+          const damage = Math.floor(Math.random() * 100) + 1
           // 敵人受到傷害
           enemy.hp = enemy.hp >= damage ? enemy.hp - damage : 0
           // 印出攻擊資訊
@@ -40,6 +40,7 @@ function createPlayer(name, hp, mp) {
       }
     }
   }
+ 
   console.log('====== CREATE PLAYERS ======')
   const magician = createPlayer('Magician', 30, 100)
   const warrior = createPlayer('Warrior', 100, 30)

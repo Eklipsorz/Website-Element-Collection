@@ -99,11 +99,13 @@
     content: "";
   }
 
+
+  
 /*** 人物簡介樣式 ***/
 
 /* 
 該簡介包含人物資訊區塊(以card__user-info來代表)。
-其資訊區塊又包含了以下區塊:
+其人物資訊區塊又包含了以下區塊:
 1. 使用者名稱(以card__user-name代表)。
 2. 存放職稱的區塊(以card__job-section代表)。
 3. 職稱(以card__job-title代表)。
@@ -111,7 +113,7 @@
 */
 
 
-/* 人物資訊整體樣式 */
+/* 人物資訊區塊樣式 */
   .card > .card__profile {
 
     /* Positioning */
@@ -185,7 +187,7 @@
     
   }
 
-/* 
+/* 人物描述的樣式 */
   .card__user-info > .card__description {
 
     /* Box Model */

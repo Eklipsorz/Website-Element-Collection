@@ -109,7 +109,6 @@ body {
     position: absolute;
     top: 94px;
     left: 86px;
-    z-index: 1;
 
     /* Box Model */
     width: 128px;

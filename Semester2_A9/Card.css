@@ -1,10 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
-html, body {
+
+/* 通用元件樣式 General Style */
+  html, body {
+    /* Font or other */
     width: 100vw;
     height: 100vh;
     background: #333;
-  }
+  }  
   
   * {
     /* Box Model */
@@ -13,15 +16,20 @@ html, body {
     box-sizing: border-box;
   }
 
- .card__user-name, 
- .card__job-title,
- .card__description {
+  .card__user-name, 
+  .card__job-title,
+  .card__description {
     /* Font or other */
     font-family: Roboto;
     font-weight: normal;
- }
+  }
 
-  
+
+
+/*** 卡片樣式 ***/
+
+/* 整體卡片樣式 */
+
   .card {
     /* Positioning */
     position: relative;
@@ -36,14 +44,13 @@ html, body {
     background: linear-gradient(161.98deg, #07E3A1 13.65%, rgba(11, 111, 218, 0) 87.85%);
   }
 
-
-.card > .card__avatar {
+/* 大頭相樣式 */
+  .card > .card__avatar {
 
     /* Positioning */
     position: absolute;
     top: 94px;
     left: 86px;
-    /* 深度 - 調整呈現的優先度 */
     z-index: 1;
 
     /* Box Model */
@@ -55,9 +62,10 @@ html, body {
     background-image: url(https://assets-lighthouse.alphacamp.co/uploads/image/file/14990/Bernard_keyer.png);
     background-size: cover;
     background-position: center center;
-}
+  }
   
-.card > .card__status-info {
+/* 狀態按鈕樣式 */
+  .card > .card__status-info {
 
     /* Positioning */
     position: absolute;
@@ -72,27 +80,39 @@ html, body {
     background: #FFFFFF;
     border-radius: 30px;
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
-}
+  }
 
-.card > .card__status-info--active::after {
-  /* Positioning */
-  position: absolute;
-  left: 20px;
+/* 狀態按鈕樣式 */
+  .card > .card__status-info--active::after {
+    /* Positioning */
+    position: absolute;
+    left: 20px;
 
-  /* Box Model */
-  width: 10px;
-  height: 10px;
+    /* Box Model */
+    width: 10px;
+    height: 10px;
 
-  /* Font or other */
-  background: #FF0000;
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 30px;
-  content: "";
-}
+    /* Font or other */
+    background: #FF0000;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 30px;
+    content: "";
+  }
+
+/*** 人物簡介樣式 ***/
+
+/* 
+該簡介包含人物資訊區塊(以card__user-info來代表)。
+其資訊區塊又包含了以下區塊:
+1. 使用者名稱(以card__user-name代表)。
+2. 存放職稱的區塊(以card__job-section代表)。
+3. 職稱(以card__job-title代表)。
+4. 人物描述(以card__desecription代表)。
+*/
 
 
-
-.card > .card__profile {
+/* 人物資訊整體樣式 */
+  .card > .card__profile {
 
     /* Positioning */
     position: absolute;
@@ -106,11 +126,10 @@ html, body {
     /* Font or other */
     background: #FCFCFC;
     
-}
-/* */
- 
-/* card__profile */
-.card__profile > .card__user-info {
+  }
+
+/* 人物資訊樣式 */
+  .card__profile > .card__user-info {
      
     /* Display */
     display: flex;
@@ -122,10 +141,10 @@ html, body {
     height: 232px;
     margin-top: 68px;
      
-}
+  }
 
 
-/* card__user-info */
+/* 使用者名稱樣式 */
   .card__user-info > .card__user-name {
 
 
@@ -138,6 +157,8 @@ html, body {
     line-height: 35px;
     color: #000000;
   }
+
+/* 存放職稱的區塊之樣式 */
   .card__user-info > .card__job-section {
     /* Box Model */
     width: 134px;
@@ -149,6 +170,22 @@ html, body {
     background: #000000;
   }
 
+/* 職稱的樣式 */
+  .card__user-info > .card__job-section > .card__job-title {
+
+    /* Box Model */
+    width: 116px;
+    height: 14px;
+    margin: 3px 8px 3px 10px;
+    /* Font or other */
+    
+    font-size: 12px;
+    line-height: 14px;
+    color: #FFFFFF;
+    
+  }
+
+/* 
   .card__user-info > .card__description {
 
     /* Box Model */
@@ -165,17 +202,4 @@ html, body {
   }
 
 
-  .card__user-info > .card__job-section > .card__job-name {
-
-    /* Box Model */
-    width: 116px;
-    height: 14px;
-    margin: 3px 8px 3px 10px;
-    /* Font or other */
-    
-    font-size: 12px;
-    line-height: 14px;
-    color: #FFFFFF;
-    
-  }
-
+  

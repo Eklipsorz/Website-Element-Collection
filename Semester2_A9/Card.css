@@ -2,7 +2,8 @@
 
 
 /* 通用元件樣式 General Style */
-  html, body {
+  html, 
+  body {
     /* Font or other */
     width: 100vw;
     height: 100vh;
@@ -16,6 +17,7 @@
     box-sizing: border-box;
   }
 
+/* 設定人物簡介下的使用者名稱、職稱、人物描述為同一字體、粗細程度 */
   .card__user-name, 
   .card__job-title,
   .card__description {
@@ -24,13 +26,34 @@
     font-weight: normal;
   }
 
+/* 設定人物簡介下的使用者名稱、人物描述為同一個顏色 */
+  .card__user-name, 
+  .card__description {
+    /* Font or other */
+    color: #000000;
+  }
+
+/* 設定卡片本身、人物簡介為同一種圓角 */
+
+  .card, 
+  .card__profile {
+    border-radius: 20px;
+  }
 
 
 /*** 卡片樣式 ***/
+/* 
+該簡介包含了以下區塊：
+1. 大頭照區塊
+2. 狀態按鈕區塊(未有任何狀態時的樣式、有通知時的樣式)
+3. 人物簡介區塊(只設定其整體樣式，細部樣式另外設定)
+*/
+
 
 /* 整體卡片樣式 */
 
   .card {
+
     /* Positioning */
     position: relative;
 
@@ -38,13 +61,12 @@
     width: 300px;
     height: 500px;
     margin: 100px auto;
-    border-radius: 20px;
     
     /* Font or other */
     background: linear-gradient(161.98deg, #07E3A1 13.65%, rgba(11, 111, 218, 0) 87.85%);
   }
 
-/* 大頭相樣式 */
+/* 大頭照樣式 */
   .card > .card__avatar {
 
     /* Positioning */
@@ -64,7 +86,7 @@
     background-position: center center;
   }
   
-/* 狀態按鈕樣式 */
+/* 未有任何狀態時狀態按鈕樣式 */
   .card > .card__status-info {
 
     /* Positioning */
@@ -82,8 +104,9 @@
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
   }
 
-/* 狀態按鈕樣式 */
+/* 通知時的狀態按鈕樣式 */
   .card > .card__status-info--active::after {
+
     /* Positioning */
     position: absolute;
     left: 20px;
@@ -99,8 +122,24 @@
     content: "";
   }
 
+/* 人物資訊區塊樣式 */
+  .card > .card__profile {
 
+    /* Positioning */
+    position: absolute;
+    top: 200px;
+
+    /* Box Model */
+    width: 100%;
+    height: 60%;    
+
+    /* Font or other */
+    background: #FCFCFC;
   
+  }
+
+
+
 /*** 人物簡介樣式 ***/
 
 /* 
@@ -112,23 +151,6 @@
 4. 人物描述(以card__desecription代表)。
 */
 
-
-/* 人物資訊區塊樣式 */
-  .card > .card__profile {
-
-    /* Positioning */
-    position: absolute;
-    top: 200px;
-
-    /* Box Model */
-    width: 100%;
-    height: 60%;
-    border-radius: 20px;
-
-    /* Font or other */
-    background: #FCFCFC;
-    
-  }
 
 /* 人物資訊樣式 */
   .card__profile > .card__user-info {
@@ -149,7 +171,6 @@
 /* 使用者名稱樣式 */
   .card__user-info > .card__user-name {
 
-
     /* Box Model */
     width: 105px;
     height: 35px;
@@ -157,11 +178,11 @@
     /* Font or other */
     font-size: 30px;
     line-height: 35px;
-    color: #000000;
   }
 
 /* 存放職稱的區塊之樣式 */
   .card__user-info > .card__job-section {
+
     /* Box Model */
     width: 134px;
     height: 20px;
@@ -179,8 +200,8 @@
     width: 116px;
     height: 14px;
     margin: 3px 8px 3px 10px;
+
     /* Font or other */
-    
     font-size: 12px;
     line-height: 14px;
     color: #FFFFFF;
@@ -199,7 +220,6 @@
     font-style: normal;
     font-size: 14px;
     line-height: 16px;
-    color: #000000;
 
   }
 

@@ -2,25 +2,56 @@
 
 
 /* 通用元件樣式 General Style */
-  html, 
-  body {
-    /* Font or other */
-    width: 100vw;
-    height: 100vh;
-    background: #333;
-  }  
-  
-  * {
+
+html, 
+body {
+
+  /* Box Model */
+  width: 100vw;
+  height: 100vh;
+
+  /* Font or other */
+  background: #333;
+}  
+
+* {
+
+  /* Box Model */
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+
+
+
+/*
+將同種樣式統一放在不同區塊，使用的區塊有：
+1. 卡片本身 (以 .card 來表示)
+2. 人物簡介 (以 .card__profile 來表示)
+3. 未有狀態時的按鈕 (以 .card__status-info-button 來表示)
+4. 有通知時的按鈕 (以 .card__status-info-button--active 來表示)
+5. 卡片使用者名稱 (以 .card__user-name 來表示)
+6. 卡片使用者職稱 (以 .card__job-title 來表示)
+7. 卡片使用者描述 (以 .card__description 來表示)
+
+*/
+
+
+/* 設定卡片本身、人物簡介為同一種圓角 */
+  .card, 
+  .card__profile {
+    
     /* Box Model */
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+    border-radius: 20px;
   }
 
 /* 設定狀態按鈕為同一種圓角和陰影 */
 
   .card__status-info-button,
-  .card__status-info-button--active {
+  .card__status-info-button--active::after {
+
+    /* Box Model */
     border-radius: 30px;
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
   }
@@ -29,6 +60,7 @@
   .card__user-name, 
   .card__job-title,
   .card__description {
+
     /* Font or other */
     font-family: Roboto;
     font-weight: normal;
@@ -38,15 +70,9 @@
 /* 設定人物簡介下的使用者名稱、人物描述為同一個顏色 */
   .card__user-name, 
   .card__description {
+
     /* Font or other */
     color: #000000;
-  }
-
-/* 設定卡片本身、人物簡介為同一種圓角 */
-
-  .card, 
-  .card__profile {
-    border-radius: 20px;
   }
 
 
@@ -54,9 +80,9 @@
 /*** 卡片樣式 ***/
 /* 
 該簡介包含了以下區塊：
-1. 大頭照區塊
-2. 狀態按鈕區塊(未有任何狀態時的樣式、有通知時的樣式)
-3. 人物簡介區塊(只設定其整體樣式，細部樣式另外設定)
+1. 大頭照區塊 (以 .card__avatar 來表示)
+2. 狀態按鈕區塊 (分為未有狀態時和有通知時的按鈕樣式，以 .card__status-info-button 表示前者，而 .card__status-info-button--active 表示後者)
+3. 人物簡介區塊 (只設定其整體樣式，細部樣式另外設定，並以 .card__profile 來表示)
 */
 
 
@@ -150,12 +176,12 @@
 /*** 人物簡介樣式 ***/
 
 /* 
-該簡介包含人物資訊區塊(以card__user-info來代表)。
+該簡介包含人物資訊區塊(以 .card__user-info 來表示)。
 其人物資訊區塊又包含了以下區塊:
-1. 使用者名稱(以card__user-name代表)。
-2. 存放職稱的區塊(以card__job-section代表)。
-3. 職稱(以card__job-title代表)。
-4. 人物描述(以card__desecription代表)。
+1. 使用者名稱 (以 .card__user-name 表示)。
+2. 存放職稱的區塊 (以 .card__job-section 表示)。
+3. 職稱 (以 .card__job-title 表示)。
+4. 人物描述 (以 .card__desecription 表示)。
 */
 
 

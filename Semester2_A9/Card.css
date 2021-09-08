@@ -180,7 +180,7 @@ body {
 其人物資訊區塊又包含了以下區塊:
 1. 使用者名稱 (以 .card__user-name 表示)。
 2. 存放職稱的區塊 (以 .card__job-section 表示)。
-3. 職稱 (以 .card__job-title 表示)。
+3. 人物職稱 (以 .card__job-title 表示)。
 4. 人物描述 (以 .card__desecription 表示)。
 */
 
@@ -213,7 +213,7 @@ body {
     line-height: 35px;
   }
 
-/* 存放職稱的區塊之樣式 */
+/* 存放人物職稱的區塊之樣式 */
   .card__user-info > .card__job-section {
 
     /* Box Model */
@@ -226,7 +226,7 @@ body {
     background: #000000;
   }
 
-/* 職稱的樣式 */
+/* 人物職稱的樣式 */
   .card__user-info > .card__job-section > .card__job-title {
 
     /* Box Model */

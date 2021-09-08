@@ -17,6 +17,14 @@
     box-sizing: border-box;
   }
 
+/* 設定狀態按鈕為同一種圓角和陰影 */
+
+  .card__status-info-button,
+  .card__status-info-button--active {
+    border-radius: 30px;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  }
+
 /* 設定人物簡介下的使用者名稱、職稱、人物描述為同一字體、粗細程度 */
   .card__user-name, 
   .card__job-title,
@@ -24,6 +32,7 @@
     /* Font or other */
     font-family: Roboto;
     font-weight: normal;
+    font-style: normal;
   }
 
 /* 設定人物簡介下的使用者名稱、人物描述為同一個顏色 */
@@ -39,6 +48,7 @@
   .card__profile {
     border-radius: 20px;
   }
+
 
 
 /*** 卡片樣式 ***/
@@ -87,7 +97,7 @@
   }
   
 /* 未有任何狀態時狀態按鈕樣式 */
-  .card > .card__status-info {
+  .card > .card__status-info-button {
 
     /* Positioning */
     position: absolute;
@@ -100,12 +110,11 @@
 
     /* Font or other */
     background: #FFFFFF;
-    border-radius: 30px;
-    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+
   }
 
 /* 通知時的狀態按鈕樣式 */
-  .card > .card__status-info--active::after {
+  .card > .card__status-info-button--active::after {
 
     /* Positioning */
     position: absolute;
@@ -117,8 +126,6 @@
 
     /* Font or other */
     background: #FF0000;
-    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 30px;
     content: "";
   }
 
@@ -217,7 +224,6 @@
     margin: 20px 35px 38px 34px;
 
     /* Font or other */
-    font-style: normal;
     font-size: 14px;
     line-height: 16px;
 

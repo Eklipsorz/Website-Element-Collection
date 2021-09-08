@@ -13,30 +13,31 @@ html, body {
     box-sizing: border-box;
   }
 
-  h2, 
-  h3,
-  p {
+ .card__user-name, 
+ .card__job-title,
+ .card__description {
     /* Font or other */
     font-family: Roboto;
     font-weight: normal;
-  }
+ }
 
   
-.card > .background {
+  .card {
+    /* Positioning */
+    position: relative;
 
     /* Box Model */
-    height: 100%;
-    margin: 0px auto;
+    width: 300px;
+    height: 500px;
+    margin: 100px auto;
     border-radius: 20px;
     
-
     /* Font or other */
     background: linear-gradient(161.98deg, #07E3A1 13.65%, rgba(11, 111, 218, 0) 87.85%);
+  }
 
-}
-  
-  /* Bonus for you: center a background image! */
-.background > .bernard-img {
+
+.card > .card__avatar {
 
     /* Positioning */
     position: absolute;
@@ -56,7 +57,7 @@ html, body {
     background-position: center center;
 }
   
-.background > .status-info {
+.card > .card__status-info {
 
     /* Positioning */
     position: absolute;
@@ -73,43 +74,25 @@ html, body {
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
 }
 
+.card > .card__status-info--active::after {
+  /* Positioning */
+  position: absolute;
+  left: 20px;
 
+  /* Box Model */
+  width: 10px;
+  height: 10px;
 
-
-/* .background > .status-info > .notification { */
-.status-info::after {
-    /* Positioning */
-    position: absolute;
-    left: 20px;
-
-    /* Box Model */
-    width: 10px;
-    height: 10px;
-
-    /* Font or other */
-    background: #FF0000;
-    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 30px;
-    content: "";
+  /* Font or other */
+  background: #FF0000;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 30px;
+  content: "";
 }
-  /* begin your styles here!*/
 
-  
-  .card {
-    /* Positioning */
-    position: relative;
 
-    /* Box Model */
-    width: 300px;
-    height: 500px;
-    margin: 100px auto;
-   
 
-    /* Font or other */
-    
-  }
-
-  .card > .profile {
+.card > .card__profile {
 
     /* Positioning */
     position: absolute;
@@ -123,24 +106,27 @@ html, body {
     /* Font or other */
     background: #FCFCFC;
     
-  }
-
-  .card > .profile > .user-info {
-     /* border: 5px solid; */
-
-     /* Display */
-     display: flex;
-     flex-direction: column;
-     align-items: center;
-
-     /* Box Model */
-     width: 100%;
-     height: 232px;
-     margin-top: 68px;
+}
+/* */
+ 
+/* card__profile */
+.card__profile > .card__user-info {
      
-  }
+    /* Display */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-  .user-info > .user-name {
+    /* Box Model */
+    width: 100%;
+    height: 232px;
+    margin-top: 68px;
+     
+}
+
+
+/* card__user-info */
+  .card__user-info > .card__user-name {
 
 
     /* Box Model */
@@ -152,7 +138,7 @@ html, body {
     line-height: 35px;
     color: #000000;
   }
-  .user-info > .job-background {
+  .card__user-info > .card__job-section {
     /* Box Model */
     width: 134px;
     height: 20px;
@@ -162,21 +148,8 @@ html, body {
     /* Font or other */
     background: #000000;
   }
-  .user-info > .job-background > .job-name {
 
-    /* Box Model */
-    width: 116px;
-    height: 14px;
-    margin: 3px 8px 3px 10px;
-    /* Font or other */
-    
-    font-size: 12px;
-    line-height: 14px;
-    color: #FFFFFF;
-    
-  }
-
-  .user-info > .description {
+  .card__user-info > .card__description {
 
     /* Box Model */
     width: 231px;
@@ -190,3 +163,19 @@ html, body {
     color: #000000;
 
   }
+
+
+  .card__user-info > .card__job-section > .card__job-name {
+
+    /* Box Model */
+    width: 116px;
+    height: 14px;
+    margin: 3px 8px 3px 10px;
+    /* Font or other */
+    
+    font-size: 12px;
+    line-height: 14px;
+    color: #FFFFFF;
+    
+  }
+

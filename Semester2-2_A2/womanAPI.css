@@ -1,0 +1,24 @@
+
+#data-panel {
+  /* Display */
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.person-item {
+
+  /* Display */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  /* Box Model */
+  margin: 5px;
+  padding: 5px;
+  
+  /* Font and other */
+  border: 2px solid #eee;
+
+
+}

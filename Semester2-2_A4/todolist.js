@@ -2,7 +2,7 @@
 const list = document.querySelector("#my-todo")
 const addBtn = document.querySelector("#add-btn")
 const input = document.querySelector("#new-todo")
-
+const doneList = document.querySelector('#my-done')
 // 資料
 let todos = [
   "Hit the gym",
@@ -52,7 +52,7 @@ function showWarningMessage(elementNode, isError) {
 
 }
 
-
+/* TODO: 程式碼優化 */
 // Create
 addBtn.addEventListener("click", function (event) {
 
@@ -74,7 +74,6 @@ addBtn.addEventListener("click", function (event) {
     /* 當輸入不完全是空白時，便允許增加項目 */
     addItem(inputValue)
 
-    console.log('hi')
     inputField.value = ""
     inputField.placeholder = "add item"
   }
@@ -90,11 +89,39 @@ list.addEventListener("click", function (event) {
     let parentElement = target.parentElement;
     parentElement.remove()
   } else if (target.tagName === "LABEL") {
+    // doneList.appendChild()
+    let parentElement = target.parentElement;
+
     target.classList.toggle("checked")
+    parentElement.remove()
+    doneList.appendChild(parentElement)
+
+  }
+});
+
+// Delete and check
+doneList.addEventListener("click", function (event) {
+
+  const target = event.target
+
+  if (target.classList.contains("delete")) {
+    let parentElement = target.parentElement;
+    parentElement.remove()
+  } else if (target.tagName === "LABEL") {
+    // doneList.appendChild()
+    let parentElement = target.parentElement;
+
+    target.classList.toggle("checked")
+    parentElement.remove()
+    list.appendChild(parentElement)
+
   }
 });
 
 
+
+
+/* TODO: 程式碼優化 */
 input.addEventListener("keypress", function (event) {
 
   const target = event.target
@@ -102,7 +129,7 @@ input.addEventListener("keypress", function (event) {
 
   if (event.key === "Enter") {
 
-    console.log('hi')
+
     if (inputValue.trim() === "") {
       /* 當輸入全是空白時，便代表著錯誤，會跑出錯誤訊息及調整相關樣式(線條、出現錯誤符號) */
 

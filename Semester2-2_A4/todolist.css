@@ -1,3 +1,4 @@
+
 .checked {
   color: #ccc;
   text-decoration: line-through;
@@ -9,6 +10,40 @@
   color: #bbb;
 }
 
-li>label[for='todo'] {
+li > label[for='todo'] {
+
+  /* Box Model */
   width: 210px;
+  
+}
+
+/* TODO: */
+.todolist-input-field {
+  /* Positioning */
+  position: relative;
+
+  /* Box Model */
+
+}
+
+/* TODO: */
+.todolist-input-field::after {
+
+  /*    Positioning     */
+  position: absolute;
+  left: 170px;
+
+  /*    Display         */
+  display: var(--error-sign-display, none);
+
+  /*    Font or other   */
+  font-family: "FontAwesome"; 
+  font-weight: 900; 
+  color: #FF665A;
+  content: "\f06a";
+
+}
+
+#new-todo {
+  border: var(--error-sign-border, 1px solid #ced4da)
 }

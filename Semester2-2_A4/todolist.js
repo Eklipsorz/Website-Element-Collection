@@ -27,11 +27,26 @@ function addItem(text) {
 }
 
 // Create
-addBtn.addEventListener("click", function () {
+addBtn.addEventListener("click", function (event) {
+
+
+  const target = event.target
+  const inputSectionTodoList = target.parentElement
+  const inputField = inputSectionTodoList.children[0]
+
+
   const inputValue = input.value;
 
-  if (inputValue.length > 0) {
-    addItem(inputValue);
+  if (inputValue.trim() === "") {
+
+    inputSectionTodoList.style.setProperty('--error-sign-display', ' ')
+    inputField.style.setProperty('--error-sign-border', '1px solid #FF665A')
+
+  } else if (inputValue.length > 0) {
+    addItem(inputValue)
+
+    inputSectionTodoList.style.setProperty('--error-sign-display', 'none')
+    inputField.style.setProperty('--error-sign-border', '1px solid #ced4da')
   }
 });
 

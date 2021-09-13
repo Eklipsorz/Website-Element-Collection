@@ -29,6 +29,8 @@ function displaySongList(album) {
   let songListContent = ''
 
   for (let track of album.tracks) {
+
+
     songListContent += `
     <li class="nav-item">
       <a class="nav-link" data-toggle="pill" href="#" role="tab">${track}</a>
@@ -45,17 +47,25 @@ songList.addEventListener('click', (event) => {
 
   const target = event.target
 
-
+  /* 當點選到歌曲清單中的項目時 */
   if (target.matches('.nav-link')) {
 
+    /* 取得歌手名稱、歌曲名稱，並搭配提供API的伺服器之URL來重新組一個對應API的網址與該伺服器索取歌詞 */
     const singerName = album.artist
     const songName = target.innerHTML
+    const requestURL = `${BASE_URL}${singerName}/${songName}.json`
 
-    const requestURL = BASE_URL + singerName + "/" + songName + ".json"
-    console.log(requestURL)
+    /* 利用axios發送非同步請求，然後在panel那邊顯示歌名、歌詞 */
     axios.get(requestURL).then(function (response) {
 
-      console.log(response.data)
+      const lyrics = response.data.lyrics
+      let songContent = ''
+
+      songContent = `
+        <h3>${songName}</h3>
+        <pre>${lyrics}</pre>
+      `
+      lyricsPanel.innerHTML = songContent
 
     })
 
@@ -64,5 +74,6 @@ songList.addEventListener('click', (event) => {
   }
 
 })
+
 
 displaySongList(album)

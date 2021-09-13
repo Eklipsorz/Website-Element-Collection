@@ -26,27 +26,53 @@ function addItem(text) {
   list.appendChild(newItem);
 }
 
+
+function showWarningMessage(elementNode, isError) {
+
+
+
+  /* 增加項目之區塊(含輸入欄、輸入欄的錯誤標記、輸入按鈕) */
+  const inputSectionTodoList = elementNode
+  /* 增加項目之區塊下: 輸入欄的錯誤訊息 */
+  const errorMessage = elementNode.children[2]
+  /* 增加項目之區塊下: 輸入欄 */
+  const inputField = elementNode.children[0]
+
+
+  const cssDisplay = isError ? ' ' : 'none'
+  const cssBorderColor = isError ? '#FF665A' : '#ced4da'
+
+
+
+  /* 設定錯誤訊息、錯誤符號、線條的樣式 */
+  errorMessage.style.setProperty('--list__add-item-section-error-message-display', cssDisplay)
+  inputSectionTodoList.style.setProperty('--list__add-item-section--error-display', cssDisplay)
+  inputField.style.setProperty('--list__input-field-border-color', cssBorderColor)
+
+
+}
+
 // Create
 addBtn.addEventListener("click", function (event) {
 
 
   const target = event.target
-  const inputSectionTodoList = target.parentElement
-  const inputField = inputSectionTodoList.children[0]
-
-
   const inputValue = input.value;
 
   if (inputValue.trim() === "") {
+    /* 當輸入全是空白時，便代表著錯誤，會跑出錯誤訊息及調整相關樣式(線條、出現錯誤符號) */
 
-    inputSectionTodoList.style.setProperty('--error-sign-display', ' ')
-    inputField.style.setProperty('--error-sign-border', '1px solid #FF665A')
+    /* 顯示錯誤訊息、調整相關樣式 */
+    showWarningMessage(target.parentElement, true)
 
-  } else if (inputValue.length > 0) {
+  } else {
+
+    /* 重設線條、錯誤符號的樣式，避免一開始使用者輸入錯誤而造成樣式維持錯誤時的樣式 */
+    showWarningMessage(target.parentElement, false)
+
+    /* 當輸入不完全是空白時，便允許增加項目 */
     addItem(inputValue)
 
-    inputSectionTodoList.style.setProperty('--error-sign-display', 'none')
-    inputField.style.setProperty('--error-sign-border', '1px solid #ced4da')
   }
 });
 

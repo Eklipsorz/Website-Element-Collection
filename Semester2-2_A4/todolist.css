@@ -24,14 +24,16 @@ li > label[for='todo'] {
 
 .list__header {
   /*    Variables       */
-  --error-sign-display: none;
+  
   --list__input-field-border-color: #ced4da;
+  --list__add-item-section--error-display: none;
+  --list__add-item-section-error-message-display: none;
 }
 
 
 
 /* TODO: */
-/* 增加項目之區塊(含輸入欄、輸入欄的錯誤標記、輸入按鈕) */
+/* 增加項目之區塊(含輸入欄、輸入欄的錯誤符號、輸入欄的錯誤訊息、輸入按鈕) */
 .list__add-item-section {
   /* Positioning */
   position: relative;
@@ -50,18 +52,17 @@ li > label[for='todo'] {
 }
 
 
-
-
 /* TODO: */
-/* 增加項目之區塊下: 輸入欄的錯誤標記 */
+/* 增加項目之區塊下: 輸入欄的錯誤符號 */
 .list__add-item-section--error::after {
 
   /*    Positioning     */
   position: absolute;
   left: 170px;
+  top: 6px;
 
   /*    Display         */
-  display: var(--error-sign-display);
+  display: var(--list__add-item-section--error-display);
 
   /*    Font or other   */
   font-family: "FontAwesome"; 
@@ -69,5 +70,18 @@ li > label[for='todo'] {
   color: #FF665A;
   content: "\f06a";
 
+}
+/* 增加項目之區塊下: 輸入欄的錯誤訊息 */
+.list__add-item-section-error-message {
+  
+  /*    Display     */
+  display: var(--list__add-item-section-error-message-display);
+
+  /*    Box model   */
+  width: 100%;
+  margin: 1px;
+  
+  /*    Font or other   */
+  color: #FF665A;
 }
 

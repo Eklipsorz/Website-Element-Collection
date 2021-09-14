@@ -36,3 +36,105 @@ let productData = [
   }
 ];
 // ======= 請從這裡開始 =======
+
+let totalAmountContent = 0
+
+const cartList = productData.map(product => {
+  return {
+    product: product,
+    numProduct: 0
+  }
+})
+
+
+const allCardsContent = productData.reduce((previousContent, currentProduct) => {
+
+  let content = `
+     
+     <div class="col-3">
+       <div class="card">
+          <img src=${currentProduct.imgUrl} class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">${currentProduct.name}</h5>
+            <p class="card-text">${currentProduct.price}</p>
+            <a href="#" data-id=${currentProduct.id} class="btn btn-primary">加入購物車</a>
+          </div>
+        </div>
+      </div>
+    `
+
+  return previousContent + content
+
+}, '')
+
+
+menu.innerHTML = allCardsContent
+cart.innerHTML = ""
+
+
+
+
+
+/* TODO: */
+
+
+function calcAllThingsOnCart(productIndex, productPrice) {
+
+  cartList[productIndex].numProduct++
+  totalAmountContent += productPrice
+  totalAmount.innerHTML = totalAmountContent
+
+}
+
+
+
+
+function addItemToCart(productIndex) {
+
+  const product = productData[productIndex]
+  const newListItem = document.createElement('li')
+
+  newListItem.classList.add('list-group-item')
+  newListItem.innerHTML = `${product.name} X 1 小計：${product.price}`
+
+  cart.appendChild(newListItem)
+  calcAllThingsOnCart(productIndex, product.price)
+
+}
+
+
+
+
+
+menu.addEventListener('click', event => {
+  const target = event.target
+
+  if (target.classList.contains('btn')) {
+
+    const productID = target.dataset.id
+    const indexOfProduct = productID.split('-')[1]
+
+    addItemToCart(+(indexOfProduct) - 1)
+
+  }
+
+})
+
+
+button.addEventListener('click', event => {
+
+  if (totalAmountContent > 0) {
+    const billContent = `總金額：${totalAmountContent}`
+    alert(`感謝購買\n${billContent}`)
+
+    totalAmount.innerHTML = ""
+    cart.innerHTML = ""
+
+    totalAmountContent = 0
+
+    cartList.forEach(item => {
+      item.numProduct = 0
+    })
+  }
+
+})

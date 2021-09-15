@@ -1,5 +1,9 @@
+// 存放電影的空間
 const dataPanel = document.querySelector('#data-panel')
-
+// 搜尋表單(包含輸入欄、按鈕)
+const searchForm = document.querySelector('#search-form')
+// 搜尋表單中的輸入欄
+const searchInput = document.querySelector('#search-input')
 
 const BASE_URL = 'https://movie-list.alphacamp.io'
 // 使用 INDEX API
@@ -90,6 +94,11 @@ function showMovieModal(id) {
 
 }
 
+dataPanel.addEventListener('click', onPanelClicked)
+searchForm.addEventListener('submit', onSearchFormSubmitted)
+
+
+
 function onPanelClicked(event) {
 
   const target = event.target
@@ -103,4 +112,21 @@ function onPanelClicked(event) {
 
 }
 
-dataPanel.addEventListener('click', onPanelClicked)
+function onSearchFormSubmitted(event) {
+
+  event.preventDefault()
+
+  const keyword = searchInput.value.trim().toLowerCase()
+  let filteredMovies = []
+
+  filteredMovies = movies.filter(movie => {
+    return movie.title.toLowerCase().includes(keyword)
+  })
+
+
+  if (!filteredMovies.length) {
+    alert('`您輸入的關鍵字：${keyword} 沒有符合條件的電影`')
+  }
+
+  renderMovieList(filteredMovies)
+}

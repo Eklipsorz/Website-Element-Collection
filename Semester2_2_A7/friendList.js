@@ -41,15 +41,12 @@ function renderFriendList(data) {
           <div class="card">
             <img
               src=${item.avatar}
-              class="card-img-top" alt="Friend Avatar">
+              class="card-img-top card-avatar" alt="Friend Avatar" 
+              data-toggle="modal" data-target="#friend-modal"data-id=${item.id}>
             <div class="card-body">
               <h5 class="card-title">${item.name + " " + item.surname}</h5>
             </div>
-            <div class="card-footer">
-              <button class="btn btn-primary btn-show-friend" data-toggle="modal"
-                data-target="#friend-modal" data-id=${item.id}>More</button>
-              <button class="btn btn-info btn-show-favorite">+</button>
-            </div>
+        
           </div>
         </div>
       </div>
@@ -65,6 +62,7 @@ function renderFriendList(data) {
 /* FIXME: 會從預設頁面轉換至正確頁面，正確來說是直接正確頁面，而非轉換*/
 function showFriendModal(id) {
 
+  console.log(id)
 
   // <ul class="list-unstyled">
   //   <!-- email -->
@@ -110,7 +108,8 @@ function onPanelClicked(event) {
 
   const target = event.target
 
-  if (target.matches('.btn-show-friend')) {
+  if (target.matches('.card-avatar')) {
+
 
     const friendID = +(target.dataset.id)
     showFriendModal(friendID)

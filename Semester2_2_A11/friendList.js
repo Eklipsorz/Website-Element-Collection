@@ -20,7 +20,7 @@ const INDEX_URL = BASE_URL + '/api/v1/users/'
 const friendList = []
 
 
-
+// 從API撈資料並放入friendList
 axios.get(INDEX_URL)
   .then(response => {
     const allFriendData = response.data.results
@@ -32,6 +32,7 @@ axios.get(INDEX_URL)
   })
 
 
+// 根據data內容來渲染朋友清單頁面
 function renderFriendList(data) {
   let rawHTML = ''
 
@@ -65,6 +66,7 @@ function renderFriendList(data) {
 }
 
 /* FIXME: 會從預設頁面轉換至正確頁面，正確來說是直接正確頁面，而非轉換*/
+// 設定點選後的互動視窗之內容
 function showFriendModal(id) {
 
   console.log(id)
@@ -108,7 +110,7 @@ function showFriendModal(id) {
 
 }
 
-
+// 點擊頭像的事件處理器
 function onPanelClicked(event) {
 
   const target = event.target
@@ -123,6 +125,7 @@ function onPanelClicked(event) {
 
 }
 
+// 搜尋表單提交事件處理器
 function onSearchFormSubmitted(event) {
 
 
@@ -154,9 +157,10 @@ function onSearchFormSubmitted(event) {
   renderFriendList(filteredFriends)
 }
 
-
+// 將事件處理器綁定在朋友清單點擊時的事件
 dataPanel.addEventListener('click', onPanelClicked)
 
+// 將事件處理器綁定在搜尋輸入欄提交時的事件
 searchForm.addEventListener('submit', onSearchFormSubmitted)
 
 

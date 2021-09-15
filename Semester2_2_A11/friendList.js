@@ -127,20 +127,31 @@ function onSearchFormSubmitted(event) {
 
 
   event.preventDefault()
+  const warningIcon = document.querySelector('#search-form .search-input-warning-icon')
+
 
   let filteredFriends = []
   const keyword = searchInput.value.trim().toLowerCase()
 
+  if (keyword.trim() === '') {
+    console.log('hi')
+    searchInput.style.setProperty('--search-input-border-color', '#FF665A')
+    warningIcon.style.setProperty('--search-input-warning-icon-display', ' ')
+    return
+  }
 
   filteredFriends = friendList.filter(friend => {
     const fullName = friend.name + " " + friend.surname
     return fullName.trim().toLowerCase().includes(keyword)
   })
 
+  if (!filteredFriends.length) {
+
+    alert(`我們找不到名為${keyword}的朋友，抱歉`)
+    return
+  }
 
   renderFriendList(filteredFriends)
-
-
 }
 
 

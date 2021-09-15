@@ -8,7 +8,9 @@
   <title>Friend List</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
     integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <title>Friend List</title>
+  <link rel="stylesheet" href="friendList.css">
 </head>
 
 <body>
@@ -39,7 +41,10 @@
     <div class="row">
       <form class="form-inline" id="search-form">
         <label class="sr-only" for="inlineFormInputName2">Search Keyword</label>
-        <input type="text" class="form-control mb-2 mr-sm-2" id="search-input" placeholder="Keyword...">
+        <div class="search-input-warning search-input-warning-icon">
+          <input type="text" class="form-control mb-2 mr-sm-2 search-form-warning-input" id="search-input"
+            placeholder="Keyword...">
+        </div>
         <button type="submit" class="btn btn-primary mb-2" id="search-submit">Search</button>
       </form>
     </div>

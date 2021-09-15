@@ -1,3 +1,11 @@
+// 存放所有朋友
+const dataPanel = document.querySelector('#data-panel')
+// 搜尋表單(包含輸入欄、按鈕)
+const searchForm = document.querySelector('#search-form')
+// 搜尋表單中的輸入欄
+const searchInput = document.querySelector('#search-input')
+
+
 
 // 定義 API Server 
 const BASE_URL = 'https://lighthouse-user-api.herokuapp.com'
@@ -7,12 +15,9 @@ const INDEX_URL = BASE_URL + '/api/v1/users/'
 
 
 
-const dataPanel = document.querySelector('#data-panel')
+
 
 const friendList = []
-
-
-
 
 
 
@@ -118,5 +123,30 @@ function onPanelClicked(event) {
 
 }
 
+function onSearchFormSubmitted(event) {
+
+
+  event.preventDefault()
+
+  let filteredFriends = []
+  const keyword = searchInput.value.trim().toLowerCase()
+
+
+  filteredFriends = friendList.filter(friend => {
+    const fullName = friend.name + " " + friend.surname
+    return fullName.trim().toLowerCase().includes(keyword)
+  })
+
+
+  renderFriendList(filteredFriends)
+
+
+}
+
 
 dataPanel.addEventListener('click', onPanelClicked)
+
+searchForm.addEventListener('submit', onSearchFormSubmitted)
+
+
+

@@ -85,7 +85,7 @@
   <!-- Movie Modal -->
   <div class="modal fade" id="movie-modal" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="movie-modal-title">Modal title</h5>
@@ -94,7 +94,24 @@
           </button>
         </div>
         <div class="modal-body" id="movie-modal-body">
-          ...
+          <div class="row">
+            <div class="col-sm-8" id="movie-modal-image">
+              <img
+                src="https://raw.githubusercontent.com/ALPHACamp/movie-list-api/master/public/posters/80PWnSTkygi3QWWmJ3hrAwqvLnO.jpg"
+                alt="moive-poster" class="img-fuid">
+            </div>
+            <div class="col-sm-4">
+              <p>
+                <em id="movie-modal-date">
+                  release date: 2020/01/01
+                </em>
+              </p>
+              <p id="movie-description">
+                This is a movie!!
+              </p>
+
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -115,7 +132,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"
     integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF"
     crossorigin="anonymous"></script>
-  
+
   <script src="index.js"></script>
 </body>
 

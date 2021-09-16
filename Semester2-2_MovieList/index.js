@@ -48,7 +48,7 @@ function renderMovieList(data) {
             <div class="card-footer">
               <button class="btn btn-primary btn-show-movie" data-toggle="modal"
                 data-target="#movie-modal" data-id=${item.id}>More</button>
-              <button class="btn btn-info btn-show-favorite">+</button>
+              <button class="btn btn-info btn-show-favorite" data-id=${item.id}>+</button>
             </div>
           </div>
         </div>
@@ -105,9 +105,31 @@ function onPanelClicked(event) {
 
   if (target.matches('.btn-show-movie')) {
 
-    const movieId = +(target.dataset.id)
-    showMovieModal(movieId)
+    showMovieModal(+(target.dataset.id))
+
+  } else if (target.matches('.btn-show-favorite')) {
+
+
+    addToFavoriteMovies(+(target.dataset.id))
+
   }
+
+
+}
+
+function addToFavoriteMovies(id) {
+
+  // 獲取最愛電影清單，避免使用者關掉頁面或者瀏覽器而清掉他原本選定的電影
+  const list = JSON.parse(localStorage.getItem('favoriteMovies')) || []
+  const movie = movies.find(movie => movie.id === id)
+
+  if (list.some(item => item.id === id)) {
+    return alert('此電影已在收藏清單中')
+  }
+
+  list.push(movie)
+
+  localStorage.setItem('favoriteMovies', JSON.stringify(list))
 
 
 }

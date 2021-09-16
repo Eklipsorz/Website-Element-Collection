@@ -4,6 +4,8 @@ const dataPanel = document.querySelector('#data-panel')
 const searchForm = document.querySelector('#search-form')
 // 搜尋表單中的輸入欄
 const searchInput = document.querySelector('#search-input')
+// 分頁器
+const paginator = document.querySelector('#paginator')
 
 const BASE_URL = 'https://movie-list.alphacamp.io'
 // 使用 INDEX API
@@ -11,20 +13,32 @@ const INDEX_URL = BASE_URL + '/api/v1/movies/'
 // 使用 POSTER API
 const POSTER_URL = BASE_URL + '/posters/'
 
+// 定義每頁要顯示多少個項目
+const MOVIES_PER_PAGE = 12
+
+
 const movies = []
 const directors = []
 
 
 axios.get(INDEX_URL)
   .then(response => {
-    const allMovieData = response.data.results
-    movies.push(...allMovieData)
-    renderMovieList(movies)
+
+    movies.push(...response.data.results)
+
+    // 顯示總頁數
+    renderPaginator(movies.length)
+    // 顯示第一頁
+    renderMovieList(getMoviesByPage(1))
   })
   .catch(error => {
     console.log(error)
   })
 
+
+dataPanel.addEventListener('click', onPanelClicked)
+searchForm.addEventListener('submit', onSearchFormSubmitted)
+paginator.addEventListener('click', onPaginatorClicked)
 
 function renderMovieList(data) {
   let rawHTML = ''
@@ -61,6 +75,31 @@ function renderMovieList(data) {
   dataPanel.innerHTML = rawHTML
 }
 
+function getMoviesByPage(page) {
+
+  const startPageIndex = (page - 1) * MOVIES_PER_PAGE
+
+  return movies.slice(startPageIndex, startPageIndex + MOVIES_PER_PAGE)
+
+}
+
+function renderPaginator(amount) {
+
+  const numberOfPages = Math.ceil(amount / MOVIES_PER_PAGE)
+  let rawHTML = ''
+
+  for (let page = 1; page <= numberOfPages; page++) {
+    rawHTML += `
+			<li class="page-item"><a class="page-link" href="#" data-page=${page}>${page}</a></li>
+		`
+  }
+
+  paginator.innerHTML = rawHTML
+
+}
+
+
+
 
 function showMovieModal(id) {
   /*
@@ -94,8 +133,7 @@ function showMovieModal(id) {
 
 }
 
-dataPanel.addEventListener('click', onPanelClicked)
-searchForm.addEventListener('submit', onSearchFormSubmitted)
+
 
 
 
@@ -151,4 +189,19 @@ function onSearchFormSubmitted(event) {
   }
 
   renderMovieList(filteredMovies)
+}
+
+function onPaginatorClicked(event) {
+
+  let currentPage = 0
+  const target = event.target
+
+  if (target.tagName !== 'A') {
+    return
+  }
+
+  currentPage = target.dataset.page
+  renderMovieList(getMoviesByPage(currentPage))
+
+
 }

@@ -17,19 +17,16 @@ const INDEX_URL = BASE_URL + '/api/v1/users/'
 
 
 
-const friendList = []
+const friendList = JSON.parse(localStorage.getItem('favoriteFriends')) || []
 
 
-// 從API撈資料並放入friendList
-axios.get(INDEX_URL)
-  .then(response => {
-    const allFriendData = response.data.results
-    friendList.push(...allFriendData)
-    renderFriendList(friendList)
-  })
-  .catch(error => {
-    console.log(error)
-  })
+renderFriendList(friendList)
+
+// 將事件處理器綁定在朋友清單點擊時的事件
+dataPanel.addEventListener('click', onPanelClicked)
+
+// 將事件處理器綁定在搜尋輸入欄提交時的事件
+searchForm.addEventListener('submit', onSearchFormSubmitted)
 
 
 // 根據data內容來渲染朋友清單頁面
@@ -49,8 +46,9 @@ function renderFriendList(data) {
               src=${item.avatar}
               class="card-img-top card-avatar" alt="Friend Avatar" 
               data-toggle="modal" data-target="#friend-modal"data-id=${item.id}>
-            <div class="card-body">
-              <h5 class="card-title text-center">${item.name + " " + item.surname}</h5>
+            <div class="card-body text-center">
+              <h5 class="card-title">${item.name + " " + item.surname}</h5>
+              <button class="btn btn-outline-danger btn-remove-favorite" data-id=${item.id}>REMOVE</button>
             </div>
         
           </div>
@@ -116,9 +114,9 @@ function onPanelClicked(event) {
   const target = event.target
 
   if (target.matches('.card-avatar')) {
-
-    const friendID = +(target.dataset.id)
-    showFriendModal(friendID)
+    showFriendModal(+(target.dataset.id))
+  } else if (target.matches('.btn-remove-favorite')) {
+    removeFromFavorite(+(target.dataset.id))
   }
 
 }
@@ -155,11 +153,17 @@ function onSearchFormSubmitted(event) {
   renderFriendList(filteredFriends)
 }
 
-// 將事件處理器綁定在朋友清單點擊時的事件
-dataPanel.addEventListener('click', onPanelClicked)
 
-// 將事件處理器綁定在搜尋輸入欄提交時的事件
-searchForm.addEventListener('submit', onSearchFormSubmitted)
+/* 從收藏清單清除指定朋友 */
+function removeFromFavorite(id) {
+
+  const friendIndex = friendList.findIndex(friend => friend.id === id)
+
+  friendList.splice(friendIndex, 1)
+
+  localStorage.setItem('favoriteFriends', JSON.stringify(friendList))
+
+  renderFriendList(friendList)
 
 
-
+}

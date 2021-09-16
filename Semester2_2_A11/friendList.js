@@ -14,9 +14,6 @@ const BASE_URL = 'https://lighthouse-user-api.herokuapp.com'
 const INDEX_URL = BASE_URL + '/api/v1/users/'
 
 
-
-
-
 const friendList = []
 
 
@@ -30,6 +27,62 @@ axios.get(INDEX_URL)
   .catch(error => {
     console.log(error)
   })
+
+
+
+// 將事件處理器綁定在朋友清單點擊時的事件
+dataPanel.addEventListener('click', onPanelClicked)
+
+// 將事件處理器綁定在搜尋輸入欄提交時的事件
+searchForm.addEventListener('submit', onSearchFormSubmitted)
+
+
+// 點擊頭像的事件處理器
+function onPanelClicked(event) {
+
+  const target = event.target
+
+  if (target.matches('.card-avatar')) {
+    showFriendModal(+(target.dataset.id))
+  } else if (target.matches('.btn-show-favorite')) {
+    addToFavoriteFriend(+(target.dataset.id))
+  }
+
+}
+
+// 搜尋表單提交事件處理器
+function onSearchFormSubmitted(event) {
+
+
+  event.preventDefault()
+  const warningIcon = document.querySelector('#search-form .search-input-warning-icon')
+
+
+  let filteredFriends = []
+  const keyword = searchInput.value.trim().toLowerCase()
+
+  if (keyword.trim() === '') {
+    console.log('hi')
+    searchInput.style.setProperty('--search-input-border-color', '#FF665A')
+    warningIcon.style.setProperty('--search-input-warning-icon-display', ' ')
+    return
+  }
+
+  filteredFriends = friendList.filter(friend => {
+    const fullName = friend.name + " " + friend.surname
+    return fullName.trim().toLowerCase().includes(keyword)
+  })
+
+  if (!filteredFriends.length) {
+
+    alert(`我們找不到名為${keyword}的朋友，抱歉`)
+    return
+  }
+
+  renderFriendList(filteredFriends)
+}
+
+
 
 
 // 根據data內容來渲染朋友清單頁面
@@ -49,8 +102,9 @@ function renderFriendList(data) {
               src=${item.avatar}
               class="card-img-top card-avatar" alt="Friend Avatar" 
               data-toggle="modal" data-target="#friend-modal"data-id=${item.id}>
-            <div class="card-body">
-              <h5 class="card-title text-center">${item.name + " " + item.surname}</h5>
+            <div class="card-body text-center">
+              <h5 class="card-title">${item.name + " " + item.surname}</h5>
+              <button class="btn btn-outline-danger btn-show-favorite" data-id=${item.id}>LIKE</button>
             </div>
         
           </div>
@@ -110,58 +164,19 @@ function showFriendModal(id) {
 
 }
 
-// 點擊頭像的事件處理器
-function onPanelClicked(event) {
 
-  const target = event.target
-
-  if (target.matches('.card-avatar')) {
+function addToFavoriteFriend(id) {
 
 
-    const friendID = +(target.dataset.id)
-    showFriendModal(friendID)
+  const list = JSON.parse(localStorage.getItem('favoriteFriends')) || []
+  const friend = friendList.find(friend => friend.id === id)
 
+  if (list.some(item => item.id === id)) {
+    return alert('此朋友已加入至收藏清單中!!')
   }
+
+  list.push(friend)
+  localStorage.setItem('favoriteFriends', JSON.stringify(list))
+
 
 }
-
-// 搜尋表單提交事件處理器
-function onSearchFormSubmitted(event) {
-
-
-  event.preventDefault()
-  const warningIcon = document.querySelector('#search-form .search-input-warning-icon')
-
-
-  let filteredFriends = []
-  const keyword = searchInput.value.trim().toLowerCase()
-
-  if (keyword.trim() === '') {
-    console.log('hi')
-    searchInput.style.setProperty('--search-input-border-color', '#FF665A')
-    warningIcon.style.setProperty('--search-input-warning-icon-display', ' ')
-    return
-  }
-
-  filteredFriends = friendList.filter(friend => {
-    const fullName = friend.name + " " + friend.surname
-    return fullName.trim().toLowerCase().includes(keyword)
-  })
-
-  if (!filteredFriends.length) {
-
-    alert(`我們找不到名為${keyword}的朋友，抱歉`)
-    return
-  }
-
-  renderFriendList(filteredFriends)
-}
-
-// 將事件處理器綁定在朋友清單點擊時的事件
-dataPanel.addEventListener('click', onPanelClicked)
-
-// 將事件處理器綁定在搜尋輸入欄提交時的事件
-searchForm.addEventListener('submit', onSearchFormSubmitted)
-
-
-

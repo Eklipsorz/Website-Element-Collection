@@ -117,10 +117,8 @@ function onPanelClicked(event) {
 
   if (target.matches('.card-avatar')) {
 
-
     const friendID = +(target.dataset.id)
     showFriendModal(friendID)
-
   }
 
 }

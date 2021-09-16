@@ -1,0 +1,65 @@
+
+
+
+
+
+.search-input-warning {
+
+  /* Positioning */
+  position: relative;
+
+  /* Box Model */
+
+  /* Font or other */
+  
+  /*    Variables       */
+ 
+  --search-input-border-color: #ced4da;
+  --search-input-warning-icon-display: none;
+  --list__add-item-section-error-message-display: none;
+}
+
+
+/* TODO: */
+
+.search-form-warning-input {
+  
+  /*    Font or other   */
+  border: 1px solid var(--search-input-border-color)
+  
+}
+
+
+/* TODO: */
+
+.search-input-warning-icon::after {
+
+  /*    Positioning     */
+  position: absolute;
+  left: 85%;
+  top: 12%;
+  /*    Display         */
+  display: var(--search-input-warning-icon-display);
+
+  /*    Font or other   */
+  font-family: "FontAwesome"; 
+  font-weight: 900; 
+  color: #FF665A;
+  content: "\f06a";
+ 
+}
+
+
+.list__add-item-section-error-message {
+  
+  /*    Display     */
+  display: var(--list__add-item-section-error-message-display);
+
+  /*    Box model   */
+  width: 100%;
+  margin: 1px;
+  
+  /*    Font or other   */
+  color: #FF665A;
+}
+

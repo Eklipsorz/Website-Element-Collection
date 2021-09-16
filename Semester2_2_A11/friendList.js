@@ -4,8 +4,8 @@ const dataPanel = document.querySelector('#data-panel')
 const searchForm = document.querySelector('#search-form')
 // 搜尋表單中的輸入欄
 const searchInput = document.querySelector('#search-input')
-
-
+// 分頁器
+const paginator = document.querySelector('#paginator')
 
 // 定義 API Server 
 const BASE_URL = 'https://lighthouse-user-api.herokuapp.com'
@@ -13,16 +13,22 @@ const BASE_URL = 'https://lighthouse-user-api.herokuapp.com'
 // 使用 INDEX API
 const INDEX_URL = BASE_URL + '/api/v1/users/'
 
+const FRIENDS_PER_PAGE = 8
 
+
+let filteredFriends = []
 const friendList = []
 
 
 // 從API撈資料並放入friendList
 axios.get(INDEX_URL)
   .then(response => {
-    const allFriendData = response.data.results
-    friendList.push(...allFriendData)
-    renderFriendList(friendList)
+
+    friendList.push(...response.data.results)
+
+    renderPaginator(friendList.length)
+    renderFriendList(getFriendsByPage(1))
+
   })
   .catch(error => {
     console.log(error)
@@ -30,12 +36,14 @@ axios.get(INDEX_URL)
 
 
 
-// 將事件處理器綁定在朋友清單點擊時的事件
+// 將事件處理器 onPanelClicked 綁定在朋友清單點擊時的事件
 dataPanel.addEventListener('click', onPanelClicked)
 
-// 將事件處理器綁定在搜尋輸入欄提交時的事件
+// 將事件處理器 onSearchFormSubmitted 綁定在搜尋輸入欄提交時的事件
 searchForm.addEventListener('submit', onSearchFormSubmitted)
 
+// 將事件處理器 onPaginationClicked  綁定在分頁器被點擊時的事件
+paginator.addEventListener('click', onPaginatorClicked)
 
 // 點擊頭像的事件處理器
 function onPanelClicked(event) {
@@ -58,7 +66,7 @@ function onSearchFormSubmitted(event) {
   const warningIcon = document.querySelector('#search-form .search-input-warning-icon')
 
 
-  let filteredFriends = []
+
   const keyword = searchInput.value.trim().toLowerCase()
 
   if (keyword.trim() === '') {
@@ -67,6 +75,7 @@ function onSearchFormSubmitted(event) {
     warningIcon.style.setProperty('--search-input-warning-icon-display', ' ')
     return
   }
+
 
   filteredFriends = friendList.filter(friend => {
     const fullName = friend.name + " " + friend.surname
@@ -79,10 +88,49 @@ function onSearchFormSubmitted(event) {
     return
   }
 
-  renderFriendList(filteredFriends)
+  renderFriendList(getFriendsByPage(1))
+  renderPaginator(filteredFriends.length)
 }
 
 
+function onPaginatorClicked(event) {
+
+  let currentPage = ''
+  const target = event.target
+
+  if (target.tagName !== 'A') {
+    return
+  }
+
+  currentPage = target.dataset.page
+  renderFriendList(getFriendsByPage(currentPage))
+
+}
+
+/* 取得對應頁面的項目，並判定根據是否正在搜尋而變動(要渲染的)資料的來源處 */
+function getFriendsByPage(page) {
+
+  const data = filteredFriends.length ? filteredFriends : friendList
+  const startFriendIndex = (page - 1) * FRIENDS_PER_PAGE
+
+  return data.slice(startFriendIndex, startFriendIndex + FRIENDS_PER_PAGE)
+
+}
+
+/* 渲染分頁器，根據項目數量amount來決定渲染多少頁 */
+function renderPaginator(amount) {
+
+  const numberOfPage = Math.ceil(amount / FRIENDS_PER_PAGE)
+  let rawHTML = ''
+
+  for (let page = 1; page <= numberOfPage; page++) {
+    rawHTML += `
+        <li class="page-item"><a class="page-link" href="#" data-page=${page}>${page}</a></li>
+      `
+  }
+
+  paginator.innerHTML = rawHTML
+}
 
 
 // 根據data內容來渲染朋友清單頁面
@@ -122,20 +170,6 @@ function renderFriendList(data) {
 /* FIXME: 會從預設頁面轉換至正確頁面，正確來說是直接正確頁面，而非轉換*/
 // 設定點選後的互動視窗之內容
 function showFriendModal(id) {
-
-  console.log(id)
-
-  // <ul class="list-unstyled">
-  //   <!-- email -->
-  //   <li id="friend-modal-email">email: guillaume.vincent@example.com</li>
-  //   <!-- birthday -->
-  //   <li id="friend-modal-birthday">birthday: 1995-05-05</li>
-  //   <!-- age -->
-  //   <li id="friend-modal-age">age: 25</li>
-  //   <!-- gender -->
-  //   <li id="friend-modal-gender">gender: male</li>
-  //   <!-- region -->
-  //   <li id="friend-modal-region">region: CH</li>
 
   const friendName = document.querySelector('#friend-modal-name')
   const friendEmail = document.querySelector('#friend-modal-email')

@@ -78,17 +78,17 @@ function renderMovieList(data) {
 }
 
 
-/* 取得對應頁面的項目 */
+/* 取得對應頁面的項目，並判定根據是否正在搜尋而變動(要渲染的)資料的來源處 */
 function getMoviesByPage(page) {
 
-
+  /* 當filteredMovie.length 等於0時就表示沒在進行搜尋，否則就代表正在搜尋 */
   const data = filteredMovies.length ? filteredMovies : movies
   const startPageIndex = (page - 1) * MOVIES_PER_PAGE
   return data.slice(startPageIndex, startPageIndex + MOVIES_PER_PAGE)
 
 }
 
-/* 渲染分頁器 */
+/* 渲染分頁器，根據項目數量amount來決定渲染多少頁 */
 function renderPaginator(amount) {
 
   const numberOfPages = Math.ceil(amount / MOVIES_PER_PAGE)
@@ -188,7 +188,7 @@ function onSearchFormSubmitted(event) {
     alert('`您輸入的關鍵字：${keyword} 沒有符合條件的電影`')
   }
 
-  // 渲染目前篩選的項目
+  // 渲染目前篩選的項目、分頁器
   renderPaginator(filteredMovies.length)
   renderMovieList(getMoviesByPage(1))
 
@@ -196,7 +196,7 @@ function onSearchFormSubmitted(event) {
 
 
 
-/* 分頁器點擊事件：內容 */
+/* 分頁器點擊事件：當使用點選指定頁數時，就會依照指定頁數來印出對應項目 */
 function onPaginatorClicked(event) {
 
   let currentPage = 0

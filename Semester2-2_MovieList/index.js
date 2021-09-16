@@ -8,6 +8,7 @@ const searchInput = document.querySelector('#search-input')
 const paginator = document.querySelector('#paginator')
 
 const BASE_URL = 'https://movie-list.alphacamp.io'
+
 // 使用 INDEX API
 const INDEX_URL = BASE_URL + '/api/v1/movies/'
 // 使用 POSTER API
@@ -18,6 +19,7 @@ const MOVIES_PER_PAGE = 12
 
 
 const movies = []
+let filteredMovies = []
 const directors = []
 
 
@@ -75,14 +77,18 @@ function renderMovieList(data) {
   dataPanel.innerHTML = rawHTML
 }
 
+
+/* 取得對應頁面的項目 */
 function getMoviesByPage(page) {
 
-  const startPageIndex = (page - 1) * MOVIES_PER_PAGE
 
-  return movies.slice(startPageIndex, startPageIndex + MOVIES_PER_PAGE)
+  const data = filteredMovies.length ? filteredMovies : movies
+  const startPageIndex = (page - 1) * MOVIES_PER_PAGE
+  return data.slice(startPageIndex, startPageIndex + MOVIES_PER_PAGE)
 
 }
 
+/* 渲染分頁器 */
 function renderPaginator(amount) {
 
   const numberOfPages = Math.ceil(amount / MOVIES_PER_PAGE)
@@ -102,13 +108,6 @@ function renderPaginator(amount) {
 
 
 function showMovieModal(id) {
-  /*
-  id="movie-modal-title"
-  id="movie-modal-image"
-  id="movie-modal-date"
-  id="movie-description"
-  */
-
 
   const modalTitle = document.querySelector('#movie-modal-title')
   const modalDate = document.querySelector('#movie-modal-date')
@@ -172,12 +171,13 @@ function addToFavoriteMovies(id) {
 
 }
 
+/* 搜尋表單提交事件：內容 */
 function onSearchFormSubmitted(event) {
 
   event.preventDefault()
 
   const keyword = searchInput.value.trim().toLowerCase()
-  let filteredMovies = []
+
 
   filteredMovies = movies.filter(movie => {
     return movie.title.toLowerCase().includes(keyword)
@@ -188,9 +188,15 @@ function onSearchFormSubmitted(event) {
     alert('`您輸入的關鍵字：${keyword} 沒有符合條件的電影`')
   }
 
-  renderMovieList(filteredMovies)
+  // 渲染目前篩選的項目
+  renderPaginator(filteredMovies.length)
+  renderMovieList(getMoviesByPage(1))
+
 }
 
+
+
+/* 分頁器點擊事件：內容 */
 function onPaginatorClicked(event) {
 
   let currentPage = 0

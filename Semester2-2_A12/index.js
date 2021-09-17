@@ -43,38 +43,54 @@ searchForm.addEventListener('submit', onSearchFormSubmitted)
 paginator.addEventListener('click', onPaginatorClicked)
 
 function renderMovieList(data) {
-  let rawHTML = ''
+  let rawHTML = `
+    <div class="container">
+  `
 
   // console.log(data)
   data.forEach(item => {
 
-
-
     rawHTML += `
-     <div class="col-sm-3">
-        <div class="mb-2">
-          <!-- cards -->
-          <div class="card">
-            <img
-              src=${POSTER_URL + item.image}
-              class="card-img-top" alt="Movie Poster">
-            <div class="card-body">
-              <h5 class="card-title">${item.title}</h5>
+          <hr>
+          <div class="row mt-3">
+            <div class="col-10">
+              <h5>${item.title}</h5>
             </div>
-            <div class="card-footer">
-              <button class="btn btn-primary btn-show-movie" data-toggle="modal"
+            
+            <div class="col">
+                <button class="btn btn-primary btn-show-movie" data-toggle="modal"
                 data-target="#movie-modal" data-id=${item.id}>More</button>
-              <button class="btn btn-info btn-show-favorite" data-id=${item.id}>+</button>
+                <button class="btn btn-info btn-show-favorite" data-id=${item.id}>+</button>
             </div>
-          </div>
-        </div>
-      </div>
+          </div>  
+
     `
+    // rawHTML += `
+    //  <div class="col-sm-3">
+    //     <div class="mb-2">
+    //       <!-- cards -->
+    //       <div class="card">
+    //         <img
+    //           src=${POSTER_URL + item.image}
+    //           class="card-img-top" alt="Movie Poster">
+    //         <div class="card-body">
+    //           <h5 class="card-title">${item.title}</h5>
+    //         </div>
+    //         <div class="card-footer">
+    //           <button class="btn btn-primary btn-show-movie" data-toggle="modal"
+    //             data-target="#movie-modal" data-id=${item.id}>More</button>
+    //           <button class="btn btn-info btn-show-favorite" data-id=${item.id}>+</button>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // `
 
 
   });
 
-  dataPanel.innerHTML = rawHTML
+
+  dataPanel.innerHTML = rawHTML + '</div>'
 }
 
 

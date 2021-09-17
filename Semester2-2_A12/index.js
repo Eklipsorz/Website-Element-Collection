@@ -53,7 +53,7 @@ function renderMovieList(data) {
     rawHTML += `
           <hr>
           <div class="row mt-3">
-            <div class="col-10">
+            <div class="col-8">
               <h5>${item.title}</h5>
             </div>
             

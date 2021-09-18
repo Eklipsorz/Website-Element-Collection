@@ -36,7 +36,7 @@
   </nav>
 
   <!-- Search Bar -->
-  <div class="container mt-5">
+  <div class="container mt-5 mb-5">
     <div class="row">
       <div class="col-sm-10">
         <form class="form-inline" id="search-form">
@@ -45,9 +45,9 @@
           <button type="submit" class="btn btn-primary mb-2" id="search-submit">Search</button>
         </form>
       </div>
-      <div class="col d-flex align-items-center">
-        <i class="fa fa-th fa-lg mx-1" aria-hidden="true"></i>
-        <i class="fa fa-bars fa-lg mx-1" aria-hidden="true"></i>
+      <div class="col d-flex align-items-center" id="mode-panel">
+        <i class="fa fa-th fa-lg mx-1 mode-switch-btn" data-mode="card" aria-hidden="true"></i>
+        <i class="fa fa-bars fa-lg mx-1 mode-switch-btn" data-mode="list" aria-hidden="true"></i>
       </div>
 
     </div>

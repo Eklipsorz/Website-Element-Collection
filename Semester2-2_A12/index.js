@@ -6,7 +6,10 @@ const searchForm = document.querySelector('#search-form')
 const searchInput = document.querySelector('#search-input')
 // 分頁器
 const paginator = document.querySelector('#paginator')
+// 存放顯示模式按鈕的區塊
+const modePanel = document.querySelector('#mode-panel')
 
+// 設定API Server
 const BASE_URL = 'https://movie-list.alphacamp.io'
 
 // 使用 INDEX API
@@ -17,6 +20,8 @@ const POSTER_URL = BASE_URL + '/posters/'
 // 定義每頁要顯示多少個項目
 const MOVIES_PER_PAGE = 12
 
+// 設定Data-Panel的顯示模式
+let currentMode = 'card'
 
 const movies = []
 let filteredMovies = []
@@ -31,7 +36,7 @@ axios.get(INDEX_URL)
     // 顯示總頁數
     renderPaginator(movies.length)
     // 顯示第一頁
-    renderMovieList(getMoviesByPage(1))
+    renderMovieList(getMoviesByPage(1), currentMode)
   })
   .catch(error => {
     console.log(error)
@@ -41,13 +46,31 @@ axios.get(INDEX_URL)
 dataPanel.addEventListener('click', onPanelClicked)
 searchForm.addEventListener('submit', onSearchFormSubmitted)
 paginator.addEventListener('click', onPaginatorClicked)
+modePanel.addEventListener('click', onModePanelClicked)
 
-function renderMovieList(data) {
+function renderMovieList(data, mode) {
+  let rawHTML = ''
+
+  switch (mode) {
+    case 'list':
+      rawHTML += getRawHTMLByList(data)
+      break
+    case 'card':
+      rawHTML += getRawHTMLByCard(data)
+      break
+  }
+
+
+  dataPanel.innerHTML = rawHTML
+}
+
+// 實現清單顯示
+function getRawHTMLByList(data) {
+
   let rawHTML = `
     <div class="container">
   `
 
-  // console.log(data)
   data.forEach(item => {
 
     rawHTML += `
@@ -65,33 +88,49 @@ function renderMovieList(data) {
           </div>  
 
     `
-    // rawHTML += `
-    //  <div class="col-sm-3">
-    //     <div class="mb-2">
-    //       <!-- cards -->
-    //       <div class="card">
-    //         <img
-    //           src=${POSTER_URL + item.image}
-    //           class="card-img-top" alt="Movie Poster">
-    //         <div class="card-body">
-    //           <h5 class="card-title">${item.title}</h5>
-    //         </div>
-    //         <div class="card-footer">
-    //           <button class="btn btn-primary btn-show-movie" data-toggle="modal"
-    //             data-target="#movie-modal" data-id=${item.id}>More</button>
-    //           <button class="btn btn-info btn-show-favorite" data-id=${item.id}>+</button>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // `
+  })
 
+  rawHTML += '</div>'
 
-  });
+  return rawHTML
 
-
-  dataPanel.innerHTML = rawHTML + '</div>'
 }
+
+function getRawHTMLByCard(data) {
+
+  let rawHTML = ''
+
+  data.forEach(item => {
+
+    rawHTML += `
+     <div class="col-sm-3">
+        <div class="mb-2">
+          <!-- cards -->
+          <div class="card">
+            <img
+              src=${POSTER_URL + item.image}
+              class="card-img-top" alt="Movie Poster">
+            <div class="card-body">
+              <h5 class="card-title">${item.title}</h5>
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-primary btn-show-movie" data-toggle="modal"
+                data-target="#movie-modal" data-id=${item.id}>More</button>
+              <button class="btn btn-info btn-show-favorite" data-id=${item.id}>+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `
+
+
+  })
+
+
+  return rawHTML
+
+}
+
 
 
 /* 取得對應頁面的項目，並判定根據是否正在搜尋而變動(要渲染的)資料的來源處 */
@@ -112,8 +151,8 @@ function renderPaginator(amount) {
 
   for (let page = 1; page <= numberOfPages; page++) {
     rawHTML += `
-			<li class="page-item"><a class="page-link" href="#" data-page=${page}>${page}</a></li>
-		`
+      <li class="page-item" > <a class="page-link" href="#" data-page=${page}>${page}</a></li>
+        `
   }
 
   paginator.innerHTML = rawHTML
@@ -139,8 +178,8 @@ function showMovieModal(id) {
     modalDate.innerHTML = data.release_date
     modalDescription.innerHTML = data.description
     modalImage.innerHTML = `
-        <img src=${POSTER_URL + data.image} alt="moive-poster" class="img-fuid">
-    `
+        <img src = ${POSTER_URL + data.image} alt = "moive-poster" class="img-fuid">
+          `
   })
 
 
@@ -201,12 +240,12 @@ function onSearchFormSubmitted(event) {
 
 
   if (!filteredMovies.length) {
-    alert('`您輸入的關鍵字：${keyword} 沒有符合條件的電影`')
+    alert('`您輸入的關鍵字：${ keyword } 沒有符合條件的電影`')
   }
 
   // 渲染目前篩選的項目、分頁器
   renderPaginator(filteredMovies.length)
-  renderMovieList(getMoviesByPage(1))
+  renderMovieList(getMoviesByPage(1), renderMovieList)
 
 }
 
@@ -223,7 +262,19 @@ function onPaginatorClicked(event) {
   }
 
   currentPage = target.dataset.page
-  renderMovieList(getMoviesByPage(currentPage))
+  renderMovieList(getMoviesByPage(currentPage), currentMode)
 
 
+}
+
+
+function onModePanelClicked(event) {
+
+  const target = event.target
+
+  if (target.matches('.mode-switch-btn')) {
+    currentMode = target.dataset.mode
+  }
+
+  renderMovieList(getMoviesByPage(1), currentMode)
 }

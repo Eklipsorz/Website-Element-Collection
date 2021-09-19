@@ -5,6 +5,7 @@ const Symbols = [
   'https://image.flaticon.com/icons/svg/105/105219.svg' // 梅花
 ]
 
+
 const view = {
 
 
@@ -23,10 +24,10 @@ const view = {
     `
   },
 
-  displayCard(index) {
+  displayCards() {
     const rootElement = document.querySelector('#cards')
-    rootElement.innerHTML = this.getCardContent(index)
-
+    console.log(utility.getRandomNumberArray(52))
+    rootElement.innerHTML = utility.getRandomNumberArray(52).map(index => this.getCardContent(index)).join("")
   },
 
   transferNumber(number) {
@@ -49,7 +50,19 @@ const view = {
   }
 
 }
+const utility = {
+  getRandomNumberArray(count) {
+    const number = Array.from(Array(count).keys())
+    for (let index = number.length - 1; index > 0; index--) {
+      let randomIndex = Math.floor(Math.random() * (index + 1))
+        ;[number[index], number[randomIndex]] = [number[randomIndex], number[index]]
+    }
 
-view.displayCard(41)
+    return number
+  }
 
-console.log(Array(52))
+}
+
+
+
+view.displayCards()

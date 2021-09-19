@@ -7,27 +7,28 @@ const Symbols = [
 
 
 const view = {
+  /* 顯示牌本身，預設是背面 */
+  getCardElement(index) {
+    return `<div data-index=${index} class="card back"></div>`
+  },
 
-
+  /* 牌的正面 */
   getCardContent(index) {
-
     const number = this.transferNumber((index % 13) + 1)
     const symbol = Symbols[Math.floor(index / 13)]
 
 
     return `
-      <div class="card">
         <p>${number}</p>
         <img src=${symbol} alt="">
         <p>${number}</p>
-      </div>
     `
   },
 
   displayCards() {
     const rootElement = document.querySelector('#cards')
     console.log(utility.getRandomNumberArray(52))
-    rootElement.innerHTML = utility.getRandomNumberArray(52).map(index => this.getCardContent(index)).join("")
+    rootElement.innerHTML = utility.getRandomNumberArray(52).map(index => this.getCardElement(index)).join("")
   },
 
   transferNumber(number) {
@@ -46,6 +47,19 @@ const view = {
         return '' + number
     }
 
+
+  },
+
+  flipCard(card) {
+
+    if (card.classList.contains('back')) {
+      card.classList.remove('back')
+      card.innerHTML = this.getCardContent(+(card.dataset.index))
+      return
+    }
+
+    card.classList.add('back')
+    card.innerHTML = null
 
   }
 
@@ -66,3 +80,12 @@ const utility = {
 
 
 view.displayCards()
+
+
+document.querySelectorAll('.card').forEach(card => {
+
+  card.addEventListener('click', event => {
+    view.flipCard(card)
+  })
+
+})

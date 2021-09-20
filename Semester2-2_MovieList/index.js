@@ -185,7 +185,7 @@ function onSearchFormSubmitted(event) {
 
 
   if (!filteredMovies.length) {
-    alert('`您輸入的關鍵字：${keyword} 沒有符合條件的電影`')
+    alert(`您輸入的關鍵字：${keyword} 沒有符合條件的電影`)
   }
 
   // 渲染目前篩選的項目、分頁器

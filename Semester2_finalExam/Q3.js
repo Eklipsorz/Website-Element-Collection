@@ -1,12 +1,33 @@
 //////// 在這裡寫你的答案 /////////
 function toRoman(value) {
-  let romanNum
+
+  const number = [1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000]
+  const symbol = ['I', 'IV', 'V', 'IX', 'X', 'XL', 'L',
+    'XC', 'C', 'CD', 'D', 'CM', 'M']
+
+  let index = +(value >= 100) * 12 || +(value >= 10) * 7 || 3
+  let decimalNum = value
+  let romanNum = ''
+
+  while (decimalNum) {
+
+    let divisor = Math.floor(decimalNum / number[index])
+    decimalNum %= number[index]
+
+    while (divisor--) {
+      romanNum += symbol[index]
+    }
+
+    index--
+  }
+
 
 
 
   return romanNum
 }
-
+// expect('toRoman(48)', toRoman(48), 'XLVIII');
+// expect('toRoman(59)', toRoman(59), 'LIX');
 
 
 //////// 以下是測試程式，請勿更動 /////////

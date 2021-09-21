@@ -8,7 +8,7 @@ body {
   height: 100%;
 
   /* Font or other*/
-  background-color: rgb(148, 148, 1);
+  background-color: #bd7600;
 }  
 
 * {
@@ -68,7 +68,7 @@ body {
   width: 60%;
 
   /* Font or other */
-  border: 2px solid;
+  /* border: 2px solid; */
 }
 
 .rectangle-outline {
@@ -77,7 +77,7 @@ body {
 
   /* Display */
   display: inline-block;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 
   /* Box Model */
   width: 12%;
@@ -94,6 +94,22 @@ body {
 }
 
 
+.color-panel__controller {
+
+  /* Positioning */
+
+  /* Display */
+  display: flex;
+  justify-content: center;
+
+  /* Box Model */
+
+
+  /* Font or other */
+
+
+}
+
 
 .slider {
 
@@ -104,12 +120,46 @@ body {
 
 
   /* Box Model */
-  width: 50%;
+  width: 60%;
 
   /* Font or other */
 
 
 }
 
+.show-hex-partition {
+  position: relative;
+}
 
 
+
+input[type="text"]:disabled {
+
+ 
+
+
+  /* Display */
+
+
+  /* Box Model */
+  width: 90%;
+
+
+  opacity: 0.28;
+
+}
+
+
+.show-hex-partition::after {
+
+   /* Positioning */
+  position: absolute;
+  top: 0;
+
+  /* Font or other */
+  content: "test";
+  color: black;
+  font-weight: bold;
+  font-size: 26px;
+
+}

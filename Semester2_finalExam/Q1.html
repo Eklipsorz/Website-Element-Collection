@@ -13,26 +13,28 @@
 <body>
 
 
-
   <div class="container">
     <div class="row color-panel">
       <div class="col-12 d-flex justify-content-center">
         <span style="background-color: red;" class="rectangle-outline">R</span>
-        <input type="range" id="red-controller" min=" 0" max="255" class="mx-2 slider">
-        <span style="background-color: red;" class="rectangle-outline longer-rectangle-outline">189</span>
+        <input type="range" id="red-slider" min=" 0" max="255" value="128" class="mx-2 slider">
+        <span style="background-color: red;" class="rectangle-outline longer-rectangle-outline"
+          id="red-decimal">128</span>
       </div>
 
       <div class="col-12 d-flex justify-content-center">
         <span style="background-color: green;" class="rectangle-outline">G</span>
-        <input type="range" id="green-controller" min=" 0" max="255" class="mx-2 slider">
-        <span style="background-color: green;" class="rectangle-outline longer-rectangle-outline">255</span>
+        <input type="range" id="green-slider" min=" 0" max="255" value="128" class="mx-2 slider">
+        <span style="background-color: green;" class="rectangle-outline longer-rectangle-outline"
+          id="green-decimal">128</span>
       </div>
 
 
       <div class="col-12 d-flex justify-content-center">
         <span style="background-color: blue;" class="rectangle-outline">B</span>
-        <input type="range" id="blue-controller" min=" 0" max="255" class="mx-2 slider">
-        <span style="background-color: blue;" class="rectangle-outline longer-rectangle-outline">0</span>
+        <input type="range" id="blue-slider" min=" 0" max="255" value="128" class="mx-2 slider">
+        <span style="background-color: blue;" class="rectangle-outline longer-rectangle-outline"
+          id="blue-decimal">128</span>
       </div>
 
       <div class="col-12 d-flex justify-content-center show-hex-partition">
@@ -42,7 +44,7 @@
   </div>
 
 
-  </div>
+  <script src="Q1.js"></script>
 </body>
 
 </html>

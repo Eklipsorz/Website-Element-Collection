@@ -11,10 +11,6 @@ body {
   background: #808080;
 }  
 
-:root {
-  --result-hex-value: "#808080";
-}
-
 body {
   padding-top: 100px;
 }

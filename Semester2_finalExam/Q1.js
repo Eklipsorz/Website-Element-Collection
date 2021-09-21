@@ -35,7 +35,6 @@ const view = {
 
 
     const canvas = document.body
-
     const colorHex = this.intToHexString({ redValue: redValue, greenValue: greenValue, blueValue: blueValue })
 
 

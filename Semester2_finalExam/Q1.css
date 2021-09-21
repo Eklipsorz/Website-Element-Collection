@@ -1,0 +1,115 @@
+/* 通用元件樣式 General Style */
+
+html, 
+body {
+
+  /* Box Model */
+  width: 100%;
+  height: 100%;
+
+  /* Font or other*/
+  background-color: rgb(148, 148, 1);
+}  
+
+* {
+
+  /* Box Model */
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.color-panel__literal-display {
+
+  /* Box Model */
+  width: 12%;
+  margin-right: 5px;
+
+  /* Font or other */
+  text-align: center;
+
+}
+
+.color-panel__number-display {
+  
+  /* Box Model */
+  width: 18%;
+  margin-left: 5px;
+
+  /* Font or other */
+  text-align: center;
+
+}
+
+.color-panel__controller {
+
+  /* Box Model */
+  width: 70%;
+}
+
+
+.color-panel__hex-display {
+  /* Font or other */
+  text-align: center;
+}
+
+
+
+
+
+
+/* 控制面板 */
+.color-panel {
+
+  /* Positioning */
+
+  /* Box Model */
+  margin: 100px auto;
+  width: 60%;
+
+  /* Font or other */
+  border: 2px solid;
+}
+
+.rectangle-outline {
+
+  /* Positioning */
+
+  /* Display */
+  display: inline-block;
+  margin-bottom: 5px;
+
+  /* Box Model */
+  width: 12%;
+
+  /* Font or other */
+  text-align: center;
+
+}
+
+.longer-rectangle-outline {
+  /* Box Model */
+  width: 15%;
+
+}
+
+
+
+.slider {
+
+  /* Positioning */
+
+
+  /* Display */
+
+
+  /* Box Model */
+  width: 50%;
+
+  /* Font or other */
+
+
+}
+
+
+

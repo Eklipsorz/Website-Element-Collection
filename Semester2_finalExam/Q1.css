@@ -6,10 +6,14 @@ body {
   /* Box Model */
   width: 100vw;
   height: 100vh;
-
+  
   /* Font or other*/
   background: #808080;
 }  
+
+:root {
+  --result-hex-value: "#808080";
+}
 
 body {
   padding-top: 100px;
@@ -76,6 +80,7 @@ body {
 }
 
 .show-hex-partition {
+  /* Positioning */
   position: relative;
 }
 
@@ -97,7 +102,7 @@ input[type="text"]:disabled {
   top: 0;
 
   /* Font or other */
-  content: "#808080";
+  content: attr(result-text);
   color: black;
   font-weight: bold;
   font-size: 26px;

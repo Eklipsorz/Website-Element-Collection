@@ -83,6 +83,10 @@ const view = {
     card.classList.add('back')
     card.innerHTML = null
 
+  },
+
+  pairCard(card) {
+    card.classList.add('paired')
   }
 
 }
@@ -90,7 +94,11 @@ const view = {
 
 const model = {
   // 被翻閱的卡片
-  revealedCards: []
+  revealedCards: [],
+
+  isRevealedCardsMatched() {
+    return this.revealedCards[0].dataset.index % 13 === this.revealedCards[1].dataset.index % 13
+  }
 }
 
 const controller = {
@@ -106,7 +114,7 @@ const controller = {
     if (!card.classList.contains('back')) {
       return
     }
-    console.log('current state: ' + this.currentState)
+
     switch (this.currentState) {
       case GAME_STATE.FirstCardAwaits:
         this.currentState = GAME_STATE.SecondCardAwaits
@@ -117,9 +125,35 @@ const controller = {
         // this.currentState = GAME_STATE.
         view.flipCard(card)
         model.revealedCards.push(card)
+
+        if (model.isRevealedCardsMatched()) {
+          // 配對成功
+          console.log('matched')
+          this.currentState = GAME_STATE.CardsMatched
+          view.pairCard(model.revealedCards[0])
+          view.pairCard(model.revealedCards[1])
+          model.revealedCards = []
+          this.currentState = GAME_STATE.FirstCardAwaits
+
+        } else {
+          // 配對失敗
+          console.log('matched failed')
+
+          this.currentState = GAME_STATE.CardsMatchFailed
+          // 給予玩家一秒的時間去記憶牌
+          setTimeout(() => {
+            view.flipCard(model.revealedCards[0])
+            view.flipCard(model.revealedCards[1])
+            model.revealedCards = []
+            this.currentState = GAME_STATE.FirstCardAwaits
+          }, 1000)
+
+        }
+
         break
     }
     // view.flipCard(card)
+    console.log('current state: ' + this.currentState)
     console.log('current revealedCards: ', model.revealedCards)
 
 

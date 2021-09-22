@@ -99,7 +99,33 @@ const controller = {
 
   generateCards() {
     view.displayCards(utility.getRandomNumberArray(52))
+  },
+
+  dispatchCardAction(card) {
+    // 如果點擊的牌是正面的話，就不做任何事情
+    if (!card.classList.contains('back')) {
+      return
+    }
+    console.log('current state: ' + this.currentState)
+    switch (this.currentState) {
+      case GAME_STATE.FirstCardAwaits:
+        this.currentState = GAME_STATE.SecondCardAwaits
+        view.flipCard(card)
+        model.revealedCards.push(card)
+        break
+      case GAME_STATE.SecondCardAwaits:
+        // this.currentState = GAME_STATE.
+        view.flipCard(card)
+        model.revealedCards.push(card)
+        break
+    }
+    // view.flipCard(card)
+    console.log('current revealedCards: ', model.revealedCards)
+
+
   }
+
+
 
 }
 
@@ -108,7 +134,7 @@ controller.generateCards()
 document.querySelectorAll('.card').forEach(card => {
 
   card.addEventListener('click', event => {
-    view.flipCard(card)
+    controller.dispatchCardAction(card)
   })
 
 })

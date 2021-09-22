@@ -72,27 +72,57 @@ const view = {
 
   },
 
-  flipCard(card) {
+  flipCards(...cards) {
 
-    if (card.classList.contains('back')) {
-      card.classList.remove('back')
-      card.innerHTML = this.getCardContent(+(card.dataset.index))
-      return
-    }
+    cards.map(card => {
+      if (card.classList.contains('back')) {
+        card.classList.remove('back')
+        card.innerHTML = this.getCardContent(+(card.dataset.index))
+        return
+      }
 
-    card.classList.add('back')
-    card.innerHTML = null
+      card.classList.add('back')
+      card.innerHTML = null
+    })
+
 
   },
 
-  pairCard(card) {
-    card.classList.add('paired')
+  pairCards(...cards) {
+    cards.map(card => {
+      card.classList.add('paired')
+    })
+
+  },
+
+  renderScore(score) {
+    document.querySelector('.score').innerHTML = `Score: ${score}`
+  },
+
+  renderTriedTimes(times) {
+    document.querySelector('.tried').innerHTML = `You've tried: ${times} times`
+  },
+
+  appendWrongAnimation(...cards) {
+
+    cards.map(card => {
+      card.classList.add('wrong')
+      card.addEventListener('animationend', event => {
+        card.classList.remove('wrong')
+      }, { once: true })
+
+    })
+
   }
 
 }
 
 
 const model = {
+
+
+  score: 0,
+  triedTimes: 0,
   // 被翻閱的卡片
   revealedCards: [],
 
@@ -118,21 +148,35 @@ const controller = {
     switch (this.currentState) {
       case GAME_STATE.FirstCardAwaits:
         this.currentState = GAME_STATE.SecondCardAwaits
-        view.flipCard(card)
+        view.flipCards(card)
         model.revealedCards.push(card)
         break
       case GAME_STATE.SecondCardAwaits:
-        // this.currentState = GAME_STATE.
-        view.flipCard(card)
+
+
+        // 翻第二張牌
+        view.flipCards(card)
+        // 將第二張牌存入model
         model.revealedCards.push(card)
+
+        view.renderTriedTimes(++model.triedTimes)
 
         if (model.isRevealedCardsMatched()) {
           // 配對成功
           console.log('matched')
+
+
           this.currentState = GAME_STATE.CardsMatched
-          view.pairCard(model.revealedCards[0])
-          view.pairCard(model.revealedCards[1])
+
+          // 增加分數
+          view.renderScore(model.score += 10)
+
+          // 一樣的牌設定不同樣式
+          view.pairCards(...model.revealedCards)
           model.revealedCards = []
+
+
+
           this.currentState = GAME_STATE.FirstCardAwaits
 
         } else {
@@ -140,13 +184,13 @@ const controller = {
           console.log('matched failed')
 
           this.currentState = GAME_STATE.CardsMatchFailed
+
+          // 不建議放到setTimeout後面
+          view.appendWrongAnimation(...model.revealedCards)
+
+
           // 給予玩家一秒的時間去記憶牌
-          setTimeout(() => {
-            view.flipCard(model.revealedCards[0])
-            view.flipCard(model.revealedCards[1])
-            model.revealedCards = []
-            this.currentState = GAME_STATE.FirstCardAwaits
-          }, 1000)
+          setTimeout(this.resetCards, 1000)
 
         }
 
@@ -155,6 +199,14 @@ const controller = {
     // view.flipCard(card)
     console.log('current state: ' + this.currentState)
     console.log('current revealedCards: ', model.revealedCards)
+
+
+  },
+
+  resetCards() {
+    view.flipCards(...model.revealedCards)
+    model.revealedCards = []
+    controller.currentState = GAME_STATE.FirstCardAwaits
 
 
   }
@@ -169,6 +221,7 @@ document.querySelectorAll('.card').forEach(card => {
 
   card.addEventListener('click', event => {
     controller.dispatchCardAction(card)
+
   })
 
 })

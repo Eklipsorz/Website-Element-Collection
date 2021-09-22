@@ -1,9 +1,31 @@
+const GAME_STATE = {
+  FirstCardAwaits: "FirstCardAwaits",
+  SecondCardAwaits: "SecondCardAwaits",
+  CardsMatchFailed: "CardsMatchFailed",
+  CardsMatched: "CardsMatched",
+  GameFinished: "GameFinished",
+}
+
 const Symbols = [
   'https://image.flaticon.com/icons/svg/105/105223.svg', // 黑桃
   'https://image.flaticon.com/icons/svg/105/105220.svg', // 愛心
   'https://image.flaticon.com/icons/svg/105/105212.svg', // 方塊
   'https://image.flaticon.com/icons/svg/105/105219.svg' // 梅花
 ]
+
+
+const utility = {
+  getRandomNumberArray(count) {
+    const number = Array.from(Array(count).keys())
+    for (let index = number.length - 1; index > 0; index--) {
+      let randomIndex = Math.floor(Math.random() * (index + 1))
+        ;[number[index], number[randomIndex]] = [number[randomIndex], number[index]]
+    }
+
+    return number
+  }
+
+}
 
 
 const view = {
@@ -25,10 +47,10 @@ const view = {
     `
   },
 
-  displayCards() {
+  displayCards(indexs) {
     const rootElement = document.querySelector('#cards')
-    console.log(utility.getRandomNumberArray(52))
-    rootElement.innerHTML = utility.getRandomNumberArray(52).map(index => this.getCardElement(index)).join("")
+    console.log(indexs)
+    rootElement.innerHTML = indexs.map(index => this.getCardElement(index)).join("")
   },
 
   transferNumber(number) {
@@ -64,23 +86,24 @@ const view = {
   }
 
 }
-const utility = {
-  getRandomNumberArray(count) {
-    const number = Array.from(Array(count).keys())
-    for (let index = number.length - 1; index > 0; index--) {
-      let randomIndex = Math.floor(Math.random() * (index + 1))
-        ;[number[index], number[randomIndex]] = [number[randomIndex], number[index]]
-    }
 
-    return number
+
+const model = {
+  // 被翻閱的卡片
+  revealedCards: []
+}
+
+const controller = {
+
+  currentState: GAME_STATE.FirstCardAwaits,
+
+  generateCards() {
+    view.displayCards(utility.getRandomNumberArray(52))
   }
 
 }
 
-
-
-view.displayCards()
-
+controller.generateCards()
 
 document.querySelectorAll('.card').forEach(card => {
 

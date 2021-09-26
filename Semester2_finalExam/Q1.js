@@ -74,10 +74,12 @@ const model = {
 
 }
 
+
+// View 負責渲染畫面(背景/畫布、三原色色碼實際數值(十進制)、三原色色碼合併結果)
 const view = {
 
+  // 負責渲染背景/畫布，以body作為畫布
   renderCanvas({ redValue, greenValue, blueValue }) {
-
 
     const canvas = document.body
     const colorHex = model.fullHexCodeGetter()
@@ -86,6 +88,7 @@ const view = {
 
   },
 
+  // 負責渲染三原色色碼實際數值
   renderColorTextArea({ redValue, greenValue, blueValue }) {
 
     const redTextArea = document.querySelector('#red-decimal-textarea')
@@ -98,6 +101,7 @@ const view = {
 
   },
 
+  // 負責渲染三原色合併結果(十六進制)
   renderResultTextArea({ redValue, greenValue, blueValue }) {
 
     const resultTextArea = document.querySelector('#result-textarea')
@@ -106,8 +110,10 @@ const view = {
     resultTextArea.setAttribute('result-text', colorHex)
   },
 
+  // 負責一次渲染畫布、三原色色碼實際數值、三原色合併結果
   render({ redValue, greenValue, blueValue }) {
 
+    // 設定三原色色碼、三原色合併結果
     model.colorValuesSetter(redValue, greenValue, blueValue)
     model.fullHexCodeSetter(redValue, greenValue, blueValue)
 
@@ -118,8 +124,11 @@ const view = {
 
 }
 
+// Controller：負責接收/處理使用者對於介面的請求
 const controller = {
 
+
+  // 重設畫面(背景/畫布、三原色色碼實際數值(十進制)、三原色色碼合併結果)
   resetPanelDisplay() {
 
     view.render({
@@ -130,11 +139,15 @@ const controller = {
 
   },
 
+  // 當input事件發生時，會由controller負責委派並且按照slider滑到的數值來渲染
+  // 畫面(背景/畫布、三原色色碼實際數值(十進制)、三原色色碼合併結果)
   dispatchPanelAction({ redValue, greenValue, blueValue }) {
+
 
     modelHexValueArray = model.colorValuesGetter()
 
-
+    // 除了使用者使用對應顏色的slider是以其元件的數值來表示以外，
+    // 其他顏色則是以model目前的三原色色碼為主
     redValue = redValue || modelHexValueArray[0]
     greenValue = greenValue || modelHexValueArray[1]
     blueValue = blueValue || modelHexValueArray[2]
@@ -146,7 +159,7 @@ const controller = {
 
 }
 
-
+// 讓每個顏色的slider綁定在controller，讓它能夠負責處理事件
 redSlider.addEventListener('input', event => {
   controller.dispatchPanelAction({ redValue: event.target.value })
 })
@@ -160,4 +173,5 @@ blueSlider.addEventListener('input', event => {
   controller.dispatchPanelAction({ blueValue: event.target.value })
 })
 
+// 重設畫面
 controller.resetPanelDisplay()

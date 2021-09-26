@@ -7,19 +7,30 @@ const defaultGreenValue = greenSlider.value
 const defaultBlueValue = blueSlider.value
 
 
-const view = {
 
-  redValue: defaultRedValue,
-  greenValue: defaultGreenValue,
-  blueValue: defaultBlueValue,
+const model = {
+  redValue: 0,
+  greenValue: 0,
+  blueValue: 0,
 
+  fullColorValueSetter(...hexValues) {
+    this.redValue = hexValues[0]
+    this.greenValue = hexValues[1]
+    this.blueValue = hexValues[2]
+
+  },
+
+  fullColorValueGetter() {
+    return [this.redValue, this.greenValue, this.blueValue]
+  },
+
+  // 將十進制數值轉換兩位16進制的數值，若十進制只能產生一位16進制數值便會補零
   intToTwoHexDigits(value) {
 
     let number = Number(value)
     return number > 15 ? number.toString(16) : '0' + number.toString(16)
 
   },
-
 
   intToHexString({ redValue, greenValue, blueValue }) {
 
@@ -29,18 +40,17 @@ const view = {
 
     return '#' + redHexString + greenHexString + blueHexString
 
-  },
+  }
+
+}
+
+const view = {
 
   renderCanvas({ redValue, greenValue, blueValue }) {
 
 
     const canvas = document.body
-    const colorHex = this.intToHexString({ redValue: redValue, greenValue: greenValue, blueValue: blueValue })
-
-
-    this.redValue = redValue
-    this.greenValue = greenValue
-    this.blueValue = blueValue
+    const colorHex = model.intToHexString({ redValue: redValue, greenValue: greenValue, blueValue: blueValue })
 
     canvas.style.background = colorHex
 
@@ -62,7 +72,7 @@ const view = {
   renderResultTextArea({ redValue, greenValue, blueValue }) {
 
     const resultTextArea = document.querySelector('#result-textarea')
-    const colorHex = this.intToHexString({ redValue: redValue, greenValue: greenValue, blueValue: blueValue })
+    const colorHex = model.intToHexString({ redValue: redValue, greenValue: greenValue, blueValue: blueValue })
     resultTextArea.setAttribute('result-text', colorHex)
   },
 
@@ -76,55 +86,48 @@ const view = {
 }
 
 
-view.render({
-  redValue: defaultRedValue,
-  greenValue: defaultGreenValue,
-  blueValue: defaultBlueValue
-})
 
+const controller = {
+
+  resetPanelDisplay() {
+    redValue = defaultRedValue
+    greenValue = defaultGreenValue
+    blueValue = defaultBlueValue
+
+    model.fullColorValueSetter(redValue, greenValue, blueValue)
+    view.render({ redValue, greenValue, blueValue })
+
+  },
+
+  dispatchPanelAction({ redValue, greenValue, blueValue }) {
+
+    modelHexValueArray = model.fullColorValueGetter()
+
+
+    redValue = redValue || modelHexValueArray[0]
+    greenValue = greenValue || modelHexValueArray[1]
+    blueValue = blueValue || modelHexValueArray[2]
+
+    model.fullColorValueSetter(redValue, greenValue, blueValue)
+
+    view.render({ redValue, greenValue, blueValue })
+
+  }
+
+}
 
 
 redSlider.addEventListener('input', event => {
-
-  const target = event.target
-
-  view.render({
-    redValue: target.value,
-    greenValue: view.greenValue,
-    blueValue: view.blueValue
-  })
-
-
+  controller.dispatchPanelAction({ redValue: event.target.value })
 })
 
-
-
 greenSlider.addEventListener('input', event => {
-
-  const target = event.target
-
-  view.render({
-    redValue: view.redValue,
-    greenValue: target.value,
-    blueValue: view.blueValue
-  })
-
+  controller.dispatchPanelAction({ greenValue: event.target.value })
 })
 
 
 blueSlider.addEventListener('input', event => {
-
-  const target = event.target
-
-  view.render({
-    redValue: view.redValue,
-    greenValue: view.greenValue,
-    blueValue: target.value
-  })
-
+  controller.dispatchPanelAction({ blueValue: event.target.value })
 })
 
-
-
-
-
+controller.resetPanelDisplay()

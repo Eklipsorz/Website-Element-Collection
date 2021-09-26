@@ -24,18 +24,10 @@ body {
 }
 
 
-/* 控制面板 */
-.color-panel {
 
-  /* Positioning */
-
-  /* Box Model */
-  margin: 0px auto;
-  width: 60%;
-
-  /* Font or other */
-  /* border: 2px solid; */
-}
+/*  
+.rectangle-outline、.longer-rectangle-outline是用來調整每一個顏色調整區塊的左右邊顯示區塊。
+*/
 
 .rectangle-outline {
 
@@ -59,26 +51,45 @@ body {
 
 }
 
+
 .slider {
 
   /* Positioning */
 
-
   /* Display */
-
 
   /* Box Model */
   width: 60%;
 
   /* Font or other */
 
-
 }
 
-.show-hex-partition {
+/* RGB調色控制面板 */
+.color-panel {
+
   /* Positioning */
-  position: relative;
+
+  /* Box Model */
+  margin: 0px auto;
+  width: 60%;
+
+  /* Font or other */
+  /* border: 2px solid; */
 }
+
+
+/* 
+CSS樣式調整：RGB色碼最終結果顯示區塊 
+
+主要由以下三者來構成
+1. .input[type="text"]:disabled 對應的元件是用來當色碼顯示結果後的背景，主要會設定固定大小的寬度以及透明度
+2. .show-hex-partition、.show-hex-partition::after 這兩者來構成色碼顯示結果(數字部分)，前者用來調整偽元
+素的position屬性值，後者才是數字本體，其中內容(content)會以attr這css函式來從html標籤內的屬性(result-text)
+來獲取，而這個屬性值可在javascript進行控制。
+
+*/
+
 
 
 input[type="text"]:disabled {
@@ -90,7 +101,10 @@ input[type="text"]:disabled {
 
 }
 
-
+.show-hex-partition {
+  /* Positioning */
+  position: relative;
+}
 .show-hex-partition::after {
 
    /* Positioning */

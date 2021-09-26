@@ -12,16 +12,29 @@ const model = {
   redValue: 0,
   greenValue: 0,
   blueValue: 0,
+  fullHexCode: '',
 
-  fullColorValueSetter(...hexValues) {
+  colorValuesSetter(...hexValues) {
     this.redValue = hexValues[0]
     this.greenValue = hexValues[1]
     this.blueValue = hexValues[2]
 
   },
 
-  fullColorValueGetter() {
+  colorValuesGetter() {
     return [this.redValue, this.greenValue, this.blueValue]
+  },
+
+  fullHexCodeSetter(...colorValues) {
+    this.fullHexCode = this.intToHexString({
+      redValue: colorValues[0],
+      greenValue: colorValues[1],
+      blueValue: colorValues[2]
+    })
+  },
+
+  fullHexCodeGetter() {
+    return this.fullHexCode
   },
 
   // 將十進制數值轉換兩位16進制的數值，若十進制只能產生一位16進制數值便會補零
@@ -50,10 +63,10 @@ const view = {
 
 
     const canvas = document.body
-    const colorHex = model.intToHexString({ redValue: redValue, greenValue: greenValue, blueValue: blueValue })
+    const colorHex = model.fullHexCodeGetter()
+    // const colorHex = model.intToHexString({ redValue: redValue, greenValue: greenValue, blueValue: blueValue })
 
     canvas.style.background = colorHex
-
 
   },
 
@@ -72,11 +85,15 @@ const view = {
   renderResultTextArea({ redValue, greenValue, blueValue }) {
 
     const resultTextArea = document.querySelector('#result-textarea')
-    const colorHex = model.intToHexString({ redValue: redValue, greenValue: greenValue, blueValue: blueValue })
+    const colorHex = model.fullHexCodeGetter()
+    // const colorHex = model.intToHexString({ redValue: redValue, greenValue: greenValue, blueValue: blueValue })
     resultTextArea.setAttribute('result-text', colorHex)
   },
 
   render({ redValue, greenValue, blueValue }) {
+
+    model.colorValuesSetter(redValue, greenValue, blueValue)
+    model.fullHexCodeSetter(redValue, greenValue, blueValue)
 
     this.renderCanvas({ redValue, greenValue, blueValue })
     this.renderColorTextArea({ redValue, greenValue, blueValue })
@@ -85,30 +102,27 @@ const view = {
 
 }
 
-
-
 const controller = {
 
   resetPanelDisplay() {
+
     redValue = defaultRedValue
     greenValue = defaultGreenValue
     blueValue = defaultBlueValue
 
-    model.fullColorValueSetter(redValue, greenValue, blueValue)
     view.render({ redValue, greenValue, blueValue })
 
   },
 
   dispatchPanelAction({ redValue, greenValue, blueValue }) {
 
-    modelHexValueArray = model.fullColorValueGetter()
+    modelHexValueArray = model.colorValuesGetter()
 
 
     redValue = redValue || modelHexValueArray[0]
     greenValue = greenValue || modelHexValueArray[1]
     blueValue = blueValue || modelHexValueArray[2]
 
-    model.fullColorValueSetter(redValue, greenValue, blueValue)
 
     view.render({ redValue, greenValue, blueValue })
 

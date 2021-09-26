@@ -15,6 +15,7 @@ function findLongestWord(sentence) {
   // 從陣列中利用maxLength來尋找長度最長的字串，並從中取得對應的索引值
   for (let index = 0; index < stringArray.length; index++) {
 
+    // 每當有比maxLength還大的字串長度時，便讓長度成為新的maxLength
     if (stringArray[index].length > maxLength) {
       maxLength = stringArray[index].length
       indexOfLongestWord = index

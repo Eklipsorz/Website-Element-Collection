@@ -64,7 +64,6 @@ const view = {
 
     const canvas = document.body
     const colorHex = model.fullHexCodeGetter()
-    // const colorHex = model.intToHexString({ redValue: redValue, greenValue: greenValue, blueValue: blueValue })
 
     canvas.style.background = colorHex
 
@@ -86,7 +85,7 @@ const view = {
 
     const resultTextArea = document.querySelector('#result-textarea')
     const colorHex = model.fullHexCodeGetter()
-    // const colorHex = model.intToHexString({ redValue: redValue, greenValue: greenValue, blueValue: blueValue })
+    
     resultTextArea.setAttribute('result-text', colorHex)
   },
 
@@ -106,11 +105,11 @@ const controller = {
 
   resetPanelDisplay() {
 
-    redValue = defaultRedValue
-    greenValue = defaultGreenValue
-    blueValue = defaultBlueValue
-
-    view.render({ redValue, greenValue, blueValue })
+    view.render({
+      redValue: defaultRedValue,
+      greenValue: defaultGreenValue,
+      blueValue: defaultBlueValue
+    })
 
   },
 

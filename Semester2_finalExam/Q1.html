@@ -14,29 +14,41 @@
 
 
   <div class="container">
+    <!-- RGB調色控制面板 -->
     <div class="row color-panel">
+      <!-- 紅色調整區塊 -->
       <div class="col-12 d-flex justify-content-center">
+        <!-- 調整區塊的左邊顯示區塊，顯示R -->
         <span style="background-color: red;" class="rectangle-outline">R</span>
+        <!-- 調整區塊的slider區塊 -->
         <input type="range" id="red-slider" min=" 0" max="255" value="128" class="mx-2 slider">
+        <!-- 調整區塊的右邊顯示區塊，顯示slider目前滑到的數值 -->
         <span style="background-color: red;" class="rectangle-outline longer-rectangle-outline"
           id="red-decimal-textarea">128</span>
       </div>
-
+      <!-- 綠色調整區塊 -->
       <div class="col-12 d-flex justify-content-center">
+        <!-- 調整區塊的左邊顯示區塊，顯示G -->
         <span style="background-color: green;" class="rectangle-outline">G</span>
+        <!-- 調整區塊的slider區塊 -->
         <input type="range" id="green-slider" min=" 0" max="255" value="128" class="mx-2 slider">
+        <!-- 調整區塊的右邊顯示區塊，顯示slider目前滑到的數值 -->
         <span style="background-color: green;" class="rectangle-outline longer-rectangle-outline"
           id="green-decimal-textarea">128</span>
       </div>
 
-
+      <!-- 藍色調整區塊 -->
       <div class="col-12 d-flex justify-content-center">
+        <!-- 調整區塊的左邊顯示區塊，顯示B -->
         <span style="background-color: blue;" class="rectangle-outline">B</span>
+        <!-- 調整區塊的slider區塊 -->
         <input type="range" id="blue-slider" min=" 0" max="255" value="128" class="mx-2 slider">
+        <!-- 調整區塊的右邊顯示區塊，顯示slider目前滑到的數值 -->
         <span style="background-color: blue;" class="rectangle-outline longer-rectangle-outline"
           id="blue-decimal-textarea">128</span>
       </div>
 
+      <!-- RGB色碼最終結果顯示區塊 -->
       <div class="col-12 d-flex justify-content-center show-hex-partition" id="result-textarea" result-text="#808080">
         <input type="text" class="form-control" disabled>
       </div>

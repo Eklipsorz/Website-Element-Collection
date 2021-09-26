@@ -1,18 +1,30 @@
+
+// 取得三個顏色的slider元件
 const redSlider = document.querySelector('#red-slider')
 const greenSlider = document.querySelector('#green-slider')
 const blueSlider = document.querySelector('#blue-slider')
 
+
+// 設定RGB的初始值
 const defaultRedValue = redSlider.value
 const defaultGreenValue = greenSlider.value
 const defaultBlueValue = blueSlider.value
 
 
-
+// model 負責處理/儲存顏色資料(RGB碼)，裡頭的資料會盡可能讓內部函式去獲取以及修正。 
 const model = {
+
+  // redValue 代表紅色色碼(十進制)
+  // greenValue 代表綠色色碼(十進制)
+  // blueValue 代表藍色色碼(十進制)
+  // fullHexCode 代表著上述色碼以十六進制組合在一起的色碼，形式:#xxxxxx
   redValue: 0,
   greenValue: 0,
   blueValue: 0,
   fullHexCode: '',
+
+  // 設定Red、Green、Blue這三種顏色的色碼(十進制)，外部只能透過此函式來
+  // 設定model的redValue、greenValue、blueValue這三種屬性值
 
   colorValuesSetter(...hexValues) {
     this.redValue = hexValues[0]
@@ -21,10 +33,13 @@ const model = {
 
   },
 
+  // 獲取model儲存的三原色色碼(十進制)，外部只能透過此函式來獲取model
+  // 的redValue、greenValue、blueValue這三種屬性值
   colorValuesGetter() {
     return [this.redValue, this.greenValue, this.blueValue]
   },
 
+  // 設定三原色色碼結合在一起的代碼(16進制)，外部只能透過此函式來設定model的fullHexCode屬性值。
   fullHexCodeSetter(...colorValues) {
     this.fullHexCode = this.intToHexString({
       redValue: colorValues[0],
@@ -33,11 +48,12 @@ const model = {
     })
   },
 
+  // 獲取fullHexCode屬性值
   fullHexCodeGetter() {
     return this.fullHexCode
   },
 
-  // 將十進制數值轉換兩位16進制的數值，若十進制只能產生一位16進制數值便會補零
+  // 將十進制數值轉換兩位16進制的字串，若十進制只能產生一位16進制數值便會補零
   intToTwoHexDigits(value) {
 
     let number = Number(value)
@@ -45,6 +61,7 @@ const model = {
 
   },
 
+  // 將三原色的數值(十進制)合併成一組十六進制的色碼字串
   intToHexString({ redValue, greenValue, blueValue }) {
 
     const redHexString = this.intToTwoHexDigits(redValue)
@@ -85,7 +102,7 @@ const view = {
 
     const resultTextArea = document.querySelector('#result-textarea')
     const colorHex = model.fullHexCodeGetter()
-    
+
     resultTextArea.setAttribute('result-text', colorHex)
   },
 

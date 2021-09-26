@@ -51,7 +51,9 @@ body {
 
 }
 
-
+/*
+調整每個顏色的slider元件所擁有的樣式
+*/
 .slider {
 
   /* Positioning */
@@ -95,8 +97,12 @@ CSS樣式調整：RGB色碼最終結果顯示區塊
 input[type="text"]:disabled {
 
   /* Display */
+
+
   /* Box Model */
   width: 90%;
+
+  /* Font or other */
   opacity: 0.28;
 
 }

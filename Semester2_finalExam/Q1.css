@@ -53,7 +53,10 @@ body {
 
 
 /*
-調整每個顏色的slider元件所擁有的樣式
+  調整每個顏色的slider元件(含能滑動的區塊以及一個可以滑動的按鈕)所擁有的樣式
+  .slider 是整體slider的樣式
+  .slider::-webkit-slider-thumb 則是對應“可以滑動”的按鈕，對應chrome、safari瀏覽器下的(可以滑動的)按鈕
+  .slider::-moz-range-thumb 則是對應“可以滑動”的按鈕，對應firefox瀏覽器下的(可以滑動的)按鈕
 */
 .slider {
 
@@ -62,40 +65,46 @@ body {
   /* Display */
   -webkit-appearance: none;
   
-
   /* Box Model */
   width: 60%;
-   height: 10px;
+  height: 40%;
+
   /* Font or other */
-  
-
-
-
-  /* border: solid 1px #82CFD0;
+  background-color: white;
+  border: 2px solid black;
   border-radius: 8px;
- 
-
-  outline: none;
-  transition: background 450ms ease-in;
-  -webkit-appearance: none; */
 }
+
 
 .slider::-webkit-slider-thumb {
 
--webkit-appearance: none;
-  appearance: none;
-  width: 25px;
-  height: 25px;
+  /* Positioning */
+
+  /* Display */
+  -webkit-appearance: none;
+
+  /* Box Model */
+  width: 20px;
+  height: 20px;
+
+  /* Font or other */
+  border-radius: 50%;
   background: #04AA6D;
   cursor: pointer;
 }
 
 .slider::-moz-range-thumb {
 
--webkit-appearance: none;
-  appearance: none;
-  width: 25px;
-  height: 25px;
+  /* Positioning */
+  
+  /* Display */
+
+  /* Box Model */
+  width: 20px;
+  height: 20px;
+
+  /* Font or other */
+  border-radius: 50%;
   background: #04AA6D;
   cursor: pointer;
 }
@@ -111,7 +120,6 @@ body {
   width: 60%;
 
   /* Font or other */
-  /* border: 2px solid; */
 }
 
 

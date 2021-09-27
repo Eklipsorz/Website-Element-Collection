@@ -35,7 +35,7 @@ body {
 
   /* Display */
   display: inline-block;
-  margin-bottom: 10px;
+
 
   /* Box Model */
   width: 12%;
@@ -51,6 +51,7 @@ body {
 
 }
 
+
 /*
 調整每個顏色的slider元件所擁有的樣式
 */
@@ -59,13 +60,46 @@ body {
   /* Positioning */
 
   /* Display */
+  -webkit-appearance: none;
+  
 
   /* Box Model */
   width: 60%;
-
+   height: 10px;
   /* Font or other */
+  
 
+
+
+  /* border: solid 1px #82CFD0;
+  border-radius: 8px;
+ 
+
+  outline: none;
+  transition: background 450ms ease-in;
+  -webkit-appearance: none; */
 }
+
+.slider::-webkit-slider-thumb {
+
+-webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #04AA6D;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+
+-webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #04AA6D;
+  cursor: pointer;
+}
+
 
 /* RGB調色控制面板 */
 .color-panel {

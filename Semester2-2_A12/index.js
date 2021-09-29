@@ -23,6 +23,8 @@ const MOVIES_PER_PAGE = 12
 // 設定Data-Panel的顯示模式
 let currentMode = 'card'
 
+let currentPage = 1
+
 const movies = []
 let filteredMovies = []
 const directors = []
@@ -254,7 +256,6 @@ function onSearchFormSubmitted(event) {
 /* 分頁器點擊事件：當使用點選指定頁數時，就會依照指定頁數來印出對應項目 */
 function onPaginatorClicked(event) {
 
-  let currentPage = 0
   const target = event.target
 
   if (target.tagName !== 'A') {
@@ -276,5 +277,5 @@ function onModePanelClicked(event) {
     currentMode = target.dataset.mode
   }
 
-  renderMovieList(getMoviesByPage(1), currentMode)
+  renderMovieList(getMoviesByPage(currentPage), currentMode)
 }

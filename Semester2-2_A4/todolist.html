@@ -20,9 +20,10 @@
   <main class="d-flex justify-content-center list m-5">
     <section class="d-flex flex-column align-items-center list__todo_section">
       <header class="list__todo_header text-center mb-3">
-        <h4 class="list__todo_title">My Todo</h4>
+        <h4 class="list__todo_title my-3">My Todo</h4>
         <div class="d-flex justify-content-center list__add-item-section list__add-item-section--error form-inline">
-          <input type="text" placeholder="add item" id="new-todo" class="list__input-field form-control mr-2">
+          <input type="text" placeholder="add item" id="new-todo"
+            class="list__input-field form-control d-inline-block mr-2">
           <button id="add-btn" class="btn list__input-btn">Add</button>
           <p class="list__add-item-section-error-message ">Empty item!</p>
         </div>
@@ -38,7 +39,7 @@
 
 
     <section class="d-flex flex-column align-items-center list__done_section">
-      <h4 class="list__done_title">Done</h4>
+      <h4 class="list__done_title my-3">Done</h4>
       <ul id="my-done" class="list-unstyled">
         <!-- display todos here -->
       </ul>

@@ -30,7 +30,9 @@ body {
 
   /* Box Model */
   width: 22%;
+  height: 400px;
   margin-left: 3%;
+  overflow: auto;
 
   /* Font or other */
   background-color: #EBECF0;
@@ -65,7 +67,21 @@ body {
   
 }
 
-.list__todo_section .list__item {
+.list__item {
+
+  /* Box Model */
+  height: 35px;
+  margin-bottom: 10px;
+  padding-left: 10px;
+
+  /* Display */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+
+  /* Font or other */
+  background: #ffffff;
 
 }
 
@@ -89,6 +105,7 @@ li > label[for='todo'] {
 
   /* Box Model */
   width: 210px;
+  margin: 0;
   
 }
 

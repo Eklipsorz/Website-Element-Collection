@@ -19,6 +19,7 @@ for (let todo of todos) {
 // 函式
 function addItem(text) {
   let newItem = document.createElement("li")
+  newItem.classList.add('list__item')
   newItem.innerHTML = `
     <label for="todo">${text}</label>
     <i class="delete fa fa-trash"></i>
@@ -91,7 +92,7 @@ list.addEventListener("click", function (event) {
   } else if (target.tagName === "LABEL") {
     // doneList.appendChild()
     let parentElement = target.parentElement;
-
+    console.log(parentElement.classList)
     target.classList.toggle("checked")
     parentElement.remove()
     doneList.appendChild(parentElement)

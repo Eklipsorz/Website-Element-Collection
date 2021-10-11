@@ -34,16 +34,17 @@ function showWarningMessage(elementNode, isError) {
 
   /* 增加項目之區塊(含輸入欄、輸入欄的錯誤標記、輸入按鈕) */
   const inputSectionTodoList = elementNode
-  /* 增加項目之區塊下: 輸入欄的錯誤訊息 */
-  const errorMessage = elementNode.children[2]
+
   /* 增加項目之區塊下: 輸入欄 */
   const inputField = elementNode.children[0]
 
+  /* 增加項目之區塊下: 輸入欄的錯誤訊息 */
+  const errorMessage = document.querySelector('.list__add-item-section-error-message')
 
   const cssDisplay = isError ? ' ' : 'none'
   const cssBorderColor = isError ? '#FF665A' : '#ced4da'
 
-
+  console.log(cssDisplay, cssBorderColor)
 
   /* 設定錯誤訊息、錯誤符號、線條的樣式 */
   errorMessage.style.setProperty('--list__add-item-section-error-message-display', cssDisplay)
@@ -64,7 +65,7 @@ addBtn.addEventListener("click", function (event) {
 
   if (inputValue.trim() === "") {
     /* 當輸入全是空白時，便代表著錯誤，會跑出錯誤訊息及調整相關樣式(線條、出現錯誤符號) */
-
+    console.log('空白')
     /* 顯示錯誤訊息、調整相關樣式 */
     showWarningMessage(target.parentElement, true)
   } else {
@@ -92,7 +93,6 @@ list.addEventListener("click", function (event) {
   } else if (target.tagName === "LABEL") {
     // doneList.appendChild()
     let parentElement = target.parentElement;
-    console.log(parentElement.classList)
     target.classList.toggle("checked")
     parentElement.remove()
     doneList.appendChild(parentElement)

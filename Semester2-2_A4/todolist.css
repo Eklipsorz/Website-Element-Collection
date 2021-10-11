@@ -30,15 +30,22 @@ body {
 
   /* Box Model */
   width: 22%;
-  height: 400px;
+  height: 425px;
   margin-left: 3%;
   overflow: auto;
 
   /* Font or other */
   background-color: #EBECF0;
 
+  /* variables */
+  --list__input-field-border-color: #000000;
+  --list__add-item-section--error-display: none;
+  --list__add-item-section-error-message-display: none;
+
 }
 
+
+/* Add按鈕 */
 .list__todo_section .list__input-btn {
 
   /* Font or other */
@@ -46,6 +53,10 @@ body {
   color: #ffffff;
 }
 
+.list__todo_section .list__input-btn:hover {
+  /* Font or other */
+  opacity: 0.5;  
+}
 
 .list__todo_section .todoline {
 
@@ -62,7 +73,7 @@ body {
 .list__todo_section .list__input-field {
 
   /* Box Model */
-  border: 1px solid black;
+  border: 1px solid var(--list__input-field-border-color);
   width: 65%;
   
 }
@@ -110,14 +121,6 @@ li > label[for='todo'] {
 }
 
 
-.list__todo_header {
-  /*    Variables       */
-  
-  --list__input-field-border-color: #ced4da;
-  --list__add-item-section--error-display: none;
-  --list__add-item-section-error-message-display: none;
-}
-
 
 
 /* TODO: */
@@ -141,7 +144,7 @@ li > label[for='todo'] {
 
   /*    Positioning     */
   position: absolute;
-  left: 170px;
+  left: 60%;
   top: 6px;
 
   /*    Display         */
@@ -154,6 +157,8 @@ li > label[for='todo'] {
   content: "\f06a";
 
 }
+
+
 /* 增加項目之區塊下: 輸入欄的錯誤訊息 */
 .list__add-item-section-error-message {
   
@@ -162,9 +167,10 @@ li > label[for='todo'] {
 
   /*    Box model   */
   width: 100%;
-  margin: 1px;
+  margin-left: 5%;
   
   /*    Font or other   */
   color: #FF665A;
+
 }
 

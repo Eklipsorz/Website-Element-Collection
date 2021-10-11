@@ -23,7 +23,10 @@ const album = {
 // WRITE YOUR CODE ////////////////////////
 
 
-/* 印出左欄歌曲項目 */
+/* 
+  displaySongList(parameter1) 負責在網頁左邊呈現專輯下的每個歌名
+  parameter1 要被呈現的專輯物件
+*/
 function displaySongList(album) {
 
   let songListContent = ''
@@ -75,5 +78,5 @@ songList.addEventListener('click', (event) => {
 
 })
 
-
+// 在網頁左邊添加專輯下的每個歌名
 displaySongList(album)

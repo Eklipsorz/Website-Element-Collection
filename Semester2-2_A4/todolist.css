@@ -1,4 +1,75 @@
 
+/* 通用元件樣式 General Style */
+
+html, 
+body {
+
+  /* Box Model */
+  width: 100vw;
+  height: 100vh;
+  
+}  
+
+* {
+
+  /* Box Model */
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  /*    Font or other   */
+  background-color: #CAD6E2;
+}
+
+
+
+.list__todo_section,
+.list__done_section {
+
+  /* Box Model */
+  width: 22%;
+  margin-left: 3%;
+
+  /* Font or other */
+  background-color: #EBECF0;
+
+}
+
+.list__todo_section .list__input-btn {
+
+  /* Font or other */
+  background: #768591;  
+  color: #ffffff;
+}
+
+
+.list__todo_section .todoline {
+
+
+  /* Box Model */
+  border: 0;
+  height: 1px;
+
+  /* Font or other */
+  background: #333;
+  background-image: linear-gradient(to right, #ccc, #333, #ccc);
+}
+
+.list__todo_section .list__input-field {
+
+  /* Box Model */
+  border: 1px solid black;
+  width: 65%;
+  
+}
+
+.list__todo_section .list__item {
+
+}
+
+
 .checked {
   /*    Font or other   */
   color: #ccc;
@@ -22,7 +93,7 @@ li > label[for='todo'] {
 }
 
 
-.list__header {
+.list__todo_header {
   /*    Variables       */
   
   --list__input-field-border-color: #ced4da;

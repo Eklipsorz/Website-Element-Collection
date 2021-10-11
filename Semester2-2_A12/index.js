@@ -247,7 +247,7 @@ function onSearchFormSubmitted(event) {
 
   // 渲染目前篩選的項目、分頁器
   renderPaginator(filteredMovies.length)
-  renderMovieList(getMoviesByPage(1), renderMovieList)
+  renderMovieList(getMoviesByPage(1), currentMode)
 
 }
 

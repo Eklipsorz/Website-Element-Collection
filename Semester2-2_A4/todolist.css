@@ -23,25 +23,32 @@ body {
   background-color: #CAD6E2;
 }
 
-
-
 .list__todo_section,
 .list__done_section {
 
   /* Box Model */
-  width: 22%;
-  height: 425px;
+  max-height: 425px;
   margin-left: 3%;
   overflow: auto;
+  border-radius: 5px;
 
+  /* Display */
+  flex: 0 1 22%;
+  
   /* Font or other */
   background-color: #EBECF0;
 
+}
+
+
+.list__todo_header {
+
+  /* Box Model */
+ 
   /* variables */
   --list__input-field-border-color: #000000;
-  --list__add-item-section--error-display: none;
-  --list__add-item-section-error-message-display: none;
-
+  --list__error_sign-display: none;
+  --list__error-message-display: none;
 }
 
 
@@ -58,27 +65,27 @@ body {
   opacity: 0.5;  
 }
 
-
-
 .list__todo_header .list__input-field {
 
   /* Box Model */
   border: 1px solid var(--list__input-field-border-color);
-  width: 25%;
+
   
 }
 
 .list__item {
 
+  /* Display */
+
+
   /* Box Model */
-  height: 35px;
-  margin-bottom: 10px;
-  padding-left: 10px;
+  
+  margin-bottom: 5%;
+  padding: 5px; 
+  border-radius: 5px;
 
   /* Display */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  
 
 
   /* Font or other */
@@ -119,8 +126,12 @@ li > label[for='todo'] {
   /* Positioning */
   position: relative;
 
-  /* Box Model */
+  /* Display */
+  display: inline-block;
 
+
+
+  /* Box Model */
 }
 
 
@@ -130,30 +141,35 @@ li > label[for='todo'] {
 
 /* TODO: */
 /* 增加項目之區塊下: 輸入欄的錯誤符號 */
-.list__add-item-section--error::after {
-
+.list__error_sign {
   /*    Positioning     */
   position: absolute;
-  left: 60%;
-  top: 6px;
+  top: 25%;
+  right: 12%;
+  
 
   /*    Display         */
-  display: var(--list__add-item-section--error-display);
+  display: var(--list__error_sign-display);
 
   /*    Font or other   */
-  font-family: "FontAwesome"; 
   font-weight: 900; 
   color: #FF665A;
-  content: "\f06a";
 
 }
 
 
+
+
 /* 增加項目之區塊下: 輸入欄的錯誤訊息 */
-.list__add-item-section-error-message {
+.list__error-message {
   
+  /* Positioning */
+  position: absolute;
+  left: 0%;
+  top: 92%;
+
   /*    Display     */
-  display: var(--list__add-item-section-error-message-display);
+  display: var(--list__error-message-display);
 
   /*    Box model   */
   width: 100%;

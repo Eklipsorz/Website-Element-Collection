@@ -17,36 +17,41 @@
 
 <body>
 
-  <header class="list__todo_header mt-5">
-    <div class="d-flex justify-content-center list__add-item-section list__add-item-section--error form-inline">
-      <input type="text" placeholder="add item to todolist" id="new-todo"
-        class="list__input-field form-control d-inline-block mr-4">
+  <main class="list">
+    <header class="d-flex justify-content-center mt-5 list__todo_header">
+      <div class="form-inline list__add-item-section">
+        <input type="text" placeholder="add item" id="new-todo"
+          class="form-control d-inline-block mr-4 list__input-field">
+
+        <i class="fa fa-exclamation-circle list__error_sign" aria-hidden="true"></i>
+        <p class="list__error-message">Empty item!</p>
+
+      </div>
+
       <button id="add-btn" class="btn list__input-btn">Add</button>
 
-    </div>
-    <!-- <p class="list__add-item-section-error-message">Empty item!</p> -->
 
-  </header>
+    </header>
 
-  <main class="d-flex justify-content-center list m-5">
-    <section class="d-flex flex-column align-items-center list__todo_section">
-      <h4 class="list__todo_title text-center my-3">My Todo</h4>
-      <ul id="my-todo" class="list-unstyled">
-        <!-- display todos here -->
-      </ul>
+    <section class="d-flex justify-content-center m-5 list__section">
+      <div class="d-flex flex-column align-items-center list__todo_section">
+        <h4 class="text-center my-3 list__todo_title">My Todo</h4>
+        <ul id="my-todo" class="list-unstyled list__todo_list">
+          <!-- display todos here -->
+        </ul>
+      </div>
+
+
+
+      <div class="d-flex flex-column align-items-center list__done_section">
+        <h4 class="my-3 list__done_title">Done</h4>
+        <ul id="my-done" class="list-unstyled list__done_list">
+          <!-- display dones here -->
+        </ul>
+      </div>
     </section>
 
-
-
-    <section class="d-flex flex-column align-items-center list__done_section">
-      <h4 class="list__done_title my-3">Done</h4>
-      <ul id="my-done" class="list-unstyled">
-        <!-- display dones here -->
-      </ul>
-    </section>
   </main>
-
-
   <script src="todolist.js"></script>
 </body>
 

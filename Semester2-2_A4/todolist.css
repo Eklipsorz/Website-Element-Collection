@@ -46,35 +46,25 @@ body {
 
 
 /* Add按鈕 */
-.list__todo_section .list__input-btn {
+.list__todo_header .list__input-btn {
 
   /* Font or other */
   background: #768591;  
   color: #ffffff;
 }
 
-.list__todo_section .list__input-btn:hover {
+.list__todo_header .list__input-btn:hover {
   /* Font or other */
   opacity: 0.5;  
 }
 
-.list__todo_section .todoline {
 
 
-  /* Box Model */
-  border: 0;
-  height: 1px;
-
-  /* Font or other */
-  background: #333;
-  background-image: linear-gradient(to right, #ccc, #333, #ccc);
-}
-
-.list__todo_section .list__input-field {
+.list__todo_header .list__input-field {
 
   /* Box Model */
   border: 1px solid var(--list__input-field-border-color);
-  width: 65%;
+  width: 25%;
   
 }
 

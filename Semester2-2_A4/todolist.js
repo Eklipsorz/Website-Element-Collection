@@ -28,7 +28,7 @@ const view = {
     inputField.value = ""
     inputField.placeholder = "add item"
   },
-  // 當增加項目時就針對該項目進行渲染
+  // 進行增加項目時的渲染
   renderNewItemOnList(list, text) {
 
 
@@ -43,16 +43,73 @@ const view = {
 
     list.appendChild(newItem)
   },
+  // 替新增的清單項目增加拖曳事件
   addEventListenerToNewItem(newItem) {
 
-
+    // 當發生拖曳時就替當前元件設定正在拖曳的狀態
     newItem.addEventListener('dragstart', () => {
       newItem.classList.add('dragging')
     })
-
+    // 當發生拖曳並釋放游標時就替當前元件解除正在拖曳的狀態
     newItem.addEventListener('dragend', () => {
       newItem.classList.remove('dragging')
     })
+
+  },
+  // 進行拖曳項目時的渲染
+  renderDraggedItem(list, clientY) {
+
+
+
+    // 取得正在發生拖曳的元件
+    const draggingElement = document.querySelector('.dragging')
+
+    // 根據拖曳游標的座標位置來取得該游標最近的項目元件
+    const dragAfterElement = this.getDragAfterElement(list, clientY)
+
+    // 若為null，表示該元件就在清單的最後一個位置
+    if (dragAfterElement === null) {
+      // 直接在清單後面添加正在發生拖曳的元件
+      list.appendChild(draggingElement)
+    } else {
+      // 在最近的項目元件之前添加正在發生拖曳的元件
+      list.insertBefore(draggingElement, dragAfterElement)
+    }
+
+  },
+  // 從發生拖曳事件的清單裡，取得離拖曳游標最近的項目元件
+  // list 是發生拖曳事件的清單，clientY則是相對於viewport的Y軸座標
+  getDragAfterElement(list, clientY) {
+
+
+    // 排除掉正在發生拖曳的元件而由同一個清單下的剩餘項目組成一個陣列
+    const draggableElements = [...list.querySelectorAll('.list-item:not(.dragging)')]
+
+
+    // 對剩下項目來與正在發生拖曳的元件誰比較近，會以clientY代表正在發生拖曳的元件
+    // 最後會以closestObj所擁有element元件代表結果，若為null則表示正發生拖曳的元件在清單最後面
+    // 否則就回傳較近的項目元件
+    return draggableElements.reduce((closestObj, childElement) => {
+
+      // 取得DOMRect元件(該元件會包含著childElement)，由它來代表childElement。
+      const elementBox = childElement.getBoundingClientRect()
+      // clientY 是滑鼠游標所在位置(0~N，越上面越小，越下面越大)
+      // box.top 是childElement元件上邊界至螢幕邊界的距離
+      // box.height是指childElement元件內容高度 + padding-top + border + margin-top
+
+      // 在這裏以elementBox.top和elementBox.height / 2為界線來判定正在發生拖曳的元件是離誰比較近
+      const offset = clientY - elementBox.top - elementBox.height / 2
+
+      // 通常離得近的元件會得到負值offset，且越接近為0就代表越近。
+      // 所以會在這情況下取得能讓offset保持負值且是當中最大的childElement
+      if (offset < 0 && offset > closestObj.offset) {
+        return { offset: offset, element: childElement }
+      } else {
+        return closestObj
+      }
+
+    }, { offset: Number.NEGATIVE_INFINITY }).element
+    // offset: Number.NEGATIVE_INFINITY 是設定一個非常小的初始值來比較。
 
   },
   // 當移除項目時就針對該項目進行渲染
@@ -111,8 +168,6 @@ const controller = {
     if (inputValue.trim() === "") {
       /* 當輸入全是空白時，便代表著錯誤，會跑出錯誤訊息及調整相關樣式(線條、出現錯誤符號) */
       /* 顯示錯誤訊息、調整相關樣式 */
-      console.log(target.parentElement)
-
       view.showWarningMessage(true)
     } else {
 
@@ -169,6 +224,11 @@ const controller = {
       view.renderMovedItemOnAnotherList(target, anotherList)
     }
 
+  },
+  dispatchListDraggedAction(list, clientY) {
+
+    view.renderDraggedItem(list, clientY)
+
   }
 
 
@@ -199,14 +259,12 @@ input.addEventListener("keypress", function (event) {
   controller.dispatchInputFieldInputedAction(event)
 })
 
-console.log(lists)
+// 每個清單(todo 清單 和 done 清單)的拖曳事件處理
 lists.forEach(list => {
 
   list.addEventListener('dragover', event => {
     event.preventDefault()
-    const draggingElement = document.querySelector('.dragging')
-    console.log(list)
-    list.appendChild(draggingElement)
+    controller.dispatchListDraggedAction(list, event.clientY)
   })
 
 })

@@ -121,6 +121,7 @@ body {
 .list-section {
 
   /* Box Model */
+  height: fit-content;
   max-height: 425px;
   margin-left: 3%;
   overflow: auto;
@@ -134,6 +135,13 @@ body {
 
 }
 
+
+
+
+.list {
+  padding: 1rem;
+  margin-top: 1rem;
+}
 
 .list-item {
 
@@ -155,6 +163,9 @@ body {
 
 }
 
+.list-item.dragging {
+  opacity: .5;
+}
 
 .checked {
   /*    Font or other   */

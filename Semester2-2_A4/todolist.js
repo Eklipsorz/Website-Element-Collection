@@ -3,6 +3,8 @@ const addBtn = document.querySelector("#add-btn")
 const input = document.querySelector("#new-todo")
 const todoList = document.querySelector("#my-todo")
 const doneList = document.querySelector('#my-done')
+const lists = document.querySelectorAll('.list')
+
 // 資料
 let todos = [
   "Hit the gym",
@@ -29,13 +31,29 @@ const view = {
   // 當增加項目時就針對該項目進行渲染
   renderNewItemOnList(list, text) {
 
+
     let newItem = document.createElement("li")
     newItem.classList.add('list-item')
     newItem.innerHTML = `
       <label for="todo">${text}</label>
       <i class="delete fa fa-trash"></i>
     `
+    newItem.setAttribute('draggable', "true")
+    this.addEventListenerToNewItem(newItem)
+
     list.appendChild(newItem)
+  },
+  addEventListenerToNewItem(newItem) {
+
+
+    newItem.addEventListener('dragstart', () => {
+      newItem.classList.add('dragging')
+    })
+
+    newItem.addEventListener('dragend', () => {
+      newItem.classList.remove('dragging')
+    })
+
   },
   // 當移除項目時就針對該項目進行渲染
   renderRemovedItemOnList(targetElement) {
@@ -181,7 +199,23 @@ input.addEventListener("keypress", function (event) {
   controller.dispatchInputFieldInputedAction(event)
 })
 
+console.log(lists)
+lists.forEach(list => {
+
+  list.addEventListener('dragover', event => {
+    event.preventDefault()
+    const draggingElement = document.querySelector('.dragging')
+    console.log(list)
+    list.appendChild(draggingElement)
+  })
+
+})
+
+
 // 渲染清單一開始擁有的項目
 for (let todo of todos) {
   view.renderNewItemOnList(todoList, todo);
 }
+
+
+

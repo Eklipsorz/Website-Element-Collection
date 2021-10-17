@@ -20,31 +20,31 @@
   <main class="container">
     <header class="d-flex justify-content-center mt-5 todo-header">
       <div class="form-inline add-item-section">
-        <input type="text" placeholder="add item" id="new-todo" class="form-control d-inline-block mr-4 input-field">
+        <input type="text" placeholder="add item" id="new-todo" class="form-control mr-4 input-field">
 
         <i class="fa fa-exclamation-circle input-error-sign" aria-hidden="true"></i>
         <p class="input-error-message">Empty item!</p>
 
       </div>
 
-      <button id="add-btn" class="btn list__input-btn">Add</button>
+      <button id="add-btn" class="btn input-btn">Add</button>
 
 
     </header>
 
-    <section class="d-flex justify-content-center m-5 list__section">
-      <div class="d-flex flex-column align-items-center list__todo_section">
-        <h4 class="text-center my-3 list__todo_title">My Todo</h4>
-        <ul id="my-todo" class="list-unstyled list__todo_list">
+    <section class="d-flex justify-content-center m-5">
+      <div class="d-flex flex-column align-items-center list-section">
+        <h4 class="text-center my-3">My Todo</h4>
+        <ul id="my-todo" class="list-unstyled">
           <!-- display todos here -->
         </ul>
       </div>
 
 
 
-      <div class="d-flex flex-column align-items-center list__done_section">
-        <h4 class="my-3 list__done_title">Done</h4>
-        <ul id="my-done" class="list-unstyled list__done_list">
+      <div class="d-flex flex-column align-items-center list-section">
+        <h4 class="text-center my-3">Done</h4>
+        <ul id="my-done" class="list-unstyled">
           <!-- display dones here -->
         </ul>
       </div>

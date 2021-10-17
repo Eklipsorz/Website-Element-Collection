@@ -27,13 +27,12 @@ body {
 .list__done_section {
 
   /* Box Model */
-  max-height: 425px;
   margin-left: 3%;
   overflow: auto;
   border-radius: 5px;
 
   /* Display */
-  flex: 0 1 22%;
+  flex: 0 1 30%;
   
   /* Font or other */
   background-color: #EBECF0;
@@ -41,7 +40,7 @@ body {
 }
 
 
-.list__todo_header {
+.todo-header {
 
   /* Box Model */
  
@@ -53,19 +52,19 @@ body {
 
 
 /* Add按鈕 */
-.list__todo_header .list__input-btn {
+.todo-header .list__input-btn {
 
   /* Font or other */
   background: #768591;  
   color: #ffffff;
 }
 
-.list__todo_header .list__input-btn:hover {
+.todo-header .list__input-btn:hover {
   /* Font or other */
   opacity: 0.5;  
 }
 
-.list__todo_header .list__input-field {
+.todo-header .list__input-field {
 
   /* Box Model */
   border: 1px solid var(--list__input-field-border-color);

@@ -45,9 +45,9 @@ body {
   /* Box Model */
  
   /* variables */
-  --list__input-field-border-color: #000000;
-  --list__error_sign-display: none;
-  --list__error-message-display: none;
+  --input-field-border-color: #000000;
+  --input-error-sign-display: none;
+  --input-error-message-display: none;
 }
 
 
@@ -64,10 +64,10 @@ body {
   opacity: 0.5;  
 }
 
-.todo-header .list__input-field {
+.todo-header .input-field {
 
   /* Box Model */
-  border: 1px solid var(--list__input-field-border-color);
+  border: 1px solid var(--input-field-border-color);
 
   
 }
@@ -121,7 +121,7 @@ li > label[for='todo'] {
 
 /* TODO: */
 /* 增加項目之區塊(含輸入欄、輸入欄的錯誤符號、輸入欄的錯誤訊息、輸入按鈕) */
-.list__add-item-section {
+.add-item-section {
   /* Positioning */
   position: relative;
 
@@ -140,7 +140,7 @@ li > label[for='todo'] {
 
 /* TODO: */
 /* 增加項目之區塊下: 輸入欄的錯誤符號 */
-.list__error_sign {
+.input-error-sign {
   /*    Positioning     */
   position: absolute;
   top: 25%;
@@ -148,7 +148,7 @@ li > label[for='todo'] {
   
 
   /*    Display         */
-  display: var(--list__error_sign-display);
+  display: var(--input-error-sign-display);
 
   /*    Font or other   */
   font-weight: 900; 
@@ -160,7 +160,7 @@ li > label[for='todo'] {
 
 
 /* 增加項目之區塊下: 輸入欄的錯誤訊息 */
-.list__error-message {
+.input-error-message {
   
   /* Positioning */
   position: absolute;
@@ -168,7 +168,7 @@ li > label[for='todo'] {
   top: 92%;
 
   /*    Display     */
-  display: var(--list__error-message-display);
+  display: var(--input-error-message-display);
 
   /*    Box model   */
   width: 100%;

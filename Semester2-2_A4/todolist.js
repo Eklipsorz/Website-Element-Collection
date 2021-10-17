@@ -39,7 +39,7 @@ function showWarningMessage(elementNode, isError) {
   const inputField = elementNode.children[0]
 
   /* 增加項目之區塊下: 輸入欄的錯誤訊息 */
-  const errorMessage = document.querySelector('.list__error-message')
+  const errorMessage = document.querySelector('.input-error-message')
 
   const cssDisplay = isError ? ' ' : 'none'
   const cssBorderColor = isError ? '#FF665A' : '#ced4da'
@@ -47,9 +47,9 @@ function showWarningMessage(elementNode, isError) {
   console.log(cssDisplay, cssBorderColor)
 
   /* 設定錯誤訊息、錯誤符號、線條的樣式 */
-  errorMessage.style.setProperty('--list__error-message-display', cssDisplay)
-  inputSectionTodoList.style.setProperty('--list__error_sign-display', cssDisplay)
-  inputField.style.setProperty('--list__input-field-border-color', cssBorderColor)
+  errorMessage.style.setProperty('--input-error-message-display', cssDisplay)
+  inputSectionTodoList.style.setProperty('--input-error-sign-display', cssDisplay)
+  inputField.style.setProperty('--input-field-border-color', cssBorderColor)
 
 
 }

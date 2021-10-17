@@ -62,6 +62,51 @@ const view = {
 }
 
 
+const controller = {
+
+  dispatchAddBtnClickedAction(targetElement) {
+
+    const target = targetElement
+    const inputField = target.previousElementSibling
+    const inputValue = input.value
+
+    if (inputValue.trim() === "") {
+      /* 當輸入全是空白時，便代表著錯誤，會跑出錯誤訊息及調整相關樣式(線條、出現錯誤符號) */
+      /* 顯示錯誤訊息、調整相關樣式 */
+      console.log(target.parentElement)
+
+      view.showWarningMessage(true)
+    } else {
+
+      /* 重設線條、錯誤符號的樣式，避免一開始使用者輸入錯誤而造成樣式維持錯誤時的樣式 */
+      view.showWarningMessage(false)
+
+      /* 當輸入不完全是空白時，便允許增加項目 */
+      model.addItem(inputValue)
+
+      inputField.value = ""
+      inputField.placeholder = "add item"
+    }
+  },
+  dispatchListClickedAction(targetElement) {
+
+    const target = targetElement
+    if (target.classList.contains("delete")) {
+      let parentElement = target.parentElement;
+      parentElement.remove()
+    } else if (target.tagName === "LABEL") {
+      // doneList.appendChild()
+      let parentElement = target.parentElement;
+      target.classList.toggle("checked")
+      parentElement.remove()
+      doneList.appendChild(parentElement)
+
+    }
+  }
+
+
+}
+
 
 
 for (let todo of todos) {
@@ -69,50 +114,13 @@ for (let todo of todos) {
 }
 
 /* TODO: 程式碼優化 */
-// Create
 addBtn.addEventListener("click", function (event) {
-
-
-  const target = event.target
-  const inputField = target.previousElementSibling
-  const inputValue = input.value
-
-  if (inputValue.trim() === "") {
-    /* 當輸入全是空白時，便代表著錯誤，會跑出錯誤訊息及調整相關樣式(線條、出現錯誤符號) */
-    /* 顯示錯誤訊息、調整相關樣式 */
-    console.log(target.parentElement)
-
-    view.showWarningMessage(true)
-  } else {
-
-    /* 重設線條、錯誤符號的樣式，避免一開始使用者輸入錯誤而造成樣式維持錯誤時的樣式 */
-    view.showWarningMessage(false)
-
-    /* 當輸入不完全是空白時，便允許增加項目 */
-    model.addItem(inputValue)
-
-    inputField.value = ""
-    inputField.placeholder = "add item"
-  }
-
+  controller.dispatchAddBtnClickedAction(event.target)
 })
 
 // Delete and check
 list.addEventListener("click", function (event) {
-
-  const target = event.target
-
-  if (target.classList.contains("delete")) {
-    let parentElement = target.parentElement;
-    parentElement.remove()
-  } else if (target.tagName === "LABEL") {
-    // doneList.appendChild()
-    let parentElement = target.parentElement;
-    target.classList.toggle("checked")
-    parentElement.remove()
-    doneList.appendChild(parentElement)
-
-  }
+  controller.dispatchListClickedAction(event.target)
 });
 
 // Delete and check

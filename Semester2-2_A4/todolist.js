@@ -30,38 +30,42 @@ const model = {
 
 }
 
+const view = {
+  showWarningMessage(isError) {
+
+    /* 增加項目之區塊(含輸入欄、輸入欄的錯誤標記、輸入按鈕) */
+    const inputSection = document.querySelector('.add-item-section')
+
+
+    /* 增加項目之區塊下: 輸入欄 */
+    const inputField = inputSection.children[0]
+
+    /* 增加項目之區塊下: 輸入欄的錯誤符號 */
+    const errorSign = inputSection.children[1]
+
+    /* 增加項目之區塊下: 輸入欄的錯誤訊息 */
+    const errorMessage = inputSection.children[2]
+
+    const cssDisplay = isError ? ' ' : 'none'
+    const cssBorderColor = isError ? '#FF665A' : '#ced4da'
+
+    console.log(cssDisplay, cssBorderColor)
+
+    /* 設定錯誤訊息、錯誤符號、線條的樣式 */
+    inputField.style.setProperty('--input-field-border-color', cssBorderColor)
+    errorSign.style.setProperty('--input-error-sign-display', cssDisplay)
+    errorMessage.style.setProperty('--input-error-message-display', cssDisplay)
+
+
+  }
+
+}
+
 
 
 
 for (let todo of todos) {
   model.addItem(todo);
-}
-
-
-function showWarningMessage(elementNode, isError) {
-
-
-
-  /* 增加項目之區塊(含輸入欄、輸入欄的錯誤標記、輸入按鈕) */
-  const inputSectionTodoList = elementNode
-
-  /* 增加項目之區塊下: 輸入欄 */
-  const inputField = elementNode.children[0]
-
-  /* 增加項目之區塊下: 輸入欄的錯誤訊息 */
-  const errorMessage = document.querySelector('.input-error-message')
-
-  const cssDisplay = isError ? ' ' : 'none'
-  const cssBorderColor = isError ? '#FF665A' : '#ced4da'
-
-  console.log(cssDisplay, cssBorderColor)
-
-  /* 設定錯誤訊息、錯誤符號、線條的樣式 */
-  errorMessage.style.setProperty('--input-error-message-display', cssDisplay)
-  inputSectionTodoList.style.setProperty('--input-error-sign-display', cssDisplay)
-  inputField.style.setProperty('--input-field-border-color', cssBorderColor)
-
-
 }
 
 /* TODO: 程式碼優化 */
@@ -76,11 +80,13 @@ addBtn.addEventListener("click", function (event) {
   if (inputValue.trim() === "") {
     /* 當輸入全是空白時，便代表著錯誤，會跑出錯誤訊息及調整相關樣式(線條、出現錯誤符號) */
     /* 顯示錯誤訊息、調整相關樣式 */
-    showWarningMessage(target.parentElement, true)
+    console.log(target.parentElement)
+
+    view.showWarningMessage(true)
   } else {
 
     /* 重設線條、錯誤符號的樣式，避免一開始使用者輸入錯誤而造成樣式維持錯誤時的樣式 */
-    showWarningMessage(target.parentElement, false)
+    view.showWarningMessage(false)
 
     /* 當輸入不完全是空白時，便允許增加項目 */
     model.addItem(inputValue)
@@ -144,11 +150,12 @@ input.addEventListener("keypress", function (event) {
       /* 當輸入全是空白時，便代表著錯誤，會跑出錯誤訊息及調整相關樣式(線條、出現錯誤符號) */
 
       /* 顯示錯誤訊息、調整相關樣式 */
-      showWarningMessage(target.parentElement, true)
+      view.showWarningMessage(true)
     } else {
 
       /* 重設線條、錯誤符號的樣式，避免一開始使用者輸入錯誤而造成樣式維持錯誤時的樣式 */
-      showWarningMessage(target.parentElement, false)
+      view.showWarningMessage(false)
+
 
       /* 當輸入不完全是空白時，便允許增加項目 */
       model.addItem(inputValue)

@@ -12,19 +12,29 @@ let todos = [
   "Pay bills"
 ]
 
-for (let todo of todos) {
-  addItem(todo);
+
+
+// 負責處理增加項目至清單的函式
+
+const model = {
+  addItem(text) {
+
+    let newItem = document.createElement("li")
+    newItem.classList.add('list-item')
+    newItem.innerHTML = `
+      <label for="todo">${text}</label>
+      <i class="delete fa fa-trash"></i>
+    `
+    list.appendChild(newItem)
+  }
+
 }
 
-// 函式
-function addItem(text) {
-  let newItem = document.createElement("li")
-  newItem.classList.add('list__item')
-  newItem.innerHTML = `
-    <label for="todo">${text}</label>
-    <i class="delete fa fa-trash"></i>
-  `
-  list.appendChild(newItem)
+
+
+
+for (let todo of todos) {
+  model.addItem(todo);
 }
 
 
@@ -73,7 +83,7 @@ addBtn.addEventListener("click", function (event) {
     showWarningMessage(target.parentElement, false)
 
     /* 當輸入不完全是空白時，便允許增加項目 */
-    addItem(inputValue)
+    model.addItem(inputValue)
 
     inputField.value = ""
     inputField.placeholder = "add item"
@@ -141,7 +151,7 @@ input.addEventListener("keypress", function (event) {
       showWarningMessage(target.parentElement, false)
 
       /* 當輸入不完全是空白時，便允許增加項目 */
-      addItem(inputValue)
+      model.addItem(inputValue)
 
       target.value = ""
       placeholder = "add item"

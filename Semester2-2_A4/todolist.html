@@ -18,24 +18,33 @@
 <body>
 
   <main class="container">
+    <!-- 負責增加項目至todo清單的區塊(含輸入欄、錯誤符號/訊息、按鈕) -->
     <header class="d-flex justify-content-center mt-5 todo-header">
+      <!-- 存放輸入欄、錯誤符號、錯誤訊息的區塊(用來方便定位) -->
       <div class="form-inline add-item-section">
+        <!-- 增加輸入欄 -->
         <input type="text" placeholder="add item" id="new-todo" class="form-control mr-4 input-field">
-
+        <!-- 輸入欄輸入錯誤時會出現的錯誤符號 -->
         <i class="fa fa-exclamation-circle input-error-sign" aria-hidden="true"></i>
+        <!-- 輸入欄輸入錯誤時會出現的錯誤訊息 -->
         <p class="input-error-message">Empty item!</p>
 
       </div>
 
+      <!-- 負責增加項目的按鈕 -->
       <button id="add-btn" class="btn input-btn">Add</button>
 
 
     </header>
 
+    <!-- 存放清單和清單下所有項目的區塊 -->
     <section class="d-flex justify-content-center m-5">
+      <!-- 存放todolist的區塊(含標題、清單本身) -->
       <div class="d-flex flex-column align-items-center list-section">
+        <!-- todolist的標題 -->
         <h4 class="text-center mt-3">My Todo</h4>
 
+        <!-- todolist的清單 -->
         <ul id="my-todo" class="list-unstyled list">
           <!-- display todos here -->
         </ul>
@@ -43,10 +52,12 @@
       </div>
 
 
-
+      <!-- 存放donelist的區塊(含標題、清單本身) -->
       <div class="d-flex flex-column align-items-center list-section">
+        <!-- donelist的標題 -->
         <h4 class="text-center mt-3">Done</h4>
 
+        <!-- doneist的清單 -->
         <ul id="my-done" class="list-unstyled list">
           <!-- display dones here -->
         </ul>

@@ -111,23 +111,27 @@ const view = {
     /* 排除掉正在發生拖曳的元件而由同一個清單下的剩餘項目組成一個陣列 */
     const draggableElements = [...list.querySelectorAll('.list-item:not(.dragging)')]
 
-
-    // 對剩下項目來與正在發生拖曳的元件誰比較近，會以clientY代表正在發生拖曳的元件
-    // 最後會以closestObj所擁有element元件代表結果，若為null則表示正發生拖曳的元件在清單最後面
-    // 否則就回傳較近的項目元件
+    /*
+       對剩下項目來與正在發生拖曳的元件誰比較近，會以clientY代表正在發生拖曳的元件
+       最後會以closestObj所擁有element元件代表結果，若為null則表示正發生拖曳的元件在清單最後面
+       否則就回傳較近的項目元件
+    */
     return draggableElements.reduce((closestObj, childElement) => {
 
-      // 取得DOMRect元件(該元件會包含著childElement)，由它來代表childElement。
+      /* 取得DOMRect元件(該元件會包含著childElement)，由它來代表childElement。 */
       const elementBox = childElement.getBoundingClientRect()
-      // clientY 是滑鼠游標所在位置(0~N，越上面越小，越下面越大)
-      // box.top 是childElement元件上邊界至螢幕邊界的距離
-      // box.height是指childElement元件內容高度 + padding-top + border + margin-top
-
-      // 在這裏以elementBox.top和elementBox.height / 2為界線來判定正在發生拖曳的元件是離誰比較近
+      /*
+         clientY 是滑鼠游標所在位置(0~N，越上面越小，越下面越大)
+         box.top 是childElement元件上邊界至螢幕邊界的距離
+         box.height是指childElement元件內容高度 + padding-top + border + margin-top
+      */
+      /* 在這裏以elementBox.top和elementBox.height / 2為界線來判定正在發生拖曳的元件是離誰比較近 */
       const offset = clientY - elementBox.top - elementBox.height / 2
 
-      // 通常離得近的元件會得到負值offset，且越接近為0就代表越近。
-      // 所以會在這情況下取得能讓offset保持負值且是當中最大的childElement
+      /*
+         通常離得近的元件會得到負值offset，且越接近為0就代表越近。
+         所以會在這情況下取得能讓offset保持負值且是當中最大的childElement
+      */
       if (offset < 0 && offset > closestObj.offset) {
         return { offset: offset, element: childElement }
       } else {

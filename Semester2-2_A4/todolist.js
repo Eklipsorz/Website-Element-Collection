@@ -1,12 +1,12 @@
-// 初始變數
+/* 初始變數 */
 const addBtn = document.querySelector("#add-btn")
 const input = document.querySelector("#new-todo")
 const todoList = document.querySelector("#my-todo")
 const doneList = document.querySelector('#my-done')
-// 取得所有清單(包含todo、done這兩種)
+/* 取得所有清單(包含todo、done這兩種) */
 const lists = document.querySelectorAll('.list')
 
-// 資料
+/* 資料 */
 let todos = [
   "Hit the gym",
   "Read a book",
@@ -17,73 +17,98 @@ let todos = [
 
 
 
-// 負責處理 Data 和 Business Logic，但在這裡由於篇幅有限就設定為空
+/* 負責處理 Data 和 Business Logic，但在這裡由於篇幅有限就設定為空 */
 const model = {
+  todoList: [],
+  doneList: [],
+  listSetter(listType, item) {
+
+    let list = listType === 'todo' ? this.todoList : this.doneList
+    list.push(item)
+
+  },
+  listItemDelete(listType, item) {
+    let list = listType === 'todo' ? this.todoList : this.doneList
+    const itemIndex = list.indexOf(item)
+    list.splice(itemIndex, 1)
+  },
+  listGetter(listType) {
+    let list = listType === 'todo' ? this.todoList : this.doneList
+    console.log(list)
+  }
 
 }
 
-// 負責處理畫面渲染
+/* 負責處理畫面渲染 */
 const view = {
-  // 以初始值來渲染輸入欄
+  /* 以初始值來渲染輸入欄 */
   renderInputField(inputField) {
     inputField.value = ""
     inputField.placeholder = "add item"
   },
-  // 進行增加項目時的渲染
+  /* 進行增加項目時的渲染 */
   renderNewItemOnList(list, text) {
 
-
+    /* 建立一個新項目元件 */
     let newItem = document.createElement("li")
+
+    /* 設定每個新項目的樣式 */
     newItem.classList.add('list-item')
+
+    /* 設定每個新項目的內容 */
     newItem.innerHTML = `
       <label for="todo">${text}</label>
       <i class="delete fa fa-trash"></i>
     `
+    /* 設定每個新項目為可拖曳的 */
     newItem.setAttribute('draggable', "true")
+
+    /* 替每個新項目增加事件綁定 */
     this.addEventListenerToNewItem(newItem)
 
+    /* 將項目增加至清單中 */
     list.appendChild(newItem)
   },
-  // 替新增的清單項目增加拖曳事件
+  /* 替新增的清單項目增加拖曳事件 */
   addEventListenerToNewItem(newItem) {
 
-    // 當發生拖曳時就替當前元件設定正在拖曳的狀態
+    /* 當發生拖曳時就替當前元件設定正在拖曳的狀態 */
     newItem.addEventListener('dragstart', () => {
       newItem.classList.add('dragging')
     })
-    // 當發生拖曳並釋放游標時就替當前元件解除正在拖曳的狀態
+    /* 當發生拖曳並釋放游標時就替當前元件解除正在拖曳的狀態 */
     newItem.addEventListener('dragend', () => {
       newItem.classList.remove('dragging')
     })
 
   },
-  // 進行拖曳項目時的渲染
+  /* 針對發生拖曳的清單list而做的渲染，過程中會需要Y軸來判定 */
   renderDraggedItem(list, clientY) {
 
-
-
-    // 取得正在發生拖曳的元件
+    /* 取得正在發生拖曳的元件 */
     const draggingElement = document.querySelector('.dragging')
 
-    // 根據拖曳游標的座標位置來取得該游標最近的項目元件
+    /* 根據拖曳游標的座標位置來取得該游標最近的項目元件 */
     const dragAfterElement = this.getDragAfterElement(list, clientY)
 
-    // 若為null，表示該元件就在清單的最後一個位置
+    /* 若為null，表示該元件就在清單的最後一個位置 */
     if (dragAfterElement === null) {
-      // 直接在清單後面添加正在發生拖曳的元件
+      /* 直接在清單後面添加正在發生拖曳的元件 */
       list.appendChild(draggingElement)
     } else {
-      // 在最近的項目元件之前添加正在發生拖曳的元件
+      /* 在最近的項目元件之前添加正在發生拖曳的元件 */
       list.insertBefore(draggingElement, dragAfterElement)
     }
 
   },
-  // 從發生拖曳事件的清單裡，取得離拖曳游標最近的項目元件
-  // list 是發生拖曳事件的清單，clientY則是相對於viewport的Y軸座標
+  /* 
+     從發生拖曳事件的清單裡，取得離拖曳游標最近的項目元件
+     list 是發生拖曳事件的清單，clientY則是相對於viewport的Y軸座標
+  */
   getDragAfterElement(list, clientY) {
 
 
-    // 排除掉正在發生拖曳的元件而由同一個清單下的剩餘項目組成一個陣列
+    /* 排除掉正在發生拖曳的元件而由同一個清單下的剩餘項目組成一個陣列 */
     const draggableElements = [...list.querySelectorAll('.list-item:not(.dragging)')]
 
 
@@ -110,14 +135,14 @@ const view = {
       }
 
     }, { offset: Number.NEGATIVE_INFINITY }).element
-    // offset: Number.NEGATIVE_INFINITY 是設定一個非常小的初始值來比較。
+    /* offset: Number.NEGATIVE_INFINITY 是設定一個非常小的初始值來比較。 */
 
   },
-  // 當移除項目時就針對該項目進行渲染
+  /* 當移除項目時就針對該項目進行渲染 */
   renderRemovedItemOnList(targetElement) {
     targetElement.remove()
   },
-  // 當轉移項目至其他清單時就針對該項目進行渲染
+  /* 當轉移項目至其他清單時就針對該項目進行渲染 */
   renderMovedItemOnAnotherList(targetElement, anotherList) {
     let parentElement = targetElement.parentElement;
     targetElement.classList.toggle("checked")
@@ -125,7 +150,7 @@ const view = {
     anotherList.appendChild(parentElement)
 
   },
-  // 當對目前輸入欄為空進行項目增加時，會跑出適當的錯誤訊息
+  /* 當對目前輸入欄為空進行項目增加時，會跑出適當的錯誤訊息 */
   showWarningMessage(isError) {
 
     /* 增加項目之區塊(含輸入欄、輸入欄的錯誤標記、輸入按鈕) */
@@ -156,10 +181,18 @@ const view = {
 
 }
 
-// 負責接收使用者請求和回應(介面互動的綁定)
+/* 負責接收使用者請求和回應(介面互動的綁定) */
 const controller = {
 
-  // 分配事件處理內容至增加按鈕
+  /* 設定初始清單畫面 */
+  resetListDisplay() {
+    for (let todoItem of todos) {
+      model.listSetter('todo', todoItem)
+      view.renderNewItemOnList(todoList, todoItem)
+    }
+
+  },
+  /* 分配事件處理內容至增加按鈕 */
   dispatchAddBtnClickedAction(targetElement) {
 
     const target = targetElement
@@ -177,16 +210,20 @@ const controller = {
 
       /* 當輸入不完全是空白時，便允許增加項目 */
       view.renderNewItemOnList(todoList, inputValue)
+
+      /* 當增加完便重新渲染一次輸入欄樣式 */
       view.renderInputField(input)
 
+      model.listSetter('todo', inputValue)
+      model.listGetter('todo')
     }
   },
-  // 分配事件處理內容至輸入欄輸入事件
+  /* 分配事件處理內容至輸入欄輸入事件 */
   dispatchInputFieldInputedAction(event) {
     const target = event.target
     const inputValue = input.value
 
-    // 當鍵盤按下Enter就代表要增加元素
+    /* 當鍵盤按下Enter就代表要增加元素 */
     if (event.key === "Enter") {
 
       /* 當輸入全是空白時，便代表著錯誤，會跑出錯誤訊息及調整相關樣式(線條、出現錯誤符號) */
@@ -204,6 +241,7 @@ const controller = {
         /* 當輸入不完全是空白時，便允許增加項目 */
         view.renderNewItemOnList(todoList, inputValue)
 
+        /* 當增加完便重新渲染一次輸入欄樣式 */
         view.renderInputField(input)
 
       }
@@ -212,15 +250,15 @@ const controller = {
 
     }
   },
-  // 分配事件處理內容至每個清單的點擊事件
+  /* 分配事件處理內容至每個清單的點擊事件 */
   dispatchListClickedAction(targetElement, currentListType) {
 
     const target = targetElement
     if (target.classList.contains("delete")) {
-      // 當按下垃圾桶就刪除
+      /* 當按下垃圾桶就刪除 */
       view.renderRemovedItemOnList(target.parentElement)
     } else if (target.tagName === "LABEL") {
-      // 當按下項目區塊時，就轉移另一個清單
+      /* 當按下項目區塊時，就轉移另一個清單 */
       const anotherList = currentListType === 'todo' ? doneList : todoList
       view.renderMovedItemOnAnotherList(target, anotherList)
     }
@@ -237,17 +275,17 @@ const controller = {
 
 
 
-// 增加按鈕上的點擊事件處理
+/* 增加按鈕上的點擊事件處理 */
 addBtn.addEventListener("click", function (event) {
   controller.dispatchAddBtnClickedAction(event.target)
 })
 
-// todoList 上 的 點擊事件處理
+/* todoList 上 的 點擊事件處理 */
 todoList.addEventListener("click", function (event) {
   controller.dispatchListClickedAction(event.target, 'todo')
 });
 
-// doneList 上 的 點擊事件處理
+/* doneList 上 的 點擊事件處理 */
 doneList.addEventListener("click", function (event) {
   controller.dispatchListClickedAction(event.target, 'done')
 });
@@ -255,12 +293,12 @@ doneList.addEventListener("click", function (event) {
 
 
 
-// todoList 上的輸入欄輸入事件處理 
+/* todoList 上的輸入欄輸入事件處理 */
 input.addEventListener("keypress", function (event) {
   controller.dispatchInputFieldInputedAction(event)
 })
 
-// 每個清單(todo 清單 和 done 清單)的拖曳事件處理
+/* 每個清單(todo 清單 和 done 清單)的拖曳事件處理 */
 lists.forEach(list => {
 
   list.addEventListener('dragover', event => {
@@ -271,10 +309,5 @@ lists.forEach(list => {
 })
 
 
-// 渲染清單一開始擁有的項目
-for (let todo of todos) {
-  view.renderNewItemOnList(todoList, todo);
-}
-
-
-
+/* 渲染清單一開始擁有的項目 */
+controller.resetListDisplay()

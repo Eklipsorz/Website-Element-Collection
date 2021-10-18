@@ -19,7 +19,7 @@ body {
 }
 
 body {
-  /*    Font or other   */
+  /* Font or other */
   background-color: #CAD6E2;
 }
 
@@ -74,16 +74,16 @@ body {
 
 /* 增加項目之區塊下: 輸入欄的錯誤符號 */
 .add-item-section > .input-error-sign {
-  /*    Positioning     */
+  /* Positioning */
   position: absolute;
   top: 25%;
   right: 12%;
   
 
-  /*    Display         */
+  /* Display */
   display: var(--input-error-sign-display);
 
-  /*    Font or other   */
+  /* Font or other */
   font-weight: 900; 
   color: #FF665A;
 
@@ -113,7 +113,8 @@ body {
 }
 
 
-/* 存放清單和清單項目的區塊 */
+/* 存放清單和清單項目的區塊 清單 和 清單下的項目  */
+/* 清單對應的class 是 .list，而清單下的項目 是 .list-item */
 .list-section {
 
   /* Box Model */
@@ -131,38 +132,34 @@ body {
 
 }
 
-
-
-
+/* 清單 */
 .list {
+
+  /* Box Model */
   padding: 1rem;
   margin-top: 1rem;
 }
 
-.list-item {
-
-  /* Display */
-
+/* 清單下的項目 */
+.list > .list-item {
 
   /* Box Model */
-  
   margin-bottom: 5%;
   padding: 5px; 
   border-radius: 5px;
-
-  /* Display */
-  
-
 
   /* Font or other */
   background: #ffffff;
 
 }
 
+/* 拖曳項目時會有的樣式 */
 .list-item.dragging {
+  /* Font or other */
   opacity: .5;
 }
 
+/* 勾選已完成的項目之樣式 */
 .checked {
   /*    Font or other   */
   color: #ccc;
@@ -170,14 +167,16 @@ body {
   font-style: italic;
 }
 
+/* 清單項目下的垃圾桶圖示 */
 .fa {
   /* Box Model */
   margin: 0 5px;
 
-  /*    Font or other   */
+  /* Font or other */
   color: #bbb;
 }
 
+/* 清單項目下的標籤樣式 */
 li > label[for='todo'] {
 
   /* Box Model */

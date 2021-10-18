@@ -3,6 +3,7 @@ const addBtn = document.querySelector("#add-btn")
 const input = document.querySelector("#new-todo")
 const todoList = document.querySelector("#my-todo")
 const doneList = document.querySelector('#my-done')
+// 取得所有清單(包含todo、done這兩種)
 const lists = document.querySelectorAll('.list')
 
 // 資料

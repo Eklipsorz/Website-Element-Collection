@@ -25,12 +25,7 @@ button.addEventListener('click', function (event) {
 
       dataPanel.appendChild(personItem)
     }
-    // console.log(userName)
-    // dataPanel.innerHTML = `
-    //   <h3>${userName.first + " " + userName.last} </h3>
-    //   <img src="${user.picture.large}">
-    //   <p>${user.email}</p>
-    //   `
+
   }).catch(function (error) {
     // handle error
     console.log(error);

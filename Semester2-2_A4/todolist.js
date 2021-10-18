@@ -1,3 +1,5 @@
+/* 初始資料區域 */
+
 /* 初始變數 */
 const addBtn = document.querySelector("#add-btn")
 const input = document.querySelector("#new-todo")
@@ -15,27 +17,32 @@ let todos = [
   "Pay bills"
 ]
 
-
+/* MVC架構區域 */
 
 /* 負責處理 Data 和 Business Logic，但在這裡由於篇幅有限就設定為空 */
 const model = {
   todoList: [],
   doneList: [],
-  listSetter(listType, item) {
+  /* 新增清單項目的setter */
+  listSetter({ listType, itemTitle, itemReference }) {
 
     let list = listType === 'todo' ? this.todoList : this.doneList
-    list.push(item)
+    list.push({ itemTitle, itemReference })
 
   },
-  listItemDelete(listType, item) {
+  /* 取得清單項目的getter */
+  listGetter({ listType, listItemStartIndex, listItemNumber }) {
     let list = listType === 'todo' ? this.todoList : this.doneList
-    const itemIndex = list.indexOf(item)
+    return list.slice(listItemStartIndex, listItemStartIndex + listItemNumber)
+  },
+  /* 刪除清單項目 */
+  listItemDelete(listType, itemTitle) {
+    let list = listType === 'todo' ? this.todoList : this.doneList
+    const itemIndex = list.findIndex(listItem => listItem.itemTitle === itemTitle)
+
     list.splice(itemIndex, 1)
-  },
-  listGetter(listType) {
-    let list = listType === 'todo' ? this.todoList : this.doneList
-    console.log(list)
   }
+
 
 }
 
@@ -46,7 +53,7 @@ const view = {
     inputField.value = ""
     inputField.placeholder = "add item"
   },
-  /* 進行增加項目時的渲染 */
+  /* 進行增加項目時的渲染，會回傳渲染後的項目 */
   renderNewItemOnList(list, text) {
 
     /* 建立一個新項目元件 */
@@ -62,12 +69,14 @@ const view = {
     `
     /* 設定每個新項目為可拖曳的 */
     newItem.setAttribute('draggable', "true")
-
+    newItem.setAttribute('data-list', "todo")
     /* 替每個新項目增加事件綁定 */
     this.addEventListenerToNewItem(newItem)
 
     /* 將項目增加至清單中 */
     list.appendChild(newItem)
+
+    return newItem
   },
   /* 替新增的清單項目增加拖曳事件 */
   addEventListenerToNewItem(newItem) {
@@ -190,9 +199,15 @@ const controller = {
 
   /* 設定初始清單畫面 */
   resetListDisplay() {
+    // listType, item, reference
+    /* 以初始給定的項目進行渲染和增加 */
     for (let todoItem of todos) {
-      model.listSetter('todo', todoItem)
-      view.renderNewItemOnList(todoList, todoItem)
+      const itemReference = view.renderNewItemOnList(todoList, todoItem)
+      model.listSetter({
+        listType: 'todo',
+        itemTitle: todoItem,
+        itemReference: itemReference
+      })
     }
 
   },
@@ -202,6 +217,7 @@ const controller = {
     const target = targetElement
     const inputField = target.previousElementSibling
     const inputValue = input.value
+
 
     if (inputValue.trim() === "") {
       /* 當輸入全是空白時，便代表著錯誤，會跑出錯誤訊息及調整相關樣式(線條、出現錯誤符號) */
@@ -213,13 +229,18 @@ const controller = {
       view.showWarningMessage(false)
 
       /* 當輸入不完全是空白時，便允許增加項目 */
-      view.renderNewItemOnList(todoList, inputValue)
+      const itemReference = view.renderNewItemOnList(todoList, inputValue)
 
       /* 當增加完便重新渲染一次輸入欄樣式 */
       view.renderInputField(input)
 
-      model.listSetter('todo', inputValue)
-      model.listGetter('todo')
+      /* 增加實際項目至 Model */
+      model.listSetter({
+        listType: 'todo',
+        itemTitle: inputValue,
+        itemReference: itemReference
+      })
+
     }
   },
   /* 分配事件處理內容至輸入欄輸入事件 */
@@ -243,10 +264,17 @@ const controller = {
 
 
         /* 當輸入不完全是空白時，便允許增加項目 */
-        view.renderNewItemOnList(todoList, inputValue)
+        const itemReference = view.renderNewItemOnList(todoList, inputValue)
 
         /* 當增加完便重新渲染一次輸入欄樣式 */
         view.renderInputField(input)
+
+        /* 增加實際項目至 Model */
+        model.listSetter({
+          listType: 'todo',
+          itemTitle: inputValue,
+          itemReference: itemReference
+        })
 
       }
 
@@ -254,20 +282,31 @@ const controller = {
 
     }
   },
-  /* 分配事件處理內容至每個清單的點擊事件 */
+  /* 分配事件處理內容至每個清單項目的點擊事件 */
   dispatchListClickedAction(targetElement, currentListType) {
 
     const target = targetElement
     if (target.classList.contains("delete")) {
+
+      const targetParentElement = target.parentElement
+      const deletedItemListType = targetParentElement.dataset.list
+      const deletedItem = targetParentElement.children[0]
+
       /* 當按下垃圾桶就刪除 */
-      view.renderRemovedItemOnList(target.parentElement)
+      model.listItemDelete(deletedItemListType, deletedItem.innerText)
+      view.renderRemovedItemOnList(targetParentElement)
+
+
     } else if (target.tagName === "LABEL") {
       /* 當按下項目區塊時，就轉移另一個清單 */
       const anotherList = currentListType === 'todo' ? doneList : todoList
+      
+
       view.renderMovedItemOnAnotherList(target, anotherList)
     }
 
   },
+  /* 分配事件處理內容至每個清單項目的拖曳事件 */
   dispatchListDraggedAction(list, clientY) {
 
     view.renderDraggedItem(list, clientY)
@@ -277,6 +316,8 @@ const controller = {
 
 }
 
+
+/* 元件事件綁定區域 */
 
 
 /* 增加按鈕上的點擊事件處理 */
@@ -315,3 +356,10 @@ lists.forEach(list => {
 
 /* 渲染清單一開始擁有的項目 */
 controller.resetListDisplay()
+
+
+// model.listGetter({
+//   listType: 'todo',
+//   listItemStartIndex: 0,
+//   listItemNumber: 2
+// })

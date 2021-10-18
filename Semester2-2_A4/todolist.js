@@ -26,21 +26,42 @@ const model = {
   /* 新增清單項目的setter */
   listSetter({ listType, itemTitle, itemReference }) {
 
-    let list = listType === 'todo' ? this.todoList : this.doneList
+    const list = listType === 'todo' ? this.todoList : this.doneList
     list.push({ itemTitle, itemReference })
 
   },
   /* 取得清單項目的getter */
   listGetter({ listType, listItemStartIndex, listItemNumber }) {
-    let list = listType === 'todo' ? this.todoList : this.doneList
+    const list = listType === 'todo' ? this.todoList : this.doneList
     return list.slice(listItemStartIndex, listItemStartIndex + listItemNumber)
   },
   /* 刪除清單項目 */
   listItemDelete(listType, itemTitle) {
-    let list = listType === 'todo' ? this.todoList : this.doneList
-    const itemIndex = list.findIndex(listItem => listItem.itemTitle === itemTitle)
-
+    const list = listType === 'todo' ? this.todoList : this.doneList
+    const itemIndex = this.listSearcher(listType, itemTitle)
     list.splice(itemIndex, 1)
+  },
+  /* 根據項目標題和清單類型來尋找並回傳對應index */
+  listSearcher(listType, itemTitle) {
+    const list = listType === 'todo' ? this.todoList : this.doneList
+    return list.findIndex(listItem => listItem.itemTitle === itemTitle)
+  },
+  /* 轉移項目至其他清單 */
+  listItemMigration({ listType, toListType, itemTitle }) {
+
+    const fromList = listType === 'todo' ? this.todoList : this.doneList
+    const targetItem = fromList[this.listSearcher(listType, itemTitle)]
+
+    /* 在另一個清單增加相同項目 */
+    this.listSetter({
+      listType: toListType,
+      itemTitle: targetItem.itemTitle,
+      itemReference: targetItem.itemReference
+    })
+
+    /* 刪掉原本清單的相同項目 */
+    this.listItemDelete(listType, itemTitle)
+
   }
 
 
@@ -69,7 +90,10 @@ const view = {
     `
     /* 設定每個新項目為可拖曳的 */
     newItem.setAttribute('draggable', "true")
-    newItem.setAttribute('data-list', "todo")
+
+    /* 設定每個新項目是隸屬於哪個清單 */
+    newItem.setAttribute('data-listbelong', "todo")
+
     /* 替每個新項目增加事件綁定 */
     this.addEventListenerToNewItem(newItem)
 
@@ -100,6 +124,30 @@ const view = {
     /* 根據拖曳游標的座標位置來取得該游標最近的項目元件 */
     const dragAfterElement = this.getDragAfterElement(list, clientY)
 
+    /* 取得目前游標指向的清單是什麼 */
+    const targetListType = list.dataset.listtype
+
+    /* 取得正在拖曳元件原隸屬於什麼清單 */
+    const draggingElementBelongTo = draggingElement.dataset.listbelong
+
+
+    /* 當拖曳游標釋放後所在清單並不是原本拖曳所在的清單時，就切換該項目的樣式和資料轉移 */
+    if (targetListType != draggingElementBelongTo) {
+      const draggingElementLabel = draggingElement.children[0]
+      draggingElement.dataset.listbelong = targetListType
+
+      /* 資料轉移 */
+      model.listItemMigration({
+        listType: draggingElementBelongTo,
+        toListType: targetListType,
+        itemTitle: draggingElementLabel.innerText
+      })
+
+      /* 切換樣式 */
+      draggingElementLabel.classList.toggle("checked")
+    }
+
+
     /* 若為null，表示該元件就在清單的最後一個位置 */
     if (dragAfterElement === null) {
       /* 直接在清單後面添加正在發生拖曳的元件 */
@@ -107,7 +155,9 @@ const view = {
     } else {
       /* 在最近的項目元件之前添加正在發生拖曳的元件 */
       list.insertBefore(draggingElement, dragAfterElement)
+
     }
+
 
   },
   /* 
@@ -115,7 +165,6 @@ const view = {
      list 是發生拖曳事件的清單，clientY則是相對於viewport的Y軸座標
   */
   getDragAfterElement(list, clientY) {
-
 
     /* 排除掉正在發生拖曳的元件而由同一個清單下的剩餘項目組成一個陣列 */
     const draggableElements = [...list.querySelectorAll('.list-item:not(.dragging)')]
@@ -156,10 +205,16 @@ const view = {
     targetElement.remove()
   },
   /* 當轉移項目至其他清單時就針對該項目進行渲染 */
-  renderMovedItemOnAnotherList(targetElement, anotherList) {
+  renderMigratedItem(targetElement, nextListType) {
+
+    const anotherList = nextListType === 'todo' ? todoList : doneList
+
     let parentElement = targetElement.parentElement;
     targetElement.classList.toggle("checked")
+
     parentElement.remove()
+    /* 設定每個新項目是隸屬於哪個清單 */
+    parentElement.setAttribute('data-listbelong', nextListType)
     anotherList.appendChild(parentElement)
 
   },
@@ -199,7 +254,7 @@ const controller = {
 
   /* 設定初始清單畫面 */
   resetListDisplay() {
-    // listType, item, reference
+
     /* 以初始給定的項目進行渲染和增加 */
     for (let todoItem of todos) {
       const itemReference = view.renderNewItemOnList(todoList, todoItem)
@@ -208,16 +263,13 @@ const controller = {
         itemTitle: todoItem,
         itemReference: itemReference
       })
-    }
 
+    }
   },
   /* 分配事件處理內容至增加按鈕 */
   dispatchAddBtnClickedAction(targetElement) {
 
-    const target = targetElement
-    const inputField = target.previousElementSibling
     const inputValue = input.value
-
 
     if (inputValue.trim() === "") {
       /* 當輸入全是空白時，便代表著錯誤，會跑出錯誤訊息及調整相關樣式(線條、出現錯誤符號) */
@@ -245,7 +297,7 @@ const controller = {
   },
   /* 分配事件處理內容至輸入欄輸入事件 */
   dispatchInputFieldInputedAction(event) {
-    const target = event.target
+
     const inputValue = input.value
 
     /* 當鍵盤按下Enter就代表要增加元素 */
@@ -288,21 +340,23 @@ const controller = {
     const target = targetElement
     if (target.classList.contains("delete")) {
 
-      const targetParentElement = target.parentElement
-      const deletedItemListType = targetParentElement.dataset.list
-      const deletedItem = targetParentElement.children[0]
-
       /* 當按下垃圾桶就刪除 */
-      model.listItemDelete(deletedItemListType, deletedItem.innerText)
-      view.renderRemovedItemOnList(targetParentElement)
+      model.listItemDelete(currentListType, target.previousElementSibling.innerText)
+      view.renderRemovedItemOnList(target.parentElement)
 
 
     } else if (target.tagName === "LABEL") {
       /* 當按下項目區塊時，就轉移另一個清單 */
-      const anotherList = currentListType === 'todo' ? doneList : todoList
-      
+      const nextListType = currentListType === 'todo' ? 'done' : 'todo'
 
-      view.renderMovedItemOnAnotherList(target, anotherList)
+      /* 轉移項目至另一個清單 */
+      model.listItemMigration({
+        listType: currentListType,
+        toListType: nextListType,
+        itemTitle: target.innerText
+      })
+
+      view.renderMigratedItem(target, nextListType)
     }
 
   },
@@ -357,9 +411,3 @@ lists.forEach(list => {
 /* 渲染清單一開始擁有的項目 */
 controller.resetListDisplay()
 
-
-// model.listGetter({
-//   listType: 'todo',
-//   listItemStartIndex: 0,
-//   listItemNumber: 2
-// })

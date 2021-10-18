@@ -161,7 +161,7 @@ body {
 
 /* 勾選已完成的項目之樣式 */
 .checked {
-  /*    Font or other   */
+  /* Font or other */
   color: #ccc;
   text-decoration: line-through;
   font-style: italic;

@@ -1,22 +1,24 @@
 
 // define a express app
 const express = require('express')
-const expbars = require('express-handlebars')
-
-console.log(typeof expbars)
-
 const app = express()
-
 
 
 // define port and server settings
 const port = 3500
 
 
+
+const expbars = require('express-handlebars')
+app.engine('handlebars', expbars({ defaultLayout: 'main' }))
+app.set('views', process.cwd() + '/views')
+app.set('view engine', 'handlebars')
+
+
 // define some routes
 
 app.get('/', (req, res) => {
-  res.send(`hi everyone`)
+  res.render('index')
 })
 
 

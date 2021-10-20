@@ -1,7 +1,13 @@
 
 // define a express app
 const express = require('express')
+const expbars = require('express-handlebars')
+
+console.log(typeof expbars)
+
 const app = express()
+
+
 
 // define port and server settings
 const port = 3500

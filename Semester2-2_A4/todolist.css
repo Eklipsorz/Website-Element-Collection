@@ -32,7 +32,7 @@ body {
   /* Box Model */
  
   /* variables */
-  --input-field-border-color: #000000;
+  --input-field-border-color: #CAD6E2;
   --input-error-sign-display: none;
   --input-error-message-display: none;
 }
@@ -121,7 +121,6 @@ body {
   height: fit-content;
   max-height: 425px;
   margin-left: 3%;
-  overflow: auto;
   border-radius: 5px;
 
   /* Display */
@@ -138,7 +137,27 @@ body {
   /* Box Model */
   padding: 1rem;
   margin-top: 1rem;
+  overflow: auto;
 }
+
+/* 清單的滾動軸軌道樣式 */
+.list::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #ffffff;
+}
+/* 清單的滾動軸樣式 */
+.list::-webkit-scrollbar {
+	width: 12px;
+	
+}
+/* 清單的滾動按鈕樣式 */
+.list::-webkit-scrollbar-thumb {
+	width: 12px;
+	background-color: #CAD6E2;
+  border-radius: 10px;
+}
+
 
 /* 清單下的項目 */
 .list > .list-item {

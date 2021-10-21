@@ -15,6 +15,11 @@ app.set('views', process.cwd() + '/views')
 app.set('view engine', 'handlebars')
 
 
+// app.use(express.static('public'))
+app.use('/', express.static('public'))
+
+// app.use('/', express.static(process.cwd() + '/public/stylesheets'))
+
 // define some routes
 
 app.get('/', (req, res) => {

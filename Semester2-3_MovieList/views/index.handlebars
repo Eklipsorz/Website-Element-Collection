@@ -18,12 +18,11 @@
   <!-- movie list -->
   <div class="row" id="data-panel">
     <div class="col-sm-3">
-      <a href="/1" class="text-secondary">
+      <a href="/{{ movie.id }}" class="text-secondary">
         <div class="card mb-2">
-          <img class="card-img-top" src="https://movie-list.alphacamp.io/posters/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"
-            alt="Card image cap">
+          <img class="card-img-top" src={{ movie.imageURL }} alt="Card image cap">
           <div class="card-body movie-item-body">
-            <h6 class="card-title">Jurassic World: Fallen Kingdom</h6>
+            <h6 class="card-title">{{ movie.movieTitle }}</h6>
           </div>
         </div>
       </a>

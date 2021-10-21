@@ -23,7 +23,14 @@ app.use('/', express.static('public'))
 // define some routes
 
 app.get('/', (req, res) => {
-  res.render('index')
+
+  const movieOne = {
+    id: 231,
+    imageURL: "https://movie-list.alphacamp.io/posters/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg",
+    movieTitle: "Jurassic World: Fallen Kingdom"
+  }
+
+  res.render('index', { movie: movieOne })
 })
 
 

@@ -266,10 +266,10 @@ const controller = {
 
     }
   },
-  /* 分配事件處理內容至增加按鈕 */
-  dispatchAddBtnClickedAction(targetElement) {
+  /* 根據輸入欄是否為空來決定渲染情形、資料增加，主要會檢測和增加 */
+  dispatchAddItemAction(inputField) {
 
-    const inputValue = input.value
+    const inputValue = inputField.value
 
     if (inputValue.trim() === "") {
       /* 當輸入全是空白時，便代表著錯誤，會跑出錯誤訊息及調整相關樣式(線條、出現錯誤符號) */
@@ -277,60 +277,45 @@ const controller = {
       view.showWarningMessage(true)
     } else {
 
-      /* 重設線條、錯誤符號的樣式，避免一開始使用者輸入錯誤而造成樣式維持錯誤時的樣式 */
-      view.showWarningMessage(false)
-
-      /* 當輸入不完全是空白時，便允許增加項目 */
-      const itemReference = view.renderNewItemOnList(todoList, inputValue)
-
-      /* 當增加完便重新渲染一次輸入欄樣式 */
-      view.renderInputField(input)
-
-      /* 增加實際項目至 Model */
-      model.listSetter({
-        listType: 'todo',
-        itemTitle: inputValue,
-        itemReference: itemReference
-      })
+      this.addItemAction(inputField)
 
     }
+
+  },
+  /* 實際負責增加項目以及增加相關樣式的函式 */
+  addItemAction(inputField) {
+
+    const inputValue = inputField.value
+    /* 重設線條、錯誤符號的樣式，避免一開始使用者輸入錯誤而造成樣式維持錯誤時的樣式 */
+    view.showWarningMessage(false)
+
+    /* 當輸入不完全是空白時，便允許增加項目 */
+    const itemReference = view.renderNewItemOnList(todoList, inputValue)
+
+    /* 當增加完便重新渲染一次輸入欄樣式 */
+    view.renderInputField(inputField)
+
+    /* 增加實際項目至 Model */
+    model.listSetter({
+      listType: 'todo',
+      itemTitle: inputValue,
+      itemReference: itemReference
+    })
+
+  },
+  /* 分配事件處理內容至增加按鈕 */
+  dispatchAddBtnClickedAction(inputField) {
+
+    /* 根據輸入欄是否為空來決定渲染情形、資料增加 */
+    this.dispatchAddItemAction(inputField)
   },
   /* 分配事件處理內容至輸入欄輸入事件 */
   dispatchInputFieldInputedAction(event) {
 
-    const inputValue = input.value
-
     /* 當鍵盤按下Enter就代表要增加元素 */
     if (event.key === "Enter") {
-
-      /* 當輸入全是空白時，便代表著錯誤，會跑出錯誤訊息及調整相關樣式(線條、出現錯誤符號) */
-      if (inputValue.trim() === "") {
-
-
-        /* 顯示錯誤訊息、調整相關樣式 */
-        view.showWarningMessage(true)
-      } else {
-
-        /* 重設線條、錯誤符號的樣式，避免一開始使用者輸入錯誤而造成樣式維持錯誤時的樣式 */
-        view.showWarningMessage(false)
-
-
-        /* 當輸入不完全是空白時，便允許增加項目 */
-        const itemReference = view.renderNewItemOnList(todoList, inputValue)
-
-        /* 當增加完便重新渲染一次輸入欄樣式 */
-        view.renderInputField(input)
-
-        /* 增加實際項目至 Model */
-        model.listSetter({
-          listType: 'todo',
-          itemTitle: inputValue,
-          itemReference: itemReference
-        })
-
-      }
-
-
+      /* 根據輸入欄是否為空來決定渲染情形、資料增加 */
+      this.dispatchAddItemAction(event.target)
 
     }
   },
@@ -376,7 +361,7 @@ const controller = {
 
 /* 增加按鈕上的點擊事件處理 */
 addBtn.addEventListener("click", function (event) {
-  controller.dispatchAddBtnClickedAction(event.target)
+  controller.dispatchAddBtnClickedAction(input)
 })
 
 /* todoList 上 的 點擊事件處理 */

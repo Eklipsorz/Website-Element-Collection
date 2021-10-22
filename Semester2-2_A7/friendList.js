@@ -59,22 +59,8 @@ function renderFriendList(data) {
 
 }
 
-/* FIXME: 會從預設頁面轉換至正確頁面，正確來說是直接正確頁面，而非轉換*/
+
 function showFriendModal(id) {
-
-  console.log(id)
-
-  // <ul class="list-unstyled">
-  //   <!-- email -->
-  //   <li id="friend-modal-email">email: guillaume.vincent@example.com</li>
-  //   <!-- birthday -->
-  //   <li id="friend-modal-birthday">birthday: 1995-05-05</li>
-  //   <!-- age -->
-  //   <li id="friend-modal-age">age: 25</li>
-  //   <!-- gender -->
-  //   <li id="friend-modal-gender">gender: male</li>
-  //   <!-- region -->
-  //   <li id="friend-modal-region">region: CH</li>
 
   const friendName = document.querySelector('#friend-modal-name')
   const friendEmail = document.querySelector('#friend-modal-email')

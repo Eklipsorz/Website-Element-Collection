@@ -44,6 +44,19 @@ function renderComments(comments) {
 
 ////// 請在以下區域進行修改 ///////
 
+function isBadCommentId(badCommentId, Id) {
+  return badCommentId === Id
+}
 
 
-renderComments(comments)  // 有需要的話可以更動參數
+// 假設一開始只有一筆badCommentId的話，其badCommentId會是以數字型別，而非陣列
+// 若指定多筆badCommentId的話，其badCommentId勢必會是以陣列形式來進行。
+// 在這段會一律會統一用陣列的形式來儲存單筆badCommentId或者多筆badCommentId
+const badCommentIdArray = Array.isArray(badCommentId) ? badCommentId : [1].fill(badCommentId)
+
+// 過濾出黑名單評論的評論
+const filteredComments = comments.filter(comment => {
+  return !badCommentIdArray.includes(comment.id)
+})
+
+renderComments(filteredComments)  // 有需要的話可以更動參數

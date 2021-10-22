@@ -34,6 +34,15 @@ app.get('/', (req, res) => {
 })
 
 
+app.get('/movies/:id', (req, res) => {
+
+  // const movieId = Number(req.params.id) - 1
+  const movie = movieList.results.find(movie => movie.id.toString() === req.params.id)
+
+  res.render('show', { movie: movie })
+})
+
+
 
 // start to listen
 app.listen(port, () => {

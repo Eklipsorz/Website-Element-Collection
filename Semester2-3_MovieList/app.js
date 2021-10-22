@@ -1,6 +1,7 @@
 
 // define a express app
 const express = require('express')
+
 const app = express()
 
 
@@ -10,6 +11,8 @@ const port = 3500
 
 
 const expbars = require('express-handlebars')
+const movieList = require('./movieList.json')
+
 app.engine('handlebars', expbars({ defaultLayout: 'main' }))
 app.set('views', process.cwd() + '/views')
 app.set('view engine', 'handlebars')
@@ -24,13 +27,10 @@ app.use('/', express.static('public'))
 
 app.get('/', (req, res) => {
 
-  const movieOne = {
-    id: 231,
-    imageURL: "https://movie-list.alphacamp.io/posters/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg",
-    movieTitle: "Jurassic World: Fallen Kingdom"
-  }
 
-  res.render('index', { movie: movieOne })
+
+  res.render('index', { movie: movieList.results })
+
 })
 
 

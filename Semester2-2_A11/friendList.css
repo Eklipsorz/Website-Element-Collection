@@ -67,7 +67,7 @@ body {
 
 
 @media screen and (max-width: 620px) {
-  .searchBox:hover > .searchInput {
+  .search-bar-group:hover > .search-bar-input {
     width: 100px;
     padding: 0 6px;
   }
@@ -76,7 +76,7 @@ body {
 
 
 
-.searchBox {
+.search-bar-group {
 
     /* Font or other */
     background: #F5F7F8;
@@ -89,24 +89,23 @@ body {
 
 }
 
-.searchBox:hover {
+.search-bar-group:hover {
   background: #2f3640;
 
 }
 
 
 /* 滑鼠滑到搜尋輸入欄時，輸入欄就拉長 */
-.searchBox:hover > .searchInput {
+.search-bar-group:hover > .search-bar-input {
     /* Box Model */
     width: 50vw;
     padding: 0 6px;
 }
 
 /* 滑鼠滑到搜尋輸入欄，搜尋按鈕會變顏色 */
-.searchBox:hover > .searchButton {
+.search-bar-group:hover > .search-bar-button {
 
   /* Display */
-  /* display: none; */
   background: #2f3640;
   color: #ffffff;
   border: none;
@@ -114,7 +113,7 @@ body {
 
 
 
-.searchButton {
+.search-bar-button {
 
   /* Box Model */
   width: 40px;
@@ -145,9 +144,12 @@ body {
   transition: 0.8s;
 }
 
-.searchInput {
+.search-bar-input {
 
+  /* Positioning */
   float: left;
+
+
   /* Box Model */
   outline: none;
   border: none;
@@ -160,6 +162,9 @@ body {
   color: white;
   font-size: 16px;
   line-height: 40px;
+
+
+  /* Animation: */
   transition: 0.8s;
     
     

@@ -1,9 +1,10 @@
 // 存放所有朋友
 const dataPanel = document.querySelector('#data-panel')
-// 搜尋表單(包含輸入欄、按鈕)
-const searchForm = document.querySelector('#search-form')
+// 搜尋輸入欄
+// const searchBarInput = document.querySelector('#search-bar-input')
+
 // 搜尋表單中的輸入欄
-const searchInput = document.querySelector('#search-input')
+const searchControl = document.querySelector('#search-bar-control')
 // 分頁器
 const paginator = document.querySelector('#paginator')
 
@@ -40,7 +41,7 @@ axios.get(INDEX_URL)
 dataPanel.addEventListener('click', onPanelClicked)
 
 // 將事件處理器 onSearchFormSubmitted 綁定在搜尋輸入欄提交時的事件
-searchForm.addEventListener('submit', onSearchFormSubmitted)
+searchControl.addEventListener('input', onSearchControlInputed)
 
 // 將事件處理器 onPaginationClicked  綁定在分頁器被點擊時的事件
 paginator.addEventListener('click', onPaginatorClicked)
@@ -59,20 +60,14 @@ function onPanelClicked(event) {
 }
 
 // 搜尋表單提交事件處理器
-function onSearchFormSubmitted(event) {
+function onSearchControlInputed(event) {
 
 
   event.preventDefault()
-  const warningIcon = document.querySelector('#search-form .search-input-warning-icon')
-
-
-
-  const keyword = searchInput.value.trim().toLowerCase()
+  const target = event.target
+  const keyword = target.value.trim().toLowerCase()
 
   if (keyword.trim() === '') {
-    console.log('hi')
-    searchInput.style.setProperty('--search-input-border-color', '#FF665A')
-    warningIcon.style.setProperty('--search-input-warning-icon-display', ' ')
     return
   }
 
@@ -82,11 +77,12 @@ function onSearchFormSubmitted(event) {
     return fullName.trim().toLowerCase().includes(keyword)
   })
 
-  if (!filteredFriends.length) {
 
-    alert(`我們找不到名為${keyword}的朋友，抱歉`)
-    return
-  }
+  // if (!filteredFriends.length) {
+
+  //   alert(`我們找不到名為${keyword}的朋友，抱歉`)
+  //   return
+  // }
 
   renderFriendList(getFriendsByPage(1))
   renderPaginator(filteredFriends.length)

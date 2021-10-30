@@ -1,65 +1,135 @@
-
-
-
-
-
-.search-input-warning {
-
-  /* Positioning */
-  position: relative;
-
+* {
   /* Box Model */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  /* Box Model */
+  width: 100vw;
+  height: 100vh;
+  
+}
+
+
+body {
 
   /* Font or other */
-  
-  /*    Variables       */
- 
-  --search-input-border-color: #ced4da;
-  --search-input-warning-icon-display: none;
-  --list__add-item-section-error-message-display: none;
+  background-color: #F5F7F8;
 }
 
+.navbar {
 
-/* TODO: */
-
-.search-form-warning-input {
-  
-  /*    Font or other   */
-  border: 1px solid var(--search-input-border-color)
-  
-}
+  /* Positioning */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
 
 
-/* TODO: */
-
-.search-input-warning-icon::after {
-
-  /*    Positioning     */
-  position: absolute;
-  left: 85%;
-  top: 12%;
-  /*    Display         */
-  display: var(--search-input-warning-icon-display);
-
-  /*    Font or other   */
-  font-family: "FontAwesome"; 
-  font-weight: 900; 
-  color: #FF665A;
-  content: "\f06a";
- 
-}
-
-
-.list__add-item-section-error-message {
-  
-  /*    Display     */
-  display: var(--list__add-item-section-error-message-display);
-
-  /*    Box model   */
+  /* Box Model */
   width: 100%;
-  margin: 1px;
-  
-  /*    Font or other   */
-  color: #FF665A;
+
+
+  /* Font or other */
+  background-color: #F5F7F8;
+
 }
 
+.nav-link {
+  /* Font or other */
+  color: #707A82;
+}
+
+.nav-link.active {
+
+  /* Font or other */
+  border-bottom: 3px solid #403A39;
+} 
+
+
+/* .search-bar { */
+  /* Box Model */
+  /* width: 30%;
+} */
+/* 
+.search-bar .search-bar-input { */
+  /* Box Model */
+  /* width: 100%; */
+
+
+  /* Font or other */
+
+/* } */
+
+
+
+
+
+
+
+.searchBox {
+    /* position: absolute;
+    top: 50%;
+    left: 50%; */
+    /* transform:  translate(-50%,50%); */
+    background: #2f3640;
+    height: 40px;
+    border-radius: 40px;
+    padding: 10px;
+
+}
+
+/* 滑鼠滑到搜尋輸入欄時，輸入欄就拉長 */
+.searchBox:hover > .searchInput {
+    /* Box Model */
+    width: 240px;
+    padding: 0 6px;
+}
+
+/* 滑鼠滑到搜尋輸入欄，搜尋按鈕會變顏色 */
+.searchBox:hover > .searchButton {
+
+  /* Font or other */
+  background: white;
+  color : #2f3640;
+}
+
+.searchButton {
+
+
+    
+    color: white;
+    float: right;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #2f3640;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.4s;
+}
+
+/* .searchInput {
+    border:none;
+    background: none;
+    outline:none;
+    float:left;
+    padding: 0;
+    color: white;
+    font-size: 16px;
+    transition: 0.4s;
+    line-height: 40px;
+    width: 0px;
+
+} */
+
+/* @media screen and (max-width: 620px) {
+.searchBox:hover > .searchInput {
+    width: 150px;
+    padding: 0 6px;
+}
+} */

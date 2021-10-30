@@ -75,57 +75,81 @@ body {
     top: 50%;
     left: 50%; */
     /* transform:  translate(-50%,50%); */
-    background: #2f3640;
+    background: #F5F7F8;
     height: 40px;
     border-radius: 40px;
-    padding: 10px;
+    padding: 0px 10px 0px;
+
 
 }
+
+.searchBox:hover {
+  background: #2f3640;
+
+}
+
 
 /* 滑鼠滑到搜尋輸入欄時，輸入欄就拉長 */
 .searchBox:hover > .searchInput {
     /* Box Model */
-    width: 240px;
+    width: 1000px;
     padding: 0 6px;
 }
 
 /* 滑鼠滑到搜尋輸入欄，搜尋按鈕會變顏色 */
 .searchBox:hover > .searchButton {
 
-  /* Font or other */
-  background: white;
-  color : #2f3640;
+  /* Display */
+  display: none;
 }
+
+
 
 .searchButton {
 
+  /* Box Model */
+  width: 40px;
+  height: 40px;
+  border: none;
 
+  /* Positioning */ 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* 將按鈕置強制浮貼在輸入欄右邊，避免因為Block的輸入欄而導致按鈕放不了同一行 */
+  float: right;
+
+  /* Font or other */
+
+  background-color: #F5F7F8;
     
-    color: white;
-    float: right;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #2f3640;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: 0.4s;
+
+   
+  /* Animation: */
+  /* 指定滑鼠滑過去的渲染過程以x秒來呈現 */
+
+  transition: 0.4s;
 }
 
-/* .searchInput {
-    border:none;
-    background: none;
-    outline:none;
-    float:left;
-    padding: 0;
-    color: white;
-    font-size: 16px;
-    transition: 0.4s;
-    line-height: 40px;
-    width: 0px;
+.searchInput {
 
-} */
+  /* Box Model */
+  outline: none;
+  border: none;
+  width: 0px;
+  padding: 0;
+    
+
+  /* Font or other */
+  background: none;
+  color: white;
+  font-size: 16px;
+  line-height: 40px;
+  transition: 0.8s;
+    
+    
+
+}
 
 /* @media screen and (max-width: 620px) {
 .searchBox:hover > .searchInput {

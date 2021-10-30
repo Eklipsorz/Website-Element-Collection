@@ -1,9 +1,7 @@
 // 存放所有朋友
 const dataPanel = document.querySelector('#data-panel')
-// 搜尋輸入欄
-// const searchBarInput = document.querySelector('#search-bar-input')
 
-// 搜尋表單中的輸入欄
+// 搜尋輸入欄
 const searchControl = document.querySelector('#search-bar-control')
 // 分頁器
 const paginator = document.querySelector('#paginator')
@@ -26,6 +24,7 @@ axios.get(INDEX_URL)
   .then(response => {
 
     friendList.push(...response.data.results)
+    matchFavoriteFriend(friendList)
 
     renderPaginator(friendList.length)
     renderFriendList(getFriendsByPage(1))
@@ -40,7 +39,7 @@ axios.get(INDEX_URL)
 // 將事件處理器 onPanelClicked 綁定在朋友清單點擊時的事件
 dataPanel.addEventListener('click', onPanelClicked)
 
-// 將事件處理器 onSearchFormSubmitted 綁定在搜尋輸入欄提交時的事件
+// 將事件處理器 onSearchControlInputed 綁定在搜尋輸入欄輸入時的事件
 searchControl.addEventListener('input', onSearchControlInputed)
 
 // 將事件處理器 onPaginationClicked  綁定在分頁器被點擊時的事件
@@ -54,12 +53,18 @@ function onPanelClicked(event) {
   if (target.matches('.card-avatar')) {
     showFriendModal(+(target.dataset.id))
   } else if (target.matches('.btn-show-favorite')) {
+
+
+
     addToFavoriteFriend(+(target.dataset.id))
+
   }
 
 }
 
-// 搜尋表單提交事件處理器
+
+
+// 搜尋輸入欄輸入事件處理器
 function onSearchControlInputed(event) {
 
 
@@ -77,12 +82,6 @@ function onSearchControlInputed(event) {
     return fullName.trim().toLowerCase().includes(keyword)
   })
 
-
-  // if (!filteredFriends.length) {
-
-  //   alert(`我們找不到名為${keyword}的朋友，抱歉`)
-  //   return
-  // }
 
   renderFriendList(getFriendsByPage(1))
   renderPaginator(filteredFriends.length)
@@ -135,20 +134,21 @@ function renderFriendList(data) {
 
   data.forEach(item => {
 
-
+    const iconContext = item.isFavorite ?
+      `<i class="fa fa-star btn-show-favorite" aria-hidden="true" data-id=${item.id}></i>` : `<i class="fa fa-star-o btn-show-favorite" aria-hidden="true" data-id=${item.id}></i>`
 
     rawHTML += `
       <div class="col-sm-3">
         <div class="mb-2">
           <!-- cards -->
-          <div class="card">
+          <div class="card profile-card mb-4">
             <img
               src=${item.avatar}
               class="card-img-top card-avatar" alt="Friend Avatar" 
-              data-toggle="modal" data-target="#friend-modal"data-id=${item.id}>
+              data-toggle="modal" data-target="#friend-modal" data-id=${item.id}>
             <div class="card-body text-center">
-              <h5 class="card-title">${item.name + " " + item.surname}</h5>
-              <button class="btn btn-outline-danger btn-show-favorite" data-id=${item.id}>LIKE</button>
+              <h5 class="card-title profile-card-title">${item.name + " " + item.surname}</h5>
+              ${iconContext}
             </div>
         
           </div>
@@ -193,6 +193,29 @@ function showFriendModal(id) {
 
 
 }
+
+// 利用我的最愛來比對朋友清單中哪些是在我的最愛中
+function matchFavoriteFriend(friendList) {
+
+  const list = JSON.parse(localStorage.getItem('favoriteFriends')) || []
+
+  if (list.length === 0) {
+    return
+  }
+
+
+  friendList.forEach(friend => {
+
+    friend.isFavorite = list.some(item => {
+      return item.id === friend.id
+    })
+
+
+  })
+
+
+}
+
 
 
 function addToFavoriteFriend(id) {

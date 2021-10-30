@@ -67,7 +67,7 @@ body {
 
 
 @media screen and (max-width: 620px) {
-  .search-bar-group:hover > .search-bar-input {
+  .search-bar-group:hover > .search-bar-control {
     width: 100px;
     padding: 0 6px;
   }
@@ -96,7 +96,7 @@ body {
 
 
 /* 滑鼠滑到搜尋輸入欄時，輸入欄就拉長 */
-.search-bar-group:hover > .search-bar-input {
+.search-bar-group:hover > .search-bar-control {
     /* Box Model */
     width: 50vw;
     padding: 0 6px;
@@ -144,7 +144,7 @@ body {
   transition: 0.8s;
 }
 
-.search-bar-input {
+.search-bar-control {
 
   /* Positioning */
   float: left;
@@ -170,4 +170,6 @@ body {
     
 
 }
+
+
 

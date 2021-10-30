@@ -66,16 +66,22 @@ body {
 
 
 
+@media screen and (max-width: 620px) {
+  .searchBox:hover > .searchInput {
+    width: 100px;
+    padding: 0 6px;
+  }
+}
 
 
 
 
 .searchBox {
-    /* position: absolute;
-    top: 50%;
-    left: 50%; */
-    /* transform:  translate(-50%,50%); */
+
+    /* Font or other */
     background: #F5F7F8;
+
+    /* Box model */
     height: 40px;
     border-radius: 40px;
     padding: 0px 10px 0px;
@@ -92,7 +98,7 @@ body {
 /* 滑鼠滑到搜尋輸入欄時，輸入欄就拉長 */
 .searchBox:hover > .searchInput {
     /* Box Model */
-    width: 1000px;
+    width: 50vw;
     padding: 0 6px;
 }
 
@@ -100,7 +106,10 @@ body {
 .searchBox:hover > .searchButton {
 
   /* Display */
-  display: none;
+  /* display: none; */
+  background: #2f3640;
+  color: #ffffff;
+  border: none;
 }
 
 
@@ -110,12 +119,17 @@ body {
   /* Box Model */
   width: 40px;
   height: 40px;
+  
   border: none;
+  border-radius: 50%;
+
 
   /* Positioning */ 
   display: flex;
   justify-content: center;
   align-items: center;
+
+
   /* 將按鈕置強制浮貼在輸入欄右邊，避免因為Block的輸入欄而導致按鈕放不了同一行 */
   float: right;
 
@@ -128,11 +142,12 @@ body {
   /* Animation: */
   /* 指定滑鼠滑過去的渲染過程以x秒來呈現 */
 
-  transition: 0.4s;
+  transition: 0.8s;
 }
 
 .searchInput {
 
+  float: left;
   /* Box Model */
   outline: none;
   border: none;
@@ -151,9 +166,3 @@ body {
 
 }
 
-/* @media screen and (max-width: 620px) {
-.searchBox:hover > .searchInput {
-    width: 150px;
-    padding: 0 6px;
-}
-} */

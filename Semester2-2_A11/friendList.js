@@ -37,6 +37,35 @@ axios.get(INDEX_URL)
 
 
 
+const model = {
+  // friend and isFavorite
+  friendList: [],
+  filteredFriendList: [],
+  listSetter(listType, data) {
+    const list = listType === 'normal' ? this.friendList : this.filteredFriendList
+    list.push(...data)
+  },
+  listGetter(listType) {
+    return listType === 'normal' ? this.friendList : this.filteredFriendList
+  },
+  listLengthGetter(listType) {
+    return listType === 'normal' ? this.friendList.length : this.filteredFriendList.length
+  }
+}
+
+
+const view = {
+
+
+
+
+}
+
+const controller = {
+
+}
+
+
 
 // 將事件處理器 onPanelClicked 綁定在朋友清單點擊時的事件
 dataPanel.addEventListener('click', onPanelClicked)

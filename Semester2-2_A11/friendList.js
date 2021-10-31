@@ -1,3 +1,9 @@
+// 清單類別
+const LIST_TYPE = {
+  NormalFriendList: "NormalFriendList",
+  FilteredFriendList: "FilteredFriendList",
+}
+
 // 存放所有朋友
 const dataPanel = document.querySelector('#data-panel')
 
@@ -15,27 +21,6 @@ const INDEX_URL = BASE_URL + '/api/v1/users/'
 const FRIENDS_PER_PAGE = 8
 
 
-let filteredFriends = []
-const friendList = []
-
-
-// 從API撈資料並放入friendList
-axios.get(INDEX_URL)
-  .then(response => {
-
-    friendList.push(...response.data.results)
-    matchFavoriteFriend(friendList)
-
-    renderPaginator(friendList.length)
-    renderFriendList(getFriendsByPage(1))
-
-  })
-  .catch(error => {
-    console.log(error)
-  })
-
-
-
 
 const model = {
   // friend and isFavorite
@@ -50,28 +35,144 @@ const model = {
   },
   listLengthGetter(listType) {
     return listType === 'normal' ? this.friendList.length : this.filteredFriendList.length
+  },
+  getFriendsByPage(page) {
+    const data = this.listLengthGetter('normal') ?
+      this.listGetter('normal') :
+      this.listGetter('filtered')
+
+
+    const startFriendIndex = (page - 1) * FRIENDS_PER_PAGE
+
+    return data.slice(startFriendIndex, startFriendIndex + FRIENDS_PER_PAGE)
   }
 }
 
 
 const view = {
+  initializeView(listType) {
+
+    this.renderPaginator(model.listLengthGetter(listType))
+    this.renderFriendList(model.getFriendsByPage(1))
+  },
+  /* 渲染分頁器，根據項目數量amount來決定渲染多少頁 */
+  renderPaginator(amount) {
+
+    const numberOfPage = Math.ceil(amount / FRIENDS_PER_PAGE)
+    let rawHTML = ''
+
+    for (let page = 1; page <= numberOfPage; page++) {
+      rawHTML += `
+        <li class="page-item"><a class="page-link" href="#" data-page=${page}>${page}</a></li>
+      `
+    }
+
+    paginator.innerHTML = rawHTML
+  },
+  renderFriendList(data) {
+
+    let rawHTML = ''
+
+    data.forEach(item => {
+
+      const iconContext = item.isFavorite ?
+        `<i class="fa fa-star btn-show-favorite" aria-hidden="true" data-id=${item.id}></i>` : `<i class="fa fa-star-o btn-show-favorite" aria-hidden="true" data-id=${item.id}></i>`
+
+      rawHTML += `
+      <div class="col-sm-3">
+        <div class="mb-2">
+          <!-- cards -->
+          <div class="card profile-card mb-4">
+            <img
+              src=${item.avatar}
+              class="card-img-top card-avatar" alt="Friend Avatar" 
+              data-toggle="modal" data-target="#friend-modal" data-id=${item.id}>
+            <div class="card-body text-center">
+              <h5 class="card-title profile-card-title">${item.name + " " + item.surname}</h5>
+              ${iconContext}
+            </div>
+        
+          </div>
+        </div>
+      </div>
+    `
 
 
+    });
 
+    dataPanel.innerHTML = rawHTML
+
+  }
 
 }
 
 const controller = {
+  initialize(INDEX_URL) {
+    axios.get(INDEX_URL)
+      .then(response => {
+
+        model.listSetter('normal', response.data.results)
+        // matchFavoriteFriend(friendList)
+
+        view.renderPaginator(model.listLengthGetter('normal'))
+        view.renderFriendList(model.getFriendsByPage(1))
+        initializeView('normal')
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  },
+  dispatchSearchControlInputedAction(event) {
+
+    event.preventDefault()
+    const target = event.target
+    const keyword = target.value.trim().toLowerCase()
+
+    if (keyword.trim() === '') {
+      filteredFriends = []
+      renderFriendList(getFriendsByPage(1))
+      renderPaginator(friendList.length)
+      return
+    }
+
+
+    filteredFriends = friendList.filter(friend => {
+      const fullName = friend.name + " " + friend.surname
+      return fullName.trim().toLowerCase().includes(keyword)
+    })
+
+
+
+    renderPaginator(filteredFriends.length)
+
+    // 找不到就跳到404
+    if (!filteredFriends.length) {
+
+      dataPanel.innerHTML = `
+      <div id="main">
+    	  <div class="fof">
+        		<h1>Error 404</h1>
+    	  </div>
+      </div>
+     `
+
+      return
+
+    }
+    renderFriendList(getFriendsByPage(1))
+  }
 
 }
 
-
+controller.initialize(INDEX_URL)
 
 // 將事件處理器 onPanelClicked 綁定在朋友清單點擊時的事件
 dataPanel.addEventListener('click', onPanelClicked)
 
 // 將事件處理器 onSearchControlInputed 綁定在搜尋輸入欄輸入時的事件
-searchControl.addEventListener('input', onSearchControlInputed)
+searchControl.addEventListener('input', (event) => {
+  controller.dispatchSearchControlInputedAction(event)
+})
 
 
 // 將事件處理器 onPaginationClicked  綁定在分頁器被點擊時的事件
@@ -94,6 +195,7 @@ function onPanelClicked(event) {
   }
 
 }
+
 
 
 
@@ -154,66 +256,6 @@ function onPaginatorClicked(event) {
 
 }
 
-/* 取得對應頁面的項目，並判定根據是否正在搜尋而變動(要渲染的)資料的來源處 */
-function getFriendsByPage(page) {
-
-  const data = filteredFriends.length ? filteredFriends : friendList
-  const startFriendIndex = (page - 1) * FRIENDS_PER_PAGE
-
-  return data.slice(startFriendIndex, startFriendIndex + FRIENDS_PER_PAGE)
-
-}
-
-/* 渲染分頁器，根據項目數量amount來決定渲染多少頁 */
-function renderPaginator(amount) {
-
-  const numberOfPage = Math.ceil(amount / FRIENDS_PER_PAGE)
-  let rawHTML = ''
-
-  for (let page = 1; page <= numberOfPage; page++) {
-    rawHTML += `
-        <li class="page-item"><a class="page-link" href="#" data-page=${page}>${page}</a></li>
-      `
-  }
-
-  paginator.innerHTML = rawHTML
-}
-
-
-// 根據data內容來渲染朋友清單頁面
-function renderFriendList(data) {
-  let rawHTML = ''
-
-  data.forEach(item => {
-
-    const iconContext = item.isFavorite ?
-      `<i class="fa fa-star btn-show-favorite" aria-hidden="true" data-id=${item.id}></i>` : `<i class="fa fa-star-o btn-show-favorite" aria-hidden="true" data-id=${item.id}></i>`
-
-    rawHTML += `
-      <div class="col-sm-3">
-        <div class="mb-2">
-          <!-- cards -->
-          <div class="card profile-card mb-4">
-            <img
-              src=${item.avatar}
-              class="card-img-top card-avatar" alt="Friend Avatar" 
-              data-toggle="modal" data-target="#friend-modal" data-id=${item.id}>
-            <div class="card-body text-center">
-              <h5 class="card-title profile-card-title">${item.name + " " + item.surname}</h5>
-              ${iconContext}
-            </div>
-        
-          </div>
-        </div>
-      </div>
-    `
-
-
-  });
-
-  dataPanel.innerHTML = rawHTML
-
-}
 
 /* FIXME: 會從預設頁面轉換至正確頁面，正確來說是直接正確頁面，而非轉換*/
 // 設定點選後的互動視窗之內容

@@ -26,20 +26,35 @@ const model = {
   // friend and isFavorite
   friendList: [],
   filteredFriendList: [],
-  listSetter(listType, data) {
-    const list = listType === 'normal' ? this.friendList : this.filteredFriendList
+  listAdder(listType, data) {
+    const list = listType === LIST_TYPE.NormalFriendList ?
+      this.friendList :
+      this.filteredFriendList
+
     list.push(...data)
   },
+  listSetter(listType, newList) {
+
+    if (listType === LIST_TYPE.NormalFriendList) {
+      this.friendList = newList
+    } else {
+      this.filteredFriendList = newList
+    }
+  },
   listGetter(listType) {
-    return listType === 'normal' ? this.friendList : this.filteredFriendList
+    return listType === LIST_TYPE.NormalFriendList ?
+      this.friendList :
+      this.filteredFriendList
   },
   listLengthGetter(listType) {
-    return listType === 'normal' ? this.friendList.length : this.filteredFriendList.length
+    return listType === LIST_TYPE.NormalFriendList ?
+      this.friendList.length :
+      this.filteredFriendList.length
   },
-  getFriendsByPage(page) {
-    const data = this.listLengthGetter('normal') ?
-      this.listGetter('normal') :
-      this.listGetter('filtered')
+  getFriendsByPage(listType, page) {
+    const data = listType === LIST_TYPE.NormalFriendList ?
+      this.listGetter(LIST_TYPE.NormalFriendList) :
+      this.listGetter(LIST_TYPE.FilteredFriendList)
 
 
     const startFriendIndex = (page - 1) * FRIENDS_PER_PAGE
@@ -53,7 +68,7 @@ const view = {
   initializeView(listType) {
 
     this.renderPaginator(model.listLengthGetter(listType))
-    this.renderFriendList(model.getFriendsByPage(1))
+    this.renderFriendList(model.getFriendsByPage(listType, 1))
   },
   /* 渲染分頁器，根據項目數量amount來決定渲染多少頁 */
   renderPaginator(amount) {
@@ -102,21 +117,35 @@ const view = {
 
     dataPanel.innerHTML = rawHTML
 
+  },
+  renderNotFoundPage(dataPanel) {
+
+    let rawHTML = ''
+
+    rawHTML = `
+      <div id="main">
+    	  <div class="fof">
+        		<h1>Error 404</h1>
+    	  </div>
+      </div>
+    
+    `
+    dataPanel.innerHTML = rawHTML
   }
 
 }
 
 const controller = {
+  currentListType: '',
   initialize(INDEX_URL) {
     axios.get(INDEX_URL)
       .then(response => {
 
-        model.listSetter('normal', response.data.results)
+        this.currentListType = LIST_TYPE.NormalFriendList
+        model.listAdder(this.currentListType, response.data.results)
         // matchFavoriteFriend(friendList)
+        view.initializeView(this.currentListType)
 
-        view.renderPaginator(model.listLengthGetter('normal'))
-        view.renderFriendList(model.getFriendsByPage(1))
-        initializeView('normal')
       })
       .catch(error => {
         console.log(error)
@@ -129,37 +158,35 @@ const controller = {
     const keyword = target.value.trim().toLowerCase()
 
     if (keyword.trim() === '') {
-      filteredFriends = []
-      renderFriendList(getFriendsByPage(1))
-      renderPaginator(friendList.length)
+
+      this.currentListType = LIST_TYPE.NormalFriendList
+      model.listSetter(LIST_TYPE.FilteredFriendList, [])
+      view.initializeView(this.currentListType)
+
       return
     }
 
+    const friendList = model.listGetter(LIST_TYPE.NormalFriendList)
 
-    filteredFriends = friendList.filter(friend => {
+    const filteredFriends = friendList.filter(friend => {
       const fullName = friend.name + " " + friend.surname
       return fullName.trim().toLowerCase().includes(keyword)
     })
 
+    this.currentListType = LIST_TYPE.FilteredFriendList
+    model.listSetter(this.currentListType, filteredFriends)
 
 
-    renderPaginator(filteredFriends.length)
+    view.renderPaginator(model.listLengthGetter(this.currentListType))
 
     // 找不到就跳到404
     if (!filteredFriends.length) {
 
-      dataPanel.innerHTML = `
-      <div id="main">
-    	  <div class="fof">
-        		<h1>Error 404</h1>
-    	  </div>
-      </div>
-     `
-
+      view.renderNotFoundPage(dataPanel)
       return
 
     }
-    renderFriendList(getFriendsByPage(1))
+    view.renderFriendList(model.getFriendsByPage(this.currentListType, 1))
   }
 
 }
@@ -199,47 +226,6 @@ function onPanelClicked(event) {
 
 
 
-// 搜尋輸入欄輸入事件處理器
-function onSearchControlInputed(event) {
-
-
-  event.preventDefault()
-  const target = event.target
-  const keyword = target.value.trim().toLowerCase()
-
-  if (keyword.trim() === '') {
-    filteredFriends = []
-    renderFriendList(getFriendsByPage(1))
-    renderPaginator(friendList.length)
-    return
-  }
-
-
-  filteredFriends = friendList.filter(friend => {
-    const fullName = friend.name + " " + friend.surname
-    return fullName.trim().toLowerCase().includes(keyword)
-  })
-
-
-
-  renderPaginator(filteredFriends.length)
-
-  // 找不到就跳到404
-  if (!filteredFriends.length) {
-
-    dataPanel.innerHTML = `
-      <div id="main">
-    	  <div class="fof">
-        		<h1>Error 404</h1>
-    	  </div>
-      </div>
-     `
-
-    return
-
-  }
-  renderFriendList(getFriendsByPage(1))
-}
 
 
 function onPaginatorClicked(event) {

@@ -50,23 +50,30 @@ const model = {
   listAdder(listType, data) {
 
     let list = this.getListByListType(listType)
+
     list.push(...data)
 
   },
   listSetter(listType, newList) {
 
-    if (listType === LIST_TYPE.NormalFriendList) {
-      this.friendList = newList
-    } else {
-      this.filteredFriendList = newList
+    switch (listType) {
+      case LIST_TYPE.NormalFriendList:
+        this.friendList = newList
+        break
+      case LIST_TYPE.FilteredFriendList:
+        this.filteredFriendList = newList
+        break
+      case LIST_TYPE.FavoriteFriendList:
+        this.favoriteList = newList
+        break
     }
+
   },
   listGetter(listType) {
     return this.getListByListType(listType)
   },
   listLengthGetter(listType) {
     const list = this.getListByListType(listType)
-    console.log(listType)
     return list.length
   },
   getFriendsByPage(listType, page) {
@@ -96,6 +103,22 @@ const model = {
 
 
     })
+
+  },
+  addToFavoriteFriend(id) {
+
+
+    const list = this.favoriteList
+    const friend = this.friendList.find(friend => friend.id === id)
+    let favoriteFriendIndex = 0
+
+    if ((favoriteFriendIndex = list.findIndex(item => item.id === id)) != -1) {
+      list.splice(favoriteFriendIndex, 1)
+    } else {
+      this.listAdder(LIST_TYPE.FavoriteFriendList, [friend])
+    }
+
+    localStorage.setItem('favoriteFriends', JSON.stringify(list))
 
   }
 }
@@ -186,7 +209,6 @@ const view = {
   },
   renderFavoriteIcon(targetIcon) {
 
-    console.log(targetIcon)
     const currentClass = targetIcon.matches('.fa-star') ? 'fa-star' : 'fa-star-o'
     const targetClass = currentClass === 'fa-star' ? 'fa-star-o' : 'fa-star'
     targetIcon.classList.remove(currentClass)
@@ -212,15 +234,21 @@ const view = {
 
 const controller = {
 
+  currentListType: '',
   initialize(INDEX_URL) {
     axios.get(INDEX_URL)
       .then(response => {
 
+
+        this.currentListType = LIST_TYPE.NormalFriendList
+        model.listAdder(this.currentListType, response.data.results)
+
         const favoriteFriendList = JSON.parse(localStorage.getItem('favoriteFriends')) || []
-        model.listAdder(LIST_TYPE.NormalFriendList, response.data.results)
+        model.listSetter(LIST_TYPE.FavoriteFriendList, favoriteFriendList)
         model.matchFavoriteFriend(favoriteFriendList)
-        view.initializeView(LIST_TYPE.NormalFriendList)
-        console.log(model.friendList)
+
+        view.initializeView(this.currentListType)
+
       })
       .catch(error => {
         console.log(error)
@@ -234,11 +262,14 @@ const controller = {
 
     if (keyword.trim() === '') {
 
+      this.currentListType = LIST_TYPE.NormalFriendList
       model.listSetter(LIST_TYPE.FilteredFriendList, [])
-      view.initializeView(LIST_TYPE.NormalFriendList)
+      view.initializeView(this.currentListType)
 
       return
     }
+
+    this.currentListType = LIST_TYPE.FilteredFriendList
 
     const friendList = model.listGetter(LIST_TYPE.NormalFriendList)
 
@@ -247,8 +278,8 @@ const controller = {
       return fullName.trim().toLowerCase().includes(keyword)
     })
 
-    model.listSetter(LIST_TYPE.FilteredFriendList, filteredFriends)
-    view.renderPaginator(model.listLengthGetter(LIST_TYPE.FilteredFriendList))
+    model.listSetter(this.currentListType, filteredFriends)
+    view.renderPaginator(model.listLengthGetter(this.currentListType))
 
     // 找不到就跳到404
     if (!filteredFriends.length) {
@@ -257,6 +288,7 @@ const controller = {
       return
 
     }
+
     view.renderFriendList(model.getFriendsByPage(this.currentListType, 1))
   },
   // 點擊頭像的事件處理器
@@ -266,12 +298,25 @@ const controller = {
     if (target.matches('.card-avatar')) {
       view.renderFriendModal(+(target.dataset.id))
     } else if (target.matches('.btn-show-favorite')) {
-      console.log('press star')
+
       view.renderFavoriteIcon(target)
+      model.addToFavoriteFriend(+(target.dataset.id))
       // addToFavoriteFriend(+(target.dataset.id))
       // switch icon
       // update data
     }
+
+  },
+  dispatchPaginatorClickedAction(event) {
+    let currentPage = ''
+    const target = event.target
+
+    if (target.tagName !== 'A') {
+      return
+    }
+    console.log(target)
+    currentPage = target.dataset.page
+    view.renderFriendList(model.getFriendsByPage(this.currentListType, currentPage))
 
   }
 }
@@ -290,40 +335,8 @@ searchControl.addEventListener('input', (event) => {
 
 
 // 將事件處理器 onPaginationClicked  綁定在分頁器被點擊時的事件
-paginator.addEventListener('click', onPaginatorClicked)
+paginator.addEventListener('click', (event) => {
+  controller.dispatchPaginatorClickedAction(event)
+})
 
 
-
-
-function onPaginatorClicked(event) {
-
-  let currentPage = ''
-  const target = event.target
-
-  if (target.tagName !== 'A') {
-    return
-  }
-
-  currentPage = target.dataset.page
-  renderFriendList(getFriendsByPage(currentPage))
-
-}
-
-
-
-
-
-function addToFavoriteFriend(id) {
-
-
-  const list = JSON.parse(localStorage.getItem('favoriteFriends')) || []
-  const friend = friendList.find(friend => friend.id === id)
-
-  if (list.some(item => item.id === id)) {
-    return alert('此朋友已加入至收藏清單中!!')
-  }
-
-  list.push(friend)
-  localStorage.setItem('favoriteFriends', JSON.stringify(list))
-
-}

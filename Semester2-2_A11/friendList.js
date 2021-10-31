@@ -2,6 +2,7 @@
 const LIST_TYPE = {
   NormalFriendList: "NormalFriendList",
   FilteredFriendList: "FilteredFriendList",
+  FavoriteFriendList: "FavoriteFriendList"
 }
 
 // 存放所有朋友
@@ -25,13 +26,25 @@ const FRIENDS_PER_PAGE = 8
 const model = {
   // friend and isFavorite
   friendList: [],
+  favoriteList: [],
   filteredFriendList: [],
+
   listAdder(listType, data) {
-    const list = listType === LIST_TYPE.NormalFriendList ?
-      this.friendList :
-      this.filteredFriendList
+
+    switch (listType) {
+      case LIST_TYPE.NormalFriendList:
+        list = this.friendList
+        break
+      case LIST_TYPE.FilteredFriendList:
+        list = this.filteredFriendList
+        break
+      case LIST_TYPE.FavoriteFriendList:
+        list = this.favoriteList
+        break
+    }
 
     list.push(...data)
+
   },
   listSetter(listType, newList) {
 
@@ -60,8 +73,27 @@ const model = {
     const startFriendIndex = (page - 1) * FRIENDS_PER_PAGE
 
     return data.slice(startFriendIndex, startFriendIndex + FRIENDS_PER_PAGE)
+  },
+  // 利用我的最愛來比對朋友清單中哪些是在我的最愛中
+  matchFavoriteFriend(favoriteFriendList) {
+
+    if (favoriteFriendList.length === 0) {
+      return
+    }
+
+    this.friendList.forEach(friend => {
+
+      friend.isFavorite = favoriteFriendList.some(item => {
+        return item.id === friend.id
+      })
+
+
+    })
+
   }
 }
+
+
 
 
 const view = {
@@ -136,15 +168,15 @@ const view = {
 }
 
 const controller = {
-  currentListType: '',
+
   initialize(INDEX_URL) {
     axios.get(INDEX_URL)
       .then(response => {
 
-        this.currentListType = LIST_TYPE.NormalFriendList
-        model.listAdder(this.currentListType, response.data.results)
-        // matchFavoriteFriend(friendList)
-        view.initializeView(this.currentListType)
+        const favoriteFriendList = JSON.parse(localStorage.getItem('favoriteFriends')) || []
+        model.listAdder(LIST_TYPE.NormalFriendList, response.data.results)
+        model.matchFavoriteFriend(favoriteFriendList)
+        view.initializeView(LIST_TYPE.NormalFriendList)
 
       })
       .catch(error => {
@@ -159,9 +191,8 @@ const controller = {
 
     if (keyword.trim() === '') {
 
-      this.currentListType = LIST_TYPE.NormalFriendList
       model.listSetter(LIST_TYPE.FilteredFriendList, [])
-      view.initializeView(this.currentListType)
+      view.initializeView(LIST_TYPE.NormalFriendList)
 
       return
     }
@@ -173,10 +204,7 @@ const controller = {
       return fullName.trim().toLowerCase().includes(keyword)
     })
 
-    this.currentListType = LIST_TYPE.FilteredFriendList
-    model.listSetter(this.currentListType, filteredFriends)
-
-
+    model.listSetter(LIST_TYPE.FilteredFriendList, filteredFriends)
     view.renderPaginator(model.listLengthGetter(this.currentListType))
 
     // 找不到就跳到404
@@ -274,27 +302,7 @@ function showFriendModal(id) {
 
 }
 
-// 利用我的最愛來比對朋友清單中哪些是在我的最愛中
-function matchFavoriteFriend(friendList) {
 
-  const list = JSON.parse(localStorage.getItem('favoriteFriends')) || []
-
-  if (list.length === 0) {
-    return
-  }
-
-
-  friendList.forEach(friend => {
-
-    friend.isFavorite = list.some(item => {
-      return item.id === friend.id
-    })
-
-
-  })
-
-
-}
 
 
 

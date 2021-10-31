@@ -36,14 +36,18 @@ axios.get(INDEX_URL)
 
 
 
+
+
 // 將事件處理器 onPanelClicked 綁定在朋友清單點擊時的事件
 dataPanel.addEventListener('click', onPanelClicked)
 
 // 將事件處理器 onSearchControlInputed 綁定在搜尋輸入欄輸入時的事件
 searchControl.addEventListener('input', onSearchControlInputed)
 
+
 // 將事件處理器 onPaginationClicked  綁定在分頁器被點擊時的事件
 paginator.addEventListener('click', onPaginatorClicked)
+
 
 // 點擊頭像的事件處理器
 function onPanelClicked(event) {
@@ -73,6 +77,9 @@ function onSearchControlInputed(event) {
   const keyword = target.value.trim().toLowerCase()
 
   if (keyword.trim() === '') {
+    filteredFriends = []
+    renderFriendList(getFriendsByPage(1))
+    renderPaginator(friendList.length)
     return
   }
 
@@ -83,8 +90,24 @@ function onSearchControlInputed(event) {
   })
 
 
-  renderFriendList(getFriendsByPage(1))
+
   renderPaginator(filteredFriends.length)
+
+  // 找不到就跳到404
+  if (!filteredFriends.length) {
+
+    dataPanel.innerHTML = `
+      <div id="main">
+    	  <div class="fof">
+        		<h1>Error 404</h1>
+    	  </div>
+      </div>
+     `
+
+    return
+
+  }
+  renderFriendList(getFriendsByPage(1))
 }
 
 

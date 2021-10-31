@@ -28,8 +28,9 @@ const model = {
   friendList: [],
   favoriteList: [],
   filteredFriendList: [],
+  getListByListType(listType) {
 
-  listAdder(listType, data) {
+    let list = null
 
     switch (listType) {
       case LIST_TYPE.NormalFriendList:
@@ -43,6 +44,12 @@ const model = {
         break
     }
 
+    return list
+
+  },
+  listAdder(listType, data) {
+
+    let list = this.getListByListType(listType)
     list.push(...data)
 
   },
@@ -55,16 +62,16 @@ const model = {
     }
   },
   listGetter(listType) {
-    return listType === LIST_TYPE.NormalFriendList ?
-      this.friendList :
-      this.filteredFriendList
+    return this.getListByListType(listType)
   },
   listLengthGetter(listType) {
-    return listType === LIST_TYPE.NormalFriendList ?
-      this.friendList.length :
-      this.filteredFriendList.length
+    const list = this.getListByListType(listType)
+    console.log(listType)
+    return list.length
   },
   getFriendsByPage(listType, page) {
+
+    // const data = this.listGetter(listType)
     const data = listType === LIST_TYPE.NormalFriendList ?
       this.listGetter(LIST_TYPE.NormalFriendList) :
       this.listGetter(LIST_TYPE.FilteredFriendList)
@@ -150,6 +157,33 @@ const view = {
     dataPanel.innerHTML = rawHTML
 
   },
+  renderFriendModal(id) {
+
+
+    const friendName = document.querySelector('#friend-modal-name')
+    const friendEmail = document.querySelector('#friend-modal-email')
+    const friendBirthDay = document.querySelector('#friend-modal-birthday')
+    const friendAge = document.querySelector('#friend-modal-age')
+    const friendGender = document.querySelector('#friend-modal-gender')
+    const friendRegion = document.querySelector('#friend-modal-region')
+
+
+    axios.get(INDEX_URL + id)
+      .then(response => {
+        const data = response.data
+
+        friendName.innerHTML = `${data.name} ${data.surname}`
+        friendEmail.innerHTML = `email: ${data.email}`
+        friendBirthDay.innerHTML = `birthday: ${data.birthday}`
+        friendAge.innerHTM = `$age: ${data.age}`
+        friendGender.innerHTML = `gender: ${data.gender}`
+        friendRegion.innerHTML = `region: ${data.region}`
+      })
+      .catch(error => {
+        console.log(error)
+      })
+
+  },
   renderNotFoundPage(dataPanel) {
 
     let rawHTML = ''
@@ -177,7 +211,7 @@ const controller = {
         model.listAdder(LIST_TYPE.NormalFriendList, response.data.results)
         model.matchFavoriteFriend(favoriteFriendList)
         view.initializeView(LIST_TYPE.NormalFriendList)
-
+        console.log(model.friendList)
       })
       .catch(error => {
         console.log(error)
@@ -205,7 +239,7 @@ const controller = {
     })
 
     model.listSetter(LIST_TYPE.FilteredFriendList, filteredFriends)
-    view.renderPaginator(model.listLengthGetter(this.currentListType))
+    view.renderPaginator(model.listLengthGetter(LIST_TYPE.FilteredFriendList))
 
     // 找不到就跳到404
     if (!filteredFriends.length) {
@@ -215,14 +249,28 @@ const controller = {
 
     }
     view.renderFriendList(model.getFriendsByPage(this.currentListType, 1))
-  }
+  },
+  // 點擊頭像的事件處理器
+  dispatchPanelClickedAction(event) {
+    const target = event.target
 
+    if (target.matches('.card-avatar')) {
+      view.renderFriendModal(+(target.dataset.id))
+    } else if (target.matches('.btn-show-favorite')) {
+
+      addToFavoriteFriend(+(target.dataset.id))
+
+    }
+
+  }
 }
 
 controller.initialize(INDEX_URL)
 
 // 將事件處理器 onPanelClicked 綁定在朋友清單點擊時的事件
-dataPanel.addEventListener('click', onPanelClicked)
+dataPanel.addEventListener('click', (event) => {
+  controller.dispatchPanelClickedAction(event)
+})
 
 // 將事件處理器 onSearchControlInputed 綁定在搜尋輸入欄輸入時的事件
 searchControl.addEventListener('input', (event) => {
@@ -232,26 +280,6 @@ searchControl.addEventListener('input', (event) => {
 
 // 將事件處理器 onPaginationClicked  綁定在分頁器被點擊時的事件
 paginator.addEventListener('click', onPaginatorClicked)
-
-
-// 點擊頭像的事件處理器
-function onPanelClicked(event) {
-
-  const target = event.target
-
-  if (target.matches('.card-avatar')) {
-    showFriendModal(+(target.dataset.id))
-  } else if (target.matches('.btn-show-favorite')) {
-
-
-
-    addToFavoriteFriend(+(target.dataset.id))
-
-  }
-
-}
-
-
 
 
 
@@ -273,34 +301,6 @@ function onPaginatorClicked(event) {
 
 /* FIXME: 會從預設頁面轉換至正確頁面，正確來說是直接正確頁面，而非轉換*/
 // 設定點選後的互動視窗之內容
-function showFriendModal(id) {
-
-  const friendName = document.querySelector('#friend-modal-name')
-  const friendEmail = document.querySelector('#friend-modal-email')
-  const friendBirthDay = document.querySelector('#friend-modal-birthday')
-  const friendAge = document.querySelector('#friend-modal-age')
-  const friendGender = document.querySelector('#friend-modal-gender')
-  const friendRegion = document.querySelector('#friend-modal-region')
-
-
-  axios.get(INDEX_URL + id)
-    .then(response => {
-      const data = response.data
-
-      friendName.innerHTML = `${data.name} ${data.surname}`
-      friendEmail.innerHTML = `email: ${data.email}`
-      friendBirthDay.innerHTML = `birthday: ${data.birthday}`
-      friendAge.innerHTM = `$age: ${data.age}`
-      friendGender.innerHTML = `gender: ${data.gender}`
-      friendRegion.innerHTML = `region: ${data.region}`
-    })
-    .catch(error => {
-      console.log(error)
-    })
-
-
-
-}
 
 
 

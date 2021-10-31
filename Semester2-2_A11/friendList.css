@@ -201,7 +201,7 @@ body {
   /* Font or other */
   color: #FFCD00;
   font-size: 32px;
-
+  cursor: pointer;
 }
 
 .profile-card .profile-card-title {

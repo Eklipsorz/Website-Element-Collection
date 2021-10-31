@@ -184,6 +184,15 @@ const view = {
       })
 
   },
+  renderFavoriteIcon(targetIcon) {
+
+    console.log(targetIcon)
+    const currentClass = targetIcon.matches('.fa-star') ? 'fa-star' : 'fa-star-o'
+    const targetClass = currentClass === 'fa-star' ? 'fa-star-o' : 'fa-star'
+    targetIcon.classList.remove(currentClass)
+    targetIcon.classList.add(targetClass)
+
+  },
   renderNotFoundPage(dataPanel) {
 
     let rawHTML = ''
@@ -257,9 +266,11 @@ const controller = {
     if (target.matches('.card-avatar')) {
       view.renderFriendModal(+(target.dataset.id))
     } else if (target.matches('.btn-show-favorite')) {
-
-      addToFavoriteFriend(+(target.dataset.id))
-
+      console.log('press star')
+      view.renderFavoriteIcon(target)
+      // addToFavoriteFriend(+(target.dataset.id))
+      // switch icon
+      // update data
     }
 
   }
@@ -299,10 +310,6 @@ function onPaginatorClicked(event) {
 }
 
 
-/* FIXME: 會從預設頁面轉換至正確頁面，正確來說是直接正確頁面，而非轉換*/
-// 設定點選後的互動視窗之內容
-
-
 
 
 
@@ -318,6 +325,5 @@ function addToFavoriteFriend(id) {
 
   list.push(friend)
   localStorage.setItem('favoriteFriends', JSON.stringify(list))
-
 
 }

@@ -245,29 +245,23 @@ const view = {
     let rawHTML = ''
 
     data.forEach(item => {
-
-      const iconContext = item.isFavorite ?
-        `<i class="fa fa-star btn-show-favorite" aria-hidden="true" data-id=${item.id}></i>` :
-        `<i class="fa fa-star-o btn-show-favorite" aria-hidden="true" data-id=${item.id}></i>`
-
       rawHTML += `
-  <div class="col-sm-3">
-    <div class="mb-2">
-      <!-- cards -->
-      <div class="card profile-card mb-4">
-        <img
-          src=${item.avatar}
-          class="card-img-top card-avatar" alt="Friend Avatar"
-          data-toggle="modal" data-target="#friend-modal" data-id=${item.id}>
-        <div class ="card-body text-center">
-        <h5 class ="card-title profile-card-title">${item.name + " " + item.surname}</h5>
-        ${iconContext}
+        <div class="col-sm-3">
+          <div class="mb-2">
+            <!-- cards -->
+            <div class="card profile-card mb-4">
+              <img
+                src=${item.avatar}
+                class="card-img-top card-avatar" alt="Friend Avatar"
+                data-toggle="modal" data-target="#friend-modal" data-id=${item.id}>
+              <div class ="card-body text-center">
+                <h5 class ="card-title profile-card-title">${item.name + " " + item.surname}</h5>
+                <i class="fa fa-star btn-show-favorite" aria-hidden="true" data-id=${item.id}></i>
+              </div>
+            </div>
+          </div>
         </div>
-
-      </div>
-    </div>
-  </div>
-  `
+      `
 
 
     });
@@ -315,13 +309,12 @@ const view = {
     let rawHTML = ''
 
     rawHTML = `
-  < div id = "main" >
-    <div class="fof">
-      <h1>Error 404</h1>
-    </div>
-      </div >
-
-  `
+      <div id="main">
+        <div class="fof">
+          <h1>Error 404</h1>
+        </div>
+      </div>
+    `
     dataPanel.innerHTML = rawHTML
   }
 
@@ -332,7 +325,7 @@ const controller = {
   currentListType: '',
   currentPage: 0,
   totalPages: 0,
-  initialize(INDEX_URL) {
+  initialize() {
 
 
     this.currentPage = 1
@@ -465,9 +458,9 @@ const controller = {
     if (target.matches('.card-avatar')) {
       view.renderFriendModal(+(target.dataset.id))
     } else if (target.matches('.btn-show-favorite')) {
-
-      view.renderFavoriteIcon(target)
-      model.addToFavoriteFriend(+(target.dataset.id))
+      console.log(target)
+      // view.renderFavoriteIcon(target)
+      // model.addToFavoriteFriend(+(target.dataset.id))
     }
 
   },
@@ -487,7 +480,7 @@ const controller = {
 
 }
 
-controller.initialize(INDEX_URL)
+controller.initialize()
 
 // 將事件處理器 onPanelClicked 綁定在朋友清單點擊時的事件
 dataPanel.addEventListener('click', (event) => {

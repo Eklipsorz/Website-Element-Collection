@@ -41,7 +41,7 @@ const model = {
   friendList: [],
   favoriteList: [],
   filteredFriendList: [],
-  // 根據清單類型listType 來從friendList、
+  // 根據清單類型 listType 來獲取指定類型的清單
   getListByListType(listType) {
 
     let list = null
@@ -61,6 +61,7 @@ const model = {
     return list
 
   },
+  // 根據清單類型 listType 來將資料增加至對應清單
   listAdder(listType, data) {
 
     let list = this.getListByListType(listType)
@@ -68,6 +69,7 @@ const model = {
     list.push(...data)
 
   },
+  // 根據清單類型 listType 來設定對應清單指向為新的清單 newList 
   listSetter(listType, newList) {
 
     switch (listType) {
@@ -83,13 +85,16 @@ const model = {
     }
 
   },
+  // 根據清單類型 listType 來獲取對應清單
   listGetter(listType) {
     return this.getListByListType(listType)
   },
+  // 根據清單類型 listType 來獲取對應清單的大小
   listLengthGetter(listType) {
     const list = this.getListByListType(listType)
     return list.length
   },
+  // 根據清單類型 listType 以及 對應頁面 page 來獲取對應清單中在第page頁的朋友資料
   getFriendsByPage(listType, page) {
 
     const data = this.getListByListType(listType)
@@ -97,10 +102,11 @@ const model = {
 
     return data.slice(startFriendIndex, startFriendIndex + FRIENDS_PER_PAGE)
   },
+  // 將朋友資料數轉換頁數
   parsePage(amount) {
     return Math.ceil(amount / FRIENDS_PER_PAGE)
   },
-  // 利用我的最愛來比對朋友清單中哪些是在我的最愛中
+  // 利用最愛朋友清單來比對朋友清單中哪些是在最愛朋友清單中
   matchFavoriteFriend(favoriteFriendList) {
 
     if (favoriteFriendList.length === 0) {

@@ -168,6 +168,24 @@ const view = {
     this.renderPaginator(pageIndex)
     this.renderFriendList(currentPageData)
   },
+  initPaginator() {
+    paginator.innerHTML = ''
+
+    const newLeftArrow = document.createElement('span')
+    const newRightArrow = document.createElement('span')
+
+    newLeftArrow.classList.add('material-icons-outlined')
+    newRightArrow.classList.add('material-icons-outlined')
+
+    newLeftArrow.id = 'previous'
+    newRightArrow.id = 'next'
+    newLeftArrow.innerHTML = 'chevron_left'
+    newRightArrow.innerHTML = 'navigate_next'
+
+    paginator.append(newLeftArrow)
+    paginator.append(newRightArrow)
+  }
+  ,
   /* 渲染分頁器，根據項目數量amount來決定渲染多少頁 */
   renderPaginator(pageIndex) {
 
@@ -184,12 +202,9 @@ const view = {
       newListItem.innerHTML = `
         <a class="page-link profile-link-item" href="#" data-page=${page}>${page}</a>
       `
+      newListItem.dataset.page = page
       paginator.insertBefore(newListItem, nextButton)
-      // rawHTML += `
-      //   <li class="page-item">
-      //     <a class="page-link profile-link-item" href="#" data-page=${page}>${page}</a>
-      //   </li>
-      // `
+
     }
 
     if (!pageIndex.isLastPageGroup) {
@@ -200,6 +215,19 @@ const view = {
     }
 
     // paginator.innerHTML = rawHTML
+  },
+  renderCurrentPage(id) {
+
+    const pages = [...paginator.querySelectorAll('.page-item')]
+
+
+    const currentPage = pages.find(page => {
+      return page.dataset.page === id
+    })
+
+
+    currentPage.classList.add('active')
+
   },
   renderFriendList(data) {
 
@@ -298,19 +326,23 @@ const controller = {
         this.currentPage = 1
         this.currentListType = LIST_TYPE.NormalFriendList
 
+        // 獲取資料並建立朋友清單
         model.listAdder(this.currentListType, response.data.results)
 
-
+        // 設定我的最愛
         const favoriteFriendList = JSON.parse(localStorage.getItem('favoriteFriends')) || []
         model.listSetter(LIST_TYPE.FavoriteFriendList, favoriteFriendList)
         model.matchFavoriteFriend(favoriteFriendList)
 
+        // 第幾頁好友
         const currentPageData = model.getFriendsByPage(this.currentListType, this.currentPage)
-        // const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
+        const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
 
-        const pageIndex = model.getPageIndexByPageGroup(this.currentListType, 3)
+
+
         console.log(pageIndex)
         view.initializeView(currentPageData, pageIndex)
+        view.renderCurrentPage('' + this.currentPage)
       })
       .catch(error => {
         console.log(error)
@@ -325,20 +357,21 @@ const controller = {
 
     if (keyword.trim() === '') {
 
-
+      view.initPaginator()
 
       this.currentListType = LIST_TYPE.NormalFriendList
       model.listSetter(LIST_TYPE.FilteredFriendList, [])
 
       const currentPageData = model.getFriendsByPage(this.currentListType, 1)
-      const pageDataSize = model.listLengthGetter(this.currentListType)
-      const pageIndex = model.getPageIndexByPageGroup(model.parsePage(pageDataSize), 1)
+      const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
 
       view.initializeView(currentPageData, pageIndex)
 
 
       return
     }
+
+    view.initPaginator()
 
     this.currentListType = LIST_TYPE.FilteredFriendList
 
@@ -349,18 +382,20 @@ const controller = {
       return fullName.trim().toLowerCase().includes(keyword)
     })
 
+
     model.listSetter(this.currentListType, filteredFriends)
-    view.renderPaginator(model.listLengthGetter(this.currentListType))
+
+
 
     // 找不到就跳到404
     if (!filteredFriends.length) {
+      paginator.innerHTML = ''
       view.renderNotFoundPage(dataPanel)
       return
     }
 
-    const pageIndex = model.getPageIndexByPageGroup(model.parsePage(pageDataSize), this.currentPage)
-
-
+    const pageIndex = model.getPageIndexByPageGroup(this.currentListType, 1)
+    view.renderPaginator(pageIndex)
     view.renderFriendList(model.getFriendsByPage(this.currentListType, 1))
   },
   // 點擊頭像的事件處理器

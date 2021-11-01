@@ -21,6 +21,7 @@ const INDEX_URL = BASE_URL + '/api/v1/users/'
 
 const FRIENDS_PER_PAGE = 8
 
+const PAGES_PER_PAGE_GROUP = 5
 
 
 const model = {
@@ -105,6 +106,31 @@ const model = {
     })
 
   },
+  // allPages = amount / FRIENDS_PER_PAGE
+  // const FRIENDS_PER_PAGE = 8
+  // const PAGES_PER_PAGE_GROUP = 5
+  // model.getPageIndexByPageGroup(10, 6)
+  getPageIndexByPageGroup(allPages, currentPage) {
+    const currentPageGroup = Math.ceil(currentPage / PAGES_PER_PAGE_GROUP)
+    const lastPageGroup = Math.ceil(allPages / PAGES_PER_PAGE_GROUP)
+    console.log(`currentPage: ${currentPageGroup}`)
+    console.log(`lastGroup: ${lastPageGroup}`)
+    let pageIndex = {
+      isLastPageGroup: false,
+      start: 1,
+      end: 1
+    }
+
+    pageIndex.isLastPageGroup = currentPageGroup === lastPageGroup
+    pageIndex.start = (currentPageGroup - 1) * PAGES_PER_PAGE_GROUP
+    pageIndex.end = pageIndex.isLastPageGroup ?
+      allPages :
+      pageIndex.start + PAGES_PER_PAGE_GROUP
+
+
+    return pageIndex
+
+  },
   addToFavoriteFriend(id) {
 
 
@@ -127,10 +153,12 @@ const model = {
 
 
 const view = {
-  initializeView(listType) {
+  // initializeView(listType, currentPage) {
+  // 初始化一開始的頁面，第一個參數是指目前頁數的資料，第二個參數是指多少筆資料
+  initializeView(currentPageData, dataSize) {
 
-    this.renderPaginator(model.listLengthGetter(listType))
-    this.renderFriendList(model.getFriendsByPage(listType, 1))
+    this.renderPaginator(dataSize)
+    this.renderFriendList(currentPageData)
   },
   /* 渲染分頁器，根據項目數量amount來決定渲染多少頁 */
   renderPaginator(amount) {
@@ -235,6 +263,7 @@ const view = {
 const controller = {
 
   currentListType: '',
+  currentPage: 0,
   initialize(INDEX_URL) {
     axios.get(INDEX_URL)
       .then(response => {
@@ -243,12 +272,15 @@ const controller = {
         this.currentListType = LIST_TYPE.NormalFriendList
         model.listAdder(this.currentListType, response.data.results)
 
+
         const favoriteFriendList = JSON.parse(localStorage.getItem('favoriteFriends')) || []
         model.listSetter(LIST_TYPE.FavoriteFriendList, favoriteFriendList)
         model.matchFavoriteFriend(favoriteFriendList)
 
-        view.initializeView(this.currentListType)
+        const currentPageData = model.getFriendsByPage(this.currentListType, 1)
+        const pageDataSize = model.listLengthGetter(this.currentListType)
 
+        view.initializeView(currentPageData, pageDataSize)
       })
       .catch(error => {
         console.log(error)
@@ -262,9 +294,16 @@ const controller = {
 
     if (keyword.trim() === '') {
 
+
+
       this.currentListType = LIST_TYPE.NormalFriendList
+      const currentPageData = model.getFriendsByPage(this.currentListType, 1)
+      const pageDataSize = model.listLengthGetter(this.currentListType)
+
       model.listSetter(LIST_TYPE.FilteredFriendList, [])
-      view.initializeView(this.currentListType)
+
+      view.initializeView(currentPageData, pageDataSize)
+
 
       return
     }
@@ -279,6 +318,7 @@ const controller = {
     })
 
     model.listSetter(this.currentListType, filteredFriends)
+
     view.renderPaginator(model.listLengthGetter(this.currentListType))
 
     // 找不到就跳到404
@@ -301,9 +341,7 @@ const controller = {
 
       view.renderFavoriteIcon(target)
       model.addToFavoriteFriend(+(target.dataset.id))
-      // addToFavoriteFriend(+(target.dataset.id))
-      // switch icon
-      // update data
+
     }
 
   },

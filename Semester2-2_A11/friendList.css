@@ -261,3 +261,7 @@ body {
 
   cursor: pointer;
 }
+
+.navbar-toggler-icon{
+  float: left;
+}

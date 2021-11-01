@@ -17,41 +17,38 @@
 <body>
 
   <!-- Navbar -->
-  <!-- navbar-light bg-light -->
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="friendList.html">Friend List</a>
-    <!-- <i class="fa fa-users" aria-hidden="true"></i> -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="search-bar-group">
 
-      <input class="search-bar-control" type="text" name="" placeholder="Search">
-      <button class="search-bar-button" href="#">
-        <span class="material-icons">
-          search
-        </span>
-      </button>
-    </div>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
+      <form class="form-inline my-2 my-lg-0">
+        <div class="search-bar-group">
 
-    <div class="collapse navbar-collapse mx-3" id="navbarSupportedContent">
+          <input class=" search-bar-control" type="text" name="" placeholder="Search" id="search-bar-control"
+            aria-label="Search">
+          <button class="search-bar-button" href="#">
+            <span class="material-icons">
+              search
+            </span>
+          </button>
+        </div>
+      </form>
+
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="./friendList.html">Home</a>
-        </li>
         <li class="nav-item">
-          <a class="nav-link active" href="./favorite.html">
-            Favorite
-            <span class="sr-only">(current)</span>
-          </a>
+          <a class="nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active ">
+          <a class="nav-link" href="./favorite.html">Favorite</a>
         </li>
       </ul>
     </div>
-
   </nav>
 
 

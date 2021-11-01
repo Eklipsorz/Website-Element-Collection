@@ -10,8 +10,10 @@ const dataPanel = document.querySelector('#data-panel')
 
 // 搜尋輸入欄
 const searchControl = document.querySelector('#search-bar-control')
+
 // 分頁器
 const paginator = document.querySelector('#paginator')
+
 
 // 定義 API Server 
 const BASE_URL = 'https://lighthouse-user-api.herokuapp.com'
@@ -184,6 +186,13 @@ const view = {
 
     paginator.append(newLeftArrow)
     paginator.append(newRightArrow)
+
+    console.log(newLeftArrow)
+    console.log(newRightArrow)
+
+
+
+
   }
   ,
   /* 渲染分頁器，根據項目數量amount來決定渲染多少頁 */
@@ -219,12 +228,15 @@ const view = {
   renderCurrentPage(id) {
 
     const pages = [...paginator.querySelectorAll('.page-item')]
+    let currentPage = 0
 
+    pages.forEach(page => {
 
-    const currentPage = pages.find(page => {
-      return page.dataset.page === id
+      if (page.dataset.page === id) {
+        currentPage = page
+      }
+      currentPage.classList.remove('active')
     })
-
 
     currentPage.classList.add('active')
 
@@ -338,9 +350,9 @@ const controller = {
         const currentPageData = model.getFriendsByPage(this.currentListType, this.currentPage)
         const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
 
-
-
         console.log(pageIndex)
+
+        view.initPaginator()
         view.initializeView(currentPageData, pageIndex)
         view.renderCurrentPage('' + this.currentPage)
       })

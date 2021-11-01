@@ -10,6 +10,7 @@ body {
   /* Box Model */
   width: 100vw;
   height: 100vh;
+  font-family: 'Lato', sans-serif;
   
 }
 
@@ -19,6 +20,12 @@ body {
   /* Font or other */
   background-color: #F5F7F8;
 }
+
+
+
+
+
+
 
 .navbar {
 
@@ -43,27 +50,19 @@ body {
   color: #707A82;
 }
 
-.nav-link.active {
+.nav-item.active {
 
   /* Font or other */
   border-bottom: 3px solid #403A39;
 } 
 
 
-/* .search-bar { */
+.card-container {
+
   /* Box Model */
-  /* width: 30%;
-} */
-/* 
-.search-bar .search-bar-input { */
-  /* Box Model */
-  /* width: 100%; */
+  margin-top: 8%;
 
-
-  /* Font or other */
-
-/* } */
-
+}
 
 
 @media screen and (max-width: 620px) {
@@ -173,3 +172,96 @@ body {
 
 
 
+.profile-card {
+
+  /* Positioning */
+  position: relative;
+
+  /* Box Model */
+  border-radius: 5%;
+
+  /* Font or other */
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+}
+
+.profile-card .card-avatar {
+  /* Box Model */
+  border-radius: 5% 5% 0px 0px;
+}
+
+.profile-card .btn-show-favorite {
+  
+  /* Positioning */
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+
+  /* Font or other */
+  color: #FFCD00;
+  font-size: 32px;
+  cursor: pointer;
+}
+
+.profile-card .profile-card-title {
+  /* Box Model */
+  margin: 0;
+}
+
+
+
+#main{
+    display: table;
+    width: 100%;
+    height: 50vh;
+    text-align: center;
+}
+
+.fof{
+	  display: table-cell;
+	  vertical-align: middle;
+}
+
+.fof h1{
+	  font-size: 50px;
+	  display: inline-block;
+	  padding-right: 12px;
+    color: #888;
+	  animation: type .5s alternate infinite;
+}
+
+@keyframes type{
+	  from{box-shadow: inset -3px 0px 0px #888;}
+	  to{box-shadow: inset -3px 0px 0px transparent;}
+}
+
+.page-item.active .page-link.profile-link-item {
+
+
+  /* Box Model */
+  border-radius: 5px;
+  /* Font or other */
+  color: #FFFFFF;
+  background: #2f3640;
+
+}
+
+.page-link.profile-link-item{
+
+  /* Box Model */
+  border: none;
+
+  /* Font or other */
+  color: #707A82;
+  background: none;
+}
+
+.material-icons-outlined.arrow-icon {
+
+  cursor: pointer;
+}
+
+.navbar-toggler-icon{
+  float: left;
+}

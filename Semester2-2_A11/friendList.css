@@ -50,7 +50,7 @@ body {
   color: #707A82;
 }
 
-.nav-link.active {
+.nav-item.active {
 
   /* Font or other */
   border-bottom: 3px solid #403A39;

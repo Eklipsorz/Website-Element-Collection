@@ -187,10 +187,13 @@ const view = {
     paginator.append(newLeftArrow)
     paginator.append(newRightArrow)
 
-    console.log(newLeftArrow)
-    console.log(newRightArrow)
+    newRightArrow.addEventListener('click', (event) => {
+      controller.dispatchNextBtnClickedAction(event)
+    })
 
-
+    newLeftArrow.addEventListener('click', (event) => {
+      controller.dispatchPreviousBtnClickedAction(event)
+    })
 
 
   }
@@ -230,12 +233,12 @@ const view = {
     const pages = [...paginator.querySelectorAll('.page-item')]
     let currentPage = 0
 
-    pages.forEach(page => {
 
+    pages.forEach(page => {
       if (page.dataset.page === id) {
         currentPage = page
       }
-      currentPage.classList.remove('active')
+      page.classList.remove('active')
     })
 
     currentPage.classList.add('active')
@@ -331,15 +334,18 @@ const controller = {
 
   currentListType: '',
   currentPage: 0,
+  totalPages: 0,
   initialize(INDEX_URL) {
     axios.get(INDEX_URL)
       .then(response => {
 
         this.currentPage = 1
+
         this.currentListType = LIST_TYPE.NormalFriendList
 
         // 獲取資料並建立朋友清單
         model.listAdder(this.currentListType, response.data.results)
+        this.totalPages = model.parsePage(model.listLengthGetter(LIST_TYPE.NormalFriendList))
 
         // 設定我的最愛
         const favoriteFriendList = JSON.parse(localStorage.getItem('favoriteFriends')) || []
@@ -410,6 +416,50 @@ const controller = {
     view.renderPaginator(pageIndex)
     view.renderFriendList(model.getFriendsByPage(this.currentListType, 1))
   },
+  dispatchNextBtnClickedAction(event) {
+
+    if (this.currentPage === this.totalPages) {
+      return
+    }
+    const target = event.target
+    this.currentPage++
+
+    if (this.currentPage % PAGES_PER_PAGE_GROUP === 1) {
+
+      view.initPaginator()
+      const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
+      view.renderPaginator(pageIndex)
+
+    }
+
+
+    view.renderCurrentPage('' + this.currentPage)
+    view.renderFriendList(model.getFriendsByPage(this.currentListType, this.currentPage))
+
+
+
+  },
+  dispatchPreviousBtnClickedAction(event) {
+
+    if (this.currentPage === 1) {
+      return
+    }
+    const target = event.target
+    this.currentPage--
+
+    if (this.currentPage % PAGES_PER_PAGE_GROUP === 0) {
+
+      view.initPaginator()
+      const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
+      view.renderPaginator(pageIndex)
+
+    }
+
+
+    view.renderCurrentPage('' + this.currentPage)
+    view.renderFriendList(model.getFriendsByPage(this.currentListType, this.currentPage))
+
+  },
   // 點擊頭像的事件處理器
   dispatchPanelClickedAction(event) {
     const target = event.target
@@ -420,7 +470,6 @@ const controller = {
 
       view.renderFavoriteIcon(target)
       model.addToFavoriteFriend(+(target.dataset.id))
-
     }
 
   },
@@ -432,10 +481,13 @@ const controller = {
       return
     }
     console.log(target)
-    currentPage = target.dataset.page
-    view.renderFriendList(model.getFriendsByPage(this.currentListType, currentPage))
+    this.currentPage = target.dataset.page
 
-  }
+    view.renderCurrentPage('' + this.currentPage)
+    view.renderFriendList(model.getFriendsByPage(this.currentListType, this.currentPage))
+
+  },
+
 }
 
 controller.initialize(INDEX_URL)

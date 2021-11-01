@@ -377,9 +377,9 @@ const controller = {
     if (keyword.trim() === '') {
 
       this.currentPage = 1
-      this.totalPages = model.parsePage(model.listLengthGetter(LIST_TYPE.NormalFriendList))
-      this.currentListType = LIST_TYPE.NormalFriendList
 
+      this.currentListType = LIST_TYPE.NormalFriendList
+      this.totalPages = model.parsePage(model.listLengthGetter(this.currentListType))
 
 
       model.listSetter(LIST_TYPE.FilteredFriendList, [])
@@ -475,10 +475,11 @@ const controller = {
     if (target.matches('.card-avatar')) {
       view.renderFriendModal(+(target.dataset.id))
     } else if (target.matches('.fa-star-o')) {
-
+      // 放進我的最愛
       view.renderFavoriteIcon(target)
       model.addToFavoriteFriend(+(target.dataset.id))
     } else if (target.matches('.fa-star')) {
+      // 移除我的最愛
       view.renderFavoriteIcon(target)
       model.removeFavoriteFriend(+(target.dataset.id))
     }

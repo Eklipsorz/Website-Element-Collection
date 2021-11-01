@@ -137,16 +137,6 @@ const model = {
     return pageIndex
 
   },
-  addToFavoriteFriend(id) {
-
-
-    const list = this.favoriteList
-    const friend = this.friendList.find(friend => friend.id === id)
-
-    this.listAdder(LIST_TYPE.FavoriteFriendList, [friend])
-    localStorage.setItem('favoriteFriends', JSON.stringify(list))
-
-  },
   removeFavoriteFriend(id) {
 
     const list = this.favoriteList
@@ -196,8 +186,7 @@ const view = {
     })
 
 
-  }
-  ,
+  },
   /* 渲染分頁器，根據項目數量amount來決定渲染多少頁 */
   renderPaginator(pageIndex) {
 
@@ -363,9 +352,9 @@ const controller = {
     if (keyword.trim() === '') {
 
       this.currentPage = 1
-      this.totalPages = model.parsePage(model.listLengthGetter(LIST_TYPE.NormalFriendList))
-      this.currentListType = LIST_TYPE.NormalFriendList
 
+      this.currentListType = LIST_TYPE.FavoriteFriendList
+      this.totalPages = model.parsePage(model.listLengthGetter(this.currentListType))
 
       model.listSetter(LIST_TYPE.FilteredFriendList, [])
 
@@ -383,7 +372,7 @@ const controller = {
 
     this.currentListType = LIST_TYPE.FilteredFriendList
 
-    const friendList = model.listGetter(LIST_TYPE.NormalFriendList)
+    const friendList = model.listGetter(LIST_TYPE.FavoriteFriendList)
 
     const filteredFriends = friendList.filter(friend => {
       const fullName = friend.name + " " + friend.surname
@@ -403,8 +392,8 @@ const controller = {
     }
     this.currentPage = 1
     this.totalPages = model.parsePage(model.listLengthGetter(LIST_TYPE.FilteredFriendList))
-
     const pageIndex = model.getPageIndexByPageGroup(this.currentListType, 1)
+
     view.renderPaginator(pageIndex)
     view.renderCurrentPage('' + this.currentPage)
     view.renderFriendList(model.getFriendsByPage(this.currentListType, 1))
@@ -460,10 +449,10 @@ const controller = {
     if (target.matches('.card-avatar')) {
       view.renderFriendModal(+(target.dataset.id))
     } else if (target.matches('.fa-star')) {
-      console.log(target)
-      // view.renderFavoriteIcon(target)
 
-      // model.addToFavoriteFriend(+(target.dataset.id))
+      model.removeFavoriteFriend(+(target.dataset.id))
+      view.renderFriendList(model.listGetter(LIST_TYPE.FavoriteFriendList))
+
     }
 
   },

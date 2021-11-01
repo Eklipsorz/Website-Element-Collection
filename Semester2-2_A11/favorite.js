@@ -142,16 +142,20 @@ const model = {
 
     const list = this.favoriteList
     const friend = this.friendList.find(friend => friend.id === id)
-    let favoriteFriendIndex = 0
 
-    if ((favoriteFriendIndex = list.findIndex(item => item.id === id)) != -1) {
-      list.splice(favoriteFriendIndex, 1)
-    } else {
-      this.listAdder(LIST_TYPE.FavoriteFriendList, [friend])
-    }
-
+    this.listAdder(LIST_TYPE.FavoriteFriendList, [friend])
     localStorage.setItem('favoriteFriends', JSON.stringify(list))
 
+  },
+  removeFavoriteFriend(id) {
+
+    const list = this.favoriteList
+    let favoriteFriendIndex = 0
+
+    favoriteFriendIndex = list.findIndex(item => item.id === id)
+    list.splice(favoriteFriendIndex, 1)
+
+    localStorage.setItem('favoriteFriends', JSON.stringify(list))
   }
 }
 
@@ -343,8 +347,6 @@ const controller = {
       const currentPageData = model.getFriendsByPage(this.currentListType, this.currentPage)
       const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
 
-      console.log(pageIndex)
-
       view.initPaginator()
       view.initializeView(currentPageData, pageIndex)
       view.renderCurrentPage('' + this.currentPage)
@@ -457,9 +459,10 @@ const controller = {
 
     if (target.matches('.card-avatar')) {
       view.renderFriendModal(+(target.dataset.id))
-    } else if (target.matches('.btn-show-favorite')) {
+    } else if (target.matches('.fa-star')) {
       console.log(target)
       // view.renderFavoriteIcon(target)
+
       // model.addToFavoriteFriend(+(target.dataset.id))
     }
 

@@ -113,9 +113,14 @@ const model = {
   // const FRIENDS_PER_PAGE = 8
   // const PAGES_PER_PAGE_GROUP = 5
   // model.getPageIndexByPageGroup(10, 6)
-  getPageIndexByPageGroup(allPages, currentPage) {
+  getPageIndexByPageGroup(listType, currentPage) {
+
+    let allPages = model.parsePage(model.listLengthGetter(listType))
+
     const currentPageGroup = Math.ceil(currentPage / PAGES_PER_PAGE_GROUP)
     const lastPageGroup = Math.ceil(allPages / PAGES_PER_PAGE_GROUP)
+
+
     console.log(`currentPage: ${currentPageGroup}`)
     console.log(`lastGroup: ${lastPageGroup}`)
     let pageIndex = {
@@ -170,7 +175,7 @@ const view = {
     const startIndex = pageIndex.start
     const endIndex = pageIndex.end
     const nextButton = document.querySelector('#next')
-    let rawHTML = ''
+
 
     for (let page = startIndex; page <= endIndex; page++) {
 
@@ -301,16 +306,17 @@ const controller = {
         model.matchFavoriteFriend(favoriteFriendList)
 
         const currentPageData = model.getFriendsByPage(this.currentListType, this.currentPage)
-        const pageDataSize = model.listLengthGetter(this.currentListType)
-        const pageIndex = model.getPageIndexByPageGroup(model.parsePage(pageDataSize), this.currentPage)
-        // const pageIndex = model.getPageIndexByPageGroup(4, 3)
+        // const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
+
+        const pageIndex = model.getPageIndexByPageGroup(this.currentListType, 3)
         console.log(pageIndex)
         view.initializeView(currentPageData, pageIndex)
       })
       .catch(error => {
         console.log(error)
       })
-  },
+  }
+  ,
   dispatchSearchControlInputedAction(event) {
 
     event.preventDefault()
@@ -322,12 +328,13 @@ const controller = {
 
 
       this.currentListType = LIST_TYPE.NormalFriendList
-      const currentPageData = model.getFriendsByPage(this.currentListType, 1)
-      const pageDataSize = model.listLengthGetter(this.currentListType)
-
       model.listSetter(LIST_TYPE.FilteredFriendList, [])
 
-      view.initializeView(currentPageData, pageDataSize)
+      const currentPageData = model.getFriendsByPage(this.currentListType, 1)
+      const pageDataSize = model.listLengthGetter(this.currentListType)
+      const pageIndex = model.getPageIndexByPageGroup(model.parsePage(pageDataSize), 1)
+
+      view.initializeView(currentPageData, pageIndex)
 
 
       return
@@ -343,16 +350,16 @@ const controller = {
     })
 
     model.listSetter(this.currentListType, filteredFriends)
-
     view.renderPaginator(model.listLengthGetter(this.currentListType))
 
     // 找不到就跳到404
     if (!filteredFriends.length) {
-
       view.renderNotFoundPage(dataPanel)
       return
-
     }
+
+    const pageIndex = model.getPageIndexByPageGroup(model.parsePage(pageDataSize), this.currentPage)
+
 
     view.renderFriendList(model.getFriendsByPage(this.currentListType, 1))
   },

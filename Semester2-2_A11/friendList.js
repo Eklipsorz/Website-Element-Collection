@@ -89,6 +89,9 @@ const model = {
 
     return data.slice(startFriendIndex, startFriendIndex + FRIENDS_PER_PAGE)
   },
+  parsePage(amount) {
+    return Math.ceil(amount / FRIENDS_PER_PAGE)
+  },
   // 利用我的最愛來比對朋友清單中哪些是在我的最愛中
   matchFavoriteFriend(favoriteFriendList) {
 
@@ -122,10 +125,10 @@ const model = {
     }
 
     pageIndex.isLastPageGroup = currentPageGroup === lastPageGroup
-    pageIndex.start = (currentPageGroup - 1) * PAGES_PER_PAGE_GROUP
+    pageIndex.start = (currentPageGroup - 1) * PAGES_PER_PAGE_GROUP + 1
     pageIndex.end = pageIndex.isLastPageGroup ?
       allPages :
-      pageIndex.start + PAGES_PER_PAGE_GROUP
+      pageIndex.start + PAGES_PER_PAGE_GROUP - 1
 
 
     return pageIndex
@@ -155,24 +158,43 @@ const model = {
 const view = {
   // initializeView(listType, currentPage) {
   // 初始化一開始的頁面，第一個參數是指目前頁數的資料，第二個參數是指多少筆資料
-  initializeView(currentPageData, dataSize) {
+  initializeView(currentPageData, pageIndex) {
 
-    this.renderPaginator(dataSize)
+    this.renderPaginator(pageIndex)
     this.renderFriendList(currentPageData)
   },
   /* 渲染分頁器，根據項目數量amount來決定渲染多少頁 */
-  renderPaginator(amount) {
+  renderPaginator(pageIndex) {
 
-    const numberOfPage = Math.ceil(amount / FRIENDS_PER_PAGE)
+    // const numberOfPage = Math.ceil(amount / FRIENDS_PER_PAGE)
+    const startIndex = pageIndex.start
+    const endIndex = pageIndex.end
+    const nextButton = document.querySelector('#next')
     let rawHTML = ''
 
-    for (let page = 1; page <= numberOfPage; page++) {
-      rawHTML += `
-        <li class="page-item"><a class="page-link" href="#" data-page=${page}>${page}</a></li>
+    for (let page = startIndex; page <= endIndex; page++) {
+
+      const newListItem = document.createElement('li')
+      newListItem.classList.add('page-item')
+      newListItem.innerHTML = `
+        <a class="page-link profile-link-item" href="#" data-page=${page}>${page}</a>
       `
+      paginator.insertBefore(newListItem, nextButton)
+      // rawHTML += `
+      //   <li class="page-item">
+      //     <a class="page-link profile-link-item" href="#" data-page=${page}>${page}</a>
+      //   </li>
+      // `
     }
 
-    paginator.innerHTML = rawHTML
+    if (!pageIndex.isLastPageGroup) {
+      const newListItem = document.createElement('span')
+      newListItem.classList.add('material-icons')
+      newListItem.innerHTML = 'more_horiz'
+      paginator.insertBefore(newListItem, nextButton)
+    }
+
+    // paginator.innerHTML = rawHTML
   },
   renderFriendList(data) {
 
@@ -268,8 +290,9 @@ const controller = {
     axios.get(INDEX_URL)
       .then(response => {
 
-
+        this.currentPage = 1
         this.currentListType = LIST_TYPE.NormalFriendList
+
         model.listAdder(this.currentListType, response.data.results)
 
 
@@ -277,10 +300,12 @@ const controller = {
         model.listSetter(LIST_TYPE.FavoriteFriendList, favoriteFriendList)
         model.matchFavoriteFriend(favoriteFriendList)
 
-        const currentPageData = model.getFriendsByPage(this.currentListType, 1)
+        const currentPageData = model.getFriendsByPage(this.currentListType, this.currentPage)
         const pageDataSize = model.listLengthGetter(this.currentListType)
-
-        view.initializeView(currentPageData, pageDataSize)
+        const pageIndex = model.getPageIndexByPageGroup(model.parsePage(pageDataSize), this.currentPage)
+        // const pageIndex = model.getPageIndexByPageGroup(4, 3)
+        console.log(pageIndex)
+        view.initializeView(currentPageData, pageIndex)
       })
       .catch(error => {
         console.log(error)

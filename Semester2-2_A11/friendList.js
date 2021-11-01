@@ -1,14 +1,17 @@
-// 清單類別
+// 定義清單類型
+// NormalFriendList 定義一般清單類型，該清單內容是從API Server下載回來的原檔內容
+// FilteredFriendList 定義內容被篩選後的清單類型，該清單內容是利用搜尋而獲取的搜尋結果
+// FavoriteFriendList 定義最愛朋友清單類型，該清單內容是所有被標記為最愛(實心星號)的朋友
 const LIST_TYPE = {
   NormalFriendList: "NormalFriendList",
   FilteredFriendList: "FilteredFriendList",
   FavoriteFriendList: "FavoriteFriendList"
 }
 
-// 存放所有朋友
+// 存放朋友資料的面板
 const dataPanel = document.querySelector('#data-panel')
 
-// 搜尋輸入欄
+// 搜尋輸入元件
 const searchControl = document.querySelector('#search-bar-control')
 
 // 分頁器
@@ -21,16 +24,24 @@ const BASE_URL = 'https://lighthouse-user-api.herokuapp.com'
 // 使用 INDEX API
 const INDEX_URL = BASE_URL + '/api/v1/users/'
 
+// 定義每一頁能存放幾個朋友
 const FRIENDS_PER_PAGE = 8
 
+// 定義每一個頁群組能放幾頁，每N頁為一組
 const PAGES_PER_PAGE_GROUP = 5
 
-
+// 定義整個商業邏輯、資料管理
 const model = {
+
   // friend and isFavorite
+  // model 內部會存放三種清單，不是最上面的清單類型
+  // friendList 是存放從API下載回來的朋友資料(每個朋友都額外增加isFavorite這屬性來判別誰在最愛朋友清單中)
+  // favoriteList 是存放最愛朋友清單的朋友資料(每個朋友會用實心星號來表示)
+  // filteredFriendList 是存放搜尋欄輸入後的搜尋結果
   friendList: [],
   favoriteList: [],
   filteredFriendList: [],
+  // 根據清單類型listType 來從friendList、
   getListByListType(listType) {
 
     let list = null

@@ -256,3 +256,8 @@ body {
   color: #707A82;
   background: none;
 }
+
+.material-icons-outlined.arrow-icon {
+
+  cursor: pointer;
+}

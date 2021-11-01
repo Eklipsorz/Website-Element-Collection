@@ -176,8 +176,8 @@ const view = {
     const newLeftArrow = document.createElement('span')
     const newRightArrow = document.createElement('span')
 
-    newLeftArrow.classList.add('material-icons-outlined')
-    newRightArrow.classList.add('material-icons-outlined')
+    newLeftArrow.classList.add('material-icons-outlined', 'arrow-icon')
+    newRightArrow.classList.add('material-icons-outlined', 'arrow-icon')
 
     newLeftArrow.id = 'previous'
     newRightArrow.id = 'next'
@@ -375,16 +375,20 @@ const controller = {
 
     if (keyword.trim() === '') {
 
-      view.initPaginator()
-
+      this.currentPage = 1
+      this.totalPages = model.parsePage(model.listLengthGetter(LIST_TYPE.NormalFriendList))
       this.currentListType = LIST_TYPE.NormalFriendList
+
+
+
       model.listSetter(LIST_TYPE.FilteredFriendList, [])
 
       const currentPageData = model.getFriendsByPage(this.currentListType, 1)
       const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
 
+      view.initPaginator()
       view.initializeView(currentPageData, pageIndex)
-
+      view.renderCurrentPage('' + this.currentPage)
 
       return
     }
@@ -411,9 +415,12 @@ const controller = {
       view.renderNotFoundPage(dataPanel)
       return
     }
+    this.currentPage = 1
+    this.totalPages = model.parsePage(model.listLengthGetter(LIST_TYPE.FilteredFriendList))
 
     const pageIndex = model.getPageIndexByPageGroup(this.currentListType, 1)
     view.renderPaginator(pageIndex)
+    view.renderCurrentPage('' + this.currentPage)
     view.renderFriendList(model.getFriendsByPage(this.currentListType, 1))
   },
   dispatchNextBtnClickedAction(event) {
@@ -474,7 +481,6 @@ const controller = {
 
   },
   dispatchPaginatorClickedAction(event) {
-    let currentPage = ''
     const target = event.target
 
     if (target.tagName !== 'A') {

@@ -81,12 +81,7 @@ const model = {
   },
   getFriendsByPage(listType, page) {
 
-    // const data = this.listGetter(listType)
-    const data = listType === LIST_TYPE.NormalFriendList ?
-      this.listGetter(LIST_TYPE.NormalFriendList) :
-      this.listGetter(LIST_TYPE.FilteredFriendList)
-
-
+    const data = this.getListByListType(listType)
     const startFriendIndex = (page - 1) * FRIENDS_PER_PAGE
 
     return data.slice(startFriendIndex, startFriendIndex + FRIENDS_PER_PAGE)
@@ -353,14 +348,15 @@ const controller = {
         model.matchFavoriteFriend(favoriteFriendList)
 
         // 第幾頁好友
-        const currentPageData = model.getFriendsByPage(this.currentListType, this.currentPage)
-        const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
 
-        console.log(pageIndex)
+        if (this.totalPages > 0) {
+          const currentPageData = model.getFriendsByPage(this.currentListType, this.currentPage)
+          const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
 
-        view.initPaginator()
-        view.initializeView(currentPageData, pageIndex)
-        view.renderCurrentPage('' + this.currentPage)
+          view.initPaginator()
+          view.initializeView(currentPageData, pageIndex)
+          view.renderCurrentPage('' + this.currentPage)
+        }
       })
       .catch(error => {
         console.log(error)

@@ -81,11 +81,7 @@ const model = {
   },
   getFriendsByPage(listType, page) {
 
-    // const data = this.listGetter(listType)
-    const data = listType === LIST_TYPE.NormalFriendList ?
-      this.listGetter(LIST_TYPE.NormalFriendList) :
-      this.listGetter(LIST_TYPE.FilteredFriendList)
-
+    const data = this.getListByListType(listType)
 
     const startFriendIndex = (page - 1) * FRIENDS_PER_PAGE
 
@@ -124,7 +120,7 @@ const model = {
 
 
     console.log(`currentPage: ${currentPageGroup}`)
-    console.log(`lastGroup: ${lastPageGroup}`)
+    console.log(`lastGroup: ${lastPageGroup} `)
     let pageIndex = {
       isLastPageGroup: false,
       start: 1,
@@ -251,26 +247,27 @@ const view = {
     data.forEach(item => {
 
       const iconContext = item.isFavorite ?
-        `<i class="fa fa-star btn-show-favorite" aria-hidden="true" data-id=${item.id}></i>` : `<i class="fa fa-star-o btn-show-favorite" aria-hidden="true" data-id=${item.id}></i>`
+        `<i class="fa fa-star btn-show-favorite" aria-hidden="true" data-id=${item.id}></i>` :
+        `<i class="fa fa-star-o btn-show-favorite" aria-hidden="true" data-id=${item.id}></i>`
 
       rawHTML += `
-      <div class="col-sm-3">
-        <div class="mb-2">
-          <!-- cards -->
-          <div class="card profile-card mb-4">
-            <img
-              src=${item.avatar}
-              class="card-img-top card-avatar" alt="Friend Avatar" 
-              data-toggle="modal" data-target="#friend-modal" data-id=${item.id}>
-            <div class="card-body text-center">
-              <h5 class="card-title profile-card-title">${item.name + " " + item.surname}</h5>
-              ${iconContext}
-            </div>
-        
-          </div>
+  <div class="col-sm-3">
+    <div class="mb-2">
+      <!-- cards -->
+      <div class="card profile-card mb-4">
+        <img
+          src=${item.avatar}
+          class="card-img-top card-avatar" alt="Friend Avatar"
+          data-toggle="modal" data-target="#friend-modal" data-id=${item.id}>
+        <div class ="card-body text-center">
+        <h5 class ="card-title profile-card-title">${item.name + " " + item.surname}</h5>
+        ${iconContext}
         </div>
+
       </div>
-    `
+    </div>
+  </div>
+  `
 
 
     });
@@ -293,12 +290,12 @@ const view = {
       .then(response => {
         const data = response.data
 
-        friendName.innerHTML = `${data.name} ${data.surname}`
-        friendEmail.innerHTML = `email: ${data.email}`
-        friendBirthDay.innerHTML = `birthday: ${data.birthday}`
-        friendAge.innerHTM = `$age: ${data.age}`
-        friendGender.innerHTML = `gender: ${data.gender}`
-        friendRegion.innerHTML = `region: ${data.region}`
+        friendName.innerHTML = `${data.name} ${data.surname} `
+        friendEmail.innerHTML = `email: ${data.email} `
+        friendBirthDay.innerHTML = `birthday: ${data.birthday} `
+        friendAge.innerHTM = `$age: ${data.age} `
+        friendGender.innerHTML = `gender: ${data.gender} `
+        friendRegion.innerHTML = `region: ${data.region} `
       })
       .catch(error => {
         console.log(error)
@@ -318,13 +315,13 @@ const view = {
     let rawHTML = ''
 
     rawHTML = `
-      <div id="main">
-    	  <div class="fof">
-        		<h1>Error 404</h1>
-    	  </div>
-      </div>
-    
-    `
+  < div id = "main" >
+    <div class="fof">
+      <h1>Error 404</h1>
+    </div>
+      </div >
+
+  `
     dataPanel.innerHTML = rawHTML
   }
 
@@ -336,34 +333,30 @@ const controller = {
   currentPage: 0,
   totalPages: 0,
   initialize(INDEX_URL) {
-    axios.get(INDEX_URL)
-      .then(response => {
 
-        this.currentPage = 1
-        this.currentListType = LIST_TYPE.NormalFriendList
 
-        // 獲取資料並建立朋友清單
-        const favoriteFriendList = JSON.parse(localStorage.getItem('favoriteFriends')) || []
-        model.listAdder(this.currentListType, favoriteFriendList)
-        this.totalPages = model.parsePage(model.listLengthGetter(LIST_TYPE.NormalFriendList))
+    this.currentPage = 1
+    this.currentListType = LIST_TYPE.FavoriteFriendList
 
-        // 設定我的最愛
-        model.listSetter(LIST_TYPE.FavoriteFriendList, favoriteFriendList)
-        model.matchFavoriteFriend(favoriteFriendList)
+    // 獲取資料並建立朋友清單
+    const favoriteFriendList = JSON.parse(localStorage.getItem('favoriteFriends')) || []
+    model.listAdder(this.currentListType, favoriteFriendList)
+    this.totalPages = model.parsePage(model.listLengthGetter(this.currentListType))
 
-        // 第幾頁好友
-        const currentPageData = model.getFriendsByPage(this.currentListType, this.currentPage)
-        const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
 
-        console.log(pageIndex)
 
-        view.initPaginator()
-        view.initializeView(currentPageData, pageIndex)
-        view.renderCurrentPage('' + this.currentPage)
-      })
-      .catch(error => {
-        console.log(error)
-      })
+    // 第幾頁好友
+    if (this.totalPages > 0) {
+      const currentPageData = model.getFriendsByPage(this.currentListType, this.currentPage)
+      const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
+
+      console.log(pageIndex)
+
+      view.initPaginator()
+      view.initializeView(currentPageData, pageIndex)
+      view.renderCurrentPage('' + this.currentPage)
+    }
+
   }
   ,
   dispatchSearchControlInputedAction(event) {

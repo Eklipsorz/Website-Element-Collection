@@ -423,8 +423,7 @@ const controller = {
       .catch(error => {
         console.log(error)
       })
-  }
-  ,
+  },
   // 定義分派事件處理給搜尋輸入欄(Search Control)的輸入事件，當輸入開始便代表搜尋開始
   dispatchSearchControlInputedAction(event) {
 
@@ -476,7 +475,7 @@ const controller = {
     })
 
 
-    // 將代表搜尋結果清單儲存在model層面上。
+    // 將代表搜尋結果清單儲存在model層面上
     model.listSetter(this.currentListType, filteredFriends)
 
 

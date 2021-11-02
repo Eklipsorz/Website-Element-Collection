@@ -424,7 +424,7 @@ const controller = {
       })
   }
   ,
-  // 定義分派事件處理給搜尋輸入欄(Search Control)的輸入事件
+  // 定義分派事件處理給搜尋輸入欄(Search Control)的輸入事件，當輸入開始便代表搜尋開始
   dispatchSearchControlInputedAction(event) {
 
     event.preventDefault()
@@ -500,15 +500,19 @@ const controller = {
     view.renderCurrentPage('' + this.currentPage)
     view.renderFriendList(model.getFriendsByPage(this.currentListType, 1))
   },
-
+  // 定義分派事件處理給分頁器右箭頭元件(Next Button)的點擊事件，當元件被點擊，就代表目前頁數會往後移
   dispatchNextBtnClickedAction(event) {
 
+    // 若目前頁數為總頁數就不移動目前頁數
     if (this.currentPage === this.totalPages) {
       return
     }
+    // 若目前頁數不為總頁數的話，就將目前頁數往後面移動，比如目前頁數=目前頁數+1
+
     const target = event.target
     this.currentPage++
 
+    // 當目前頁數超過目前所在的頁群組，就換下一個頁群組並重新渲染分頁器
     if (this.currentPage % PAGES_PER_PAGE_GROUP === 1) {
 
       view.initPaginator()
@@ -517,21 +521,29 @@ const controller = {
 
     }
 
-
+    // 渲染目前頁數
     view.renderCurrentPage('' + this.currentPage)
+
+    // 根據目前頁數來渲染對應的朋友資料
     view.renderFriendList(model.getFriendsByPage(this.currentListType, this.currentPage))
 
 
 
   },
+  // 定義分派事件處理給分頁器左箭頭元件(Previous Button)的點擊事件，當元件被點擊，就代表目前頁數會往前移
   dispatchPreviousBtnClickedAction(event) {
 
+    // 若目前頁數為第一頁就不移動目前頁數
     if (this.currentPage === 1) {
       return
     }
+
+    // 若目前頁數不為第一頁的話，就將目前頁數往前面移動，比如目前頁數=目前頁數-1
     const target = event.target
     this.currentPage--
 
+
+    // 當目前頁數超過目前所在的頁群組，就換上一個頁群組並重新渲染分頁器
     if (this.currentPage % PAGES_PER_PAGE_GROUP === 0) {
 
       view.initPaginator()
@@ -540,38 +552,45 @@ const controller = {
 
     }
 
-
+    // 渲染目前頁數
     view.renderCurrentPage('' + this.currentPage)
+
+    // 根據目前頁數來渲染對應的朋友資料
     view.renderFriendList(model.getFriendsByPage(this.currentListType, this.currentPage))
 
   },
-  // 點擊頭像的事件處理器
+  // 定義分派事件處理給資料面板(顯示朋友清單)元件(Next Button)的點擊事件
+  // 當元件上的圖像被點擊，就代表會顯示對應資料的互動視窗
+  // 當元件上的星號被點擊，就代表會將對應朋友增加至最愛朋友清單或者從最愛朋友清單刪除指定朋友
   dispatchPanelClickedAction(event) {
     const target = event.target
 
+    // 當元件上的圖像被點擊，就代表會顯示對應資料的互動視窗
     if (target.matches('.card-avatar')) {
       view.renderFriendModal(+(target.dataset.id))
     } else if (target.matches('.fa-star-o')) {
-      // 放進我的最愛
+      // 當點擊空心星號圖示時，就將圖示改換為實心星號以及在model層面上將指定朋友增加至最愛朋友清單
       view.renderFavoriteIcon(target)
       model.addToFavoriteFriend(+(target.dataset.id))
 
     } else if (target.matches('.fa-star')) {
-      // 移除我的最愛
+      // 當點擊實心星號圖示時，就將圖示改換為空心星號以及在model層面上從最愛朋友清單上刪除指定朋友
       view.renderFavoriteIcon(target)
       model.removeFavoriteFriend(+(target.dataset.id))
     }
 
   },
+  // 定義分派事件處理給分頁器頁數(顯示朋友清單)元件(Next Button)的點擊事件
+  // 當對應頁數的點擊發生，就會渲染目前頁數以及對應頁數的朋友清單
   dispatchPaginatorClickedAction(event) {
     const target = event.target
 
+    // 若不是<a>標籤就退回
     if (target.tagName !== 'A') {
       return
     }
-
+    // 渲染目前頁數以及對應頁數的朋友清單，另外將currentPage設定數字是為了型別統一，不讓系統隨意更改為其他型別
     this.currentPage = parseInt(target.dataset.page, 10)
-
     view.renderCurrentPage('' + this.currentPage)
     view.renderFriendList(model.getFriendsByPage(this.currentListType, this.currentPage))
 
@@ -579,20 +598,21 @@ const controller = {
 
 }
 
+// 透過API來初始化畫面和資料
 controller.initialize(INDEX_URL)
 
-// 將事件處理器 onPanelClicked 綁定在朋友清單點擊時的事件
+// 設定資料面板(顯示朋友清單)的點擊事件綁定
 dataPanel.addEventListener('click', (event) => {
   controller.dispatchPanelClickedAction(event)
 })
 
-// 將事件處理器 onSearchControlInputed 綁定在搜尋輸入欄輸入時的事件
+// 設定搜尋輸入欄的點擊事件綁定
 searchControl.addEventListener('input', (event) => {
   controller.dispatchSearchControlInputedAction(event)
 })
 
 
-// 將事件處理器 onPaginationClicked  綁定在分頁器被點擊時的事件
+// 設定分頁器的點擊事件綁定
 paginator.addEventListener('click', (event) => {
   controller.dispatchPaginatorClickedAction(event)
 })

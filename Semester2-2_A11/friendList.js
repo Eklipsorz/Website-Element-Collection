@@ -41,30 +41,10 @@ const model = {
   friendList: [],
   favoriteList: [],
   filteredFriendList: [],
-  // 根據清單類型 listType 來獲取指定類型的清單
-  getListByListType(listType) {
-
-    let list = null
-
-    switch (listType) {
-      case LIST_TYPE.NormalFriendList:
-        list = this.friendList
-        break
-      case LIST_TYPE.FilteredFriendList:
-        list = this.filteredFriendList
-        break
-      case LIST_TYPE.FavoriteFriendList:
-        list = this.favoriteList
-        break
-    }
-
-    return list
-
-  },
   // 根據清單類型 listType 來將資料增加至對應清單
   listAdder(listType, data) {
 
-    let list = this.getListByListType(listType)
+    let list = this.listGetter(listType)
 
     list.push(...data)
 
@@ -87,17 +67,33 @@ const model = {
   },
   // 根據清單類型 listType 來獲取對應清單
   listGetter(listType) {
-    return this.getListByListType(listType)
+
+    let list = null
+
+    switch (listType) {
+      case LIST_TYPE.NormalFriendList:
+        list = this.friendList
+        break
+      case LIST_TYPE.FilteredFriendList:
+        list = this.filteredFriendList
+        break
+      case LIST_TYPE.FavoriteFriendList:
+        list = this.favoriteList
+        break
+    }
+
+    return list
+
   },
   // 根據清單類型 listType 來獲取對應清單的大小
   listLengthGetter(listType) {
-    const list = this.getListByListType(listType)
+    const list = this.listGetter(listType)
     return list.length
   },
   // 根據清單類型 listType 以及 對應頁面 page 來獲取對應清單中在第page頁的朋友資料
   getFriendsByPage(listType, page) {
 
-    const data = this.getListByListType(listType)
+    const data = this.listGetter(listType)
     const startFriendIndex = (page - 1) * FRIENDS_PER_PAGE
 
     return data.slice(startFriendIndex, startFriendIndex + FRIENDS_PER_PAGE)
@@ -135,6 +131,7 @@ const model = {
     const lastPageGroup = Math.ceil(allPages / PAGES_PER_PAGE_GROUP)
 
 
+
     let pageIndex = {
       isLastPageGroup: false,
       start: 1,
@@ -158,6 +155,7 @@ const model = {
     const friend = this.friendList.find(friend => friend.id === id)
 
     this.listAdder(LIST_TYPE.FavoriteFriendList, [friend])
+    friend.isFavorite = true
     localStorage.setItem('favoriteFriends', JSON.stringify(list))
 
   },
@@ -165,9 +163,12 @@ const model = {
 
     const list = this.favoriteList
     let favoriteFriendIndex = 0
+    const friend = this.friendList.find(friend => friend.id === id)
+
 
     favoriteFriendIndex = list.findIndex(item => item.id === id)
     list.splice(favoriteFriendIndex, 1)
+    friend.isFavorite = false
 
     localStorage.setItem('favoriteFriends', JSON.stringify(list))
   }
@@ -494,6 +495,7 @@ const controller = {
       // 放進我的最愛
       view.renderFavoriteIcon(target)
       model.addToFavoriteFriend(+(target.dataset.id))
+
     } else if (target.matches('.fa-star')) {
       // 移除我的最愛
       view.renderFavoriteIcon(target)

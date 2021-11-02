@@ -357,15 +357,15 @@ const view = {
     targetIcon.classList.add(targetClass)
 
   },
-  // 渲染找不到指定朋友時的畫面
-  renderNotFoundPage(dataPanel) {
+  // 根據關鍵字內容來渲染找不到指定朋友時的畫面
+  renderNotFoundPage(dataPanel, keyword) {
 
     let rawHTML = ''
 
     rawHTML = `
       <div id="main">
     	  <div class="fof">
-        		<h1>Error 404</h1>
+        		<h1>${keyword} is not found!!!</h1>
     	  </div>
       </div>
     
@@ -375,31 +375,41 @@ const view = {
 
 }
 
+// 定義如何處理使用者發出的請求和初始化一開始畫面
+// 該控制器有存三種屬性，分別為currentListType、currentPage、totalPages
+// currentListType 是字串，指定目前使用的清單類型是什麼
+// currentPage 是數字，指定目前使用的頁數是什麼
+// totalPages 是數字，指定目前清單的總頁數
 const controller = {
 
   currentListType: '',
   currentPage: 0,
   totalPages: 0,
+  // 呼叫API SERVER所提供的服務來建立一開始畫面渲染和資料建立
   initialize(INDEX_URL) {
     axios.get(INDEX_URL)
       .then(response => {
 
+        // 設定目前頁數、所用清單類型
         this.currentPage = 1
-
         this.currentListType = LIST_TYPE.NormalFriendList
 
-        // 獲取資料並建立朋友清單
+        // 獲取資料並建立一開始的朋友清單
         model.listAdder(this.currentListType, response.data.results)
 
+        // 設定總頁數
         this.totalPages = model.parsePage(model.listLengthGetter(LIST_TYPE.NormalFriendList))
 
-        // 設定我的最愛
+        // 從瀏覽器的localStorage獲取最愛朋友清單
         const favoriteFriendList = JSON.parse(localStorage.getItem('favoriteFriends')) || []
+
+        // 將獲取的清單放置在model層面上的最愛朋友清單
         model.listSetter(LIST_TYPE.FavoriteFriendList, favoriteFriendList)
+
+        // 根據最愛朋友清單來標記從Server下載回來的朋友清單，哪些朋友是在最愛朋友清單中
         model.matchFavoriteFriend(favoriteFriendList)
 
-        // 第幾頁好友
-
+        // 當總頁數大於0才建立分頁器、朋友清單的渲染
         if (this.totalPages > 0) {
           const currentPageData = model.getFriendsByPage(this.currentListType, this.currentPage)
           const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
@@ -414,25 +424,31 @@ const controller = {
       })
   }
   ,
+  // 定義分派事件處理給搜尋輸入欄(Search Control)的輸入事件
   dispatchSearchControlInputedAction(event) {
 
     event.preventDefault()
     const target = event.target
+
     const keyword = target.value.trim().toLowerCase()
 
+
+    // 當搜尋輸入欄從有輸入內容轉換至只剩空格或者沒有任何值時，就代表搜尋停止並且恢復搜尋前的畫面
     if (keyword.trim() === '') {
 
+      // 重設目前所在的清單類型為搜尋前的類型、目前頁數、目前總頁數
       this.currentPage = 1
-
       this.currentListType = LIST_TYPE.NormalFriendList
       this.totalPages = model.parsePage(model.listLengthGetter(this.currentListType))
 
-
+      // 將存放搜尋結果的清單清空
       model.listSetter(LIST_TYPE.FilteredFriendList, [])
 
-      const currentPageData = model.getFriendsByPage(this.currentListType, 1)
+      // 獲取指定清單的第一頁的資料
+      const currentPageData = model.getFriendsByPage(this.currentListType, this.currentPage)
       const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
 
+      // 根據資料來重新渲染分頁器、朋友清單
       view.initPaginator()
       view.initializeView(currentPageData, pageIndex)
       view.renderCurrentPage('' + this.currentPage)
@@ -440,18 +456,26 @@ const controller = {
       return
     }
 
+    // 執行到這階段，代表搜尋輸入欄仍有輸入內容，此時會先建立分頁器一開始會有的樣子
+    // 並根據搜尋結果來渲染該結果下的朋友清單和分頁器內容
+
+
+    // 渲染分頁器一開始會有的樣子
     view.initPaginator()
+
 
     this.currentListType = LIST_TYPE.FilteredFriendList
 
-    const friendList = model.listGetter(LIST_TYPE.NormalFriendList)
+    // 從朋友清單找到符合keyword的朋友，並將這些朋友放入專門存放搜尋結果的清單
 
+    const friendList = model.listGetter(LIST_TYPE.NormalFriendList)
     const filteredFriends = friendList.filter(friend => {
       const fullName = friend.name + " " + friend.surname
       return fullName.trim().toLowerCase().includes(keyword)
     })
 
 
+    // 將代表搜尋結果清單儲存在model層面上。
     model.listSetter(this.currentListType, filteredFriends)
 
 
@@ -459,17 +483,24 @@ const controller = {
     // 找不到就跳到404
     if (!filteredFriends.length) {
       paginator.innerHTML = ''
-      view.renderNotFoundPage(dataPanel)
+      view.renderNotFoundPage(dataPanel, keyword)
       return
     }
+
+    // 設定搜尋後的目前頁數為1
     this.currentPage = 1
+    // 根據搜尋結果來設定總頁數
     this.totalPages = model.parsePage(model.listLengthGetter(LIST_TYPE.FilteredFriendList))
 
+    // 獲取分頁器所需要的資料
     const pageIndex = model.getPageIndexByPageGroup(this.currentListType, 1)
+
+    // 渲染分頁器、目前所在頁數、朋友清單
     view.renderPaginator(pageIndex)
     view.renderCurrentPage('' + this.currentPage)
     view.renderFriendList(model.getFriendsByPage(this.currentListType, 1))
   },
+
   dispatchNextBtnClickedAction(event) {
 
     if (this.currentPage === this.totalPages) {

@@ -31,28 +31,10 @@ const model = {
   friendList: [],
   favoriteList: [],
   filteredFriendList: [],
-  getListByListType(listType) {
 
-    let list = null
-
-    switch (listType) {
-      case LIST_TYPE.NormalFriendList:
-        list = this.friendList
-        break
-      case LIST_TYPE.FilteredFriendList:
-        list = this.filteredFriendList
-        break
-      case LIST_TYPE.FavoriteFriendList:
-        list = this.favoriteList
-        break
-    }
-
-    return list
-
-  },
   listAdder(listType, data) {
 
-    let list = this.getListByListType(listType)
+    let list = this.listGetter(listType)
 
     list.push(...data)
 
@@ -73,15 +55,29 @@ const model = {
 
   },
   listGetter(listType) {
-    return this.getListByListType(listType)
+    let list = null
+
+    switch (listType) {
+      case LIST_TYPE.NormalFriendList:
+        list = this.friendList
+        break
+      case LIST_TYPE.FilteredFriendList:
+        list = this.filteredFriendList
+        break
+      case LIST_TYPE.FavoriteFriendList:
+        list = this.favoriteList
+        break
+    }
+
+    return list
   },
   listLengthGetter(listType) {
-    const list = this.getListByListType(listType)
+    const list = this.listGetter(listType)
     return list.length
   },
   getFriendsByPage(listType, page) {
 
-    const data = this.getListByListType(listType)
+    const data = this.listGetter(listType)
 
     const startFriendIndex = (page - 1) * FRIENDS_PER_PAGE
 
@@ -136,25 +132,19 @@ const model = {
   },
   removeFriend(listType, id) {
 
-    const list = this.getListByListType(listType)
+    const list = this.listGetter(listType)
     const favoriteList = this.favoriteList
 
     let favoriteFriendIndex = 0
     let listFriendIndex = 0
 
     favoriteFriendIndex = favoriteList.findIndex(item => item.id === id)
-    listFriendIndex = list.findIndex(item => item.id === id)
-
     favoriteList.splice(favoriteFriendIndex, 1)
-    list.splice(listFriendIndex, 1)
 
-    console.log('start')
-    console.log('favorite list')
-    console.log(favoriteList)
-    console.log('list')
-    console.log(list)
-    console.log(`index: ${listFriendIndex}`)
-    console.log('end')
+    if (listType != LIST_TYPE.FavoriteFriendList) {
+      listFriendIndex = list.findIndex(item => item.id === id)
+      list.splice(listFriendIndex, 1)
+    }
 
     localStorage.setItem('favoriteFriends', JSON.stringify(favoriteList))
   }

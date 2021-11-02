@@ -134,15 +134,29 @@ const model = {
     return pageIndex
 
   },
-  removeFavoriteFriend(id) {
+  removeFriend(listType, id) {
 
-    const list = this.favoriteList
+    const list = this.getListByListType(listType)
+    const favoriteList = this.favoriteList
+
     let favoriteFriendIndex = 0
+    let listFriendIndex = 0
 
-    favoriteFriendIndex = list.findIndex(item => item.id === id)
-    list.splice(favoriteFriendIndex, 1)
+    favoriteFriendIndex = favoriteList.findIndex(item => item.id === id)
+    listFriendIndex = list.findIndex(item => item.id === id)
 
-    localStorage.setItem('favoriteFriends', JSON.stringify(list))
+    favoriteList.splice(favoriteFriendIndex, 1)
+    list.splice(listFriendIndex, 1)
+
+    console.log('start')
+    console.log('favorite list')
+    console.log(favoriteList)
+    console.log('list')
+    console.log(list)
+    console.log(`index: ${listFriendIndex}`)
+    console.log('end')
+
+    localStorage.setItem('favoriteFriends', JSON.stringify(favoriteList))
   }
 }
 
@@ -449,11 +463,18 @@ const controller = {
     } else if (target.matches('.fa-star')) {
 
       const pastLastPage = this.totalPages
-      model.removeFavoriteFriend(+(target.dataset.id))
+      model.removeFriend(this.currentListType, +(target.dataset.id))
       this.totalPages = model.parsePage(model.listLengthGetter(this.currentListType))
       const lastPageData = model.getFriendsByPage(this.currentListType, pastLastPage)
+      console.log(this.currentListType)
+      console.log(target)
 
-      if (this.totalPages === 0) {
+      if (this.currentListType === LIST_TYPE.FilteredFriendList && this.totalPages === 0) {
+        this.currentPage = 1
+        this.currentListType = LIST_TYPE.FavoriteFriendList
+        searchControl.value = ''
+      } else if (this.totalPages === 0) {
+
         paginator.innerHTML = ''
         view.renderFriendList(lastPageData)
         return
@@ -464,6 +485,7 @@ const controller = {
       const currentPageData = model.getFriendsByPage(this.currentListType, this.currentPage)
       const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
 
+      console.log(currentPageData)
 
       view.renderFriendList(currentPageData)
       view.initPaginator()

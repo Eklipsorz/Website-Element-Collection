@@ -1,14 +1,17 @@
-// 清單類別
+// 定義清單類型
+// NormalFriendList 定義一般清單類型，該清單內容是從API Server下載回來的原檔內容
+// FilteredFriendList 定義內容被篩選後的清單類型，該清單內容是利用搜尋而獲取的搜尋結果
+// FavoriteFriendList 定義最愛朋友清單類型，該清單內容是所有被標記為最愛(實心星號)的朋友
 const LIST_TYPE = {
   NormalFriendList: "NormalFriendList",
   FilteredFriendList: "FilteredFriendList",
   FavoriteFriendList: "FavoriteFriendList"
 }
 
-// 存放所有朋友
+// 存放朋友資料的面板
 const dataPanel = document.querySelector('#data-panel')
 
-// 搜尋輸入欄
+// 搜尋輸入元件
 const searchControl = document.querySelector('#search-bar-control')
 
 // 分頁器
@@ -21,39 +24,23 @@ const BASE_URL = 'https://lighthouse-user-api.herokuapp.com'
 // 使用 INDEX API
 const INDEX_URL = BASE_URL + '/api/v1/users/'
 
+// 定義每一頁能存放幾個朋友
 const FRIENDS_PER_PAGE = 8
 
+// 定義每一個頁群組能放幾頁，每N頁為一組
 const PAGES_PER_PAGE_GROUP = 5
 
-
+// 定義整個商業邏輯、資料管理
 const model = {
   // friend and isFavorite
+  // model 內部會存放三種清單，不是最上面的清單類型
+  // friendList 是存放從API下載回來的朋友資料(每個朋友都額外增加isFavorite這屬性來判別誰在最愛朋友清單中)
+  // favoriteList 是存放最愛朋友清單的朋友資料(每個朋友會用實心星號來表示)
+  // filteredFriendList 是存放搜尋欄輸入後的搜尋結果
   friendList: [],
   favoriteList: [],
   filteredFriendList: [],
-
-  listAdder(listType, data) {
-
-    let list = this.listGetter(listType)
-
-    list.push(...data)
-
-  },
-  listSetter(listType, newList) {
-
-    switch (listType) {
-      case LIST_TYPE.NormalFriendList:
-        this.friendList = newList
-        break
-      case LIST_TYPE.FilteredFriendList:
-        this.filteredFriendList = newList
-        break
-      case LIST_TYPE.FavoriteFriendList:
-        this.favoriteList = newList
-        break
-    }
-
-  },
+  // 根據清單類型 listType 來獲取對應清單
   listGetter(listType) {
     let list = null
 
@@ -71,10 +58,36 @@ const model = {
 
     return list
   },
+  // 根據清單類型 listType 來將資料增加至對應清單
+  listAdder(listType, data) {
+
+    let list = this.listGetter(listType)
+
+    list.push(...data)
+
+  },
+  // 根據清單類型 listType 來設定對應清單指向為新的清單 newList 
+  listSetter(listType, newList) {
+
+    switch (listType) {
+      case LIST_TYPE.NormalFriendList:
+        this.friendList = newList
+        break
+      case LIST_TYPE.FilteredFriendList:
+        this.filteredFriendList = newList
+        break
+      case LIST_TYPE.FavoriteFriendList:
+        this.favoriteList = newList
+        break
+    }
+
+  },
+  // 根據清單類型 listType 來獲取對應清單的大小
   listLengthGetter(listType) {
     const list = this.listGetter(listType)
     return list.length
   },
+  // 根據清單類型 listType 以及 對應頁面 page 來獲取對應清單中在第page頁的朋友資料
   getFriendsByPage(listType, page) {
 
     const data = this.listGetter(listType)
@@ -83,44 +96,42 @@ const model = {
 
     return data.slice(startFriendIndex, startFriendIndex + FRIENDS_PER_PAGE)
   },
+  // 將朋友資料數轉換頁數
   parsePage(amount) {
     return Math.ceil(amount / FRIENDS_PER_PAGE)
   },
-  // 利用我的最愛來比對朋友清單中哪些是在我的最愛中
-  matchFavoriteFriend(favoriteFriendList) {
-
-    if (favoriteFriendList.length === 0) {
-      return
-    }
-
-    this.friendList.forEach(friend => {
-
-      friend.isFavorite = favoriteFriendList.some(item => {
-        return item.id === friend.id
-      })
-
-
-    })
-
-  },
-  // allPages = amount / FRIENDS_PER_PAGE
-  // const FRIENDS_PER_PAGE = 8
-  // const PAGES_PER_PAGE_GROUP = 5
-  // model.getPageIndexByPageGroup(10, 6)
+  // 將總頁數分成好幾個群組(Page Group)，每一個群組都有各自頁數來實現分頁器一次
+  // 只渲染指定頁數，比如第一組為1-5頁，第二組為6-10頁，後面以此類推，其中1是第一組
+  // 的起始頁數，而5就是第一組的結尾頁數，該函式會根據目前清單類型和目前所在頁數來換
+  // 算目前頁數所在的群組在哪，然後再回傳 pageIndex 物件，該物件會代表該群組的起始
+  // 頁數、結尾頁數、該群組是否為最後一個群組。
+  //
+  // 該物件會存三種值，isLastPageGroup、start、end
+  // isLastPageGroup 為布林值，當是true的時候，就代表目前群組為最後群組
+  // start 為數字，代表著目前所在群組的起始頁數
+  // end 為數字，代表著目前所在群組的結尾頁數
   getPageIndexByPageGroup(listType, currentPage) {
 
+    // 獲取總頁數
     let allPages = model.parsePage(model.listLengthGetter(listType))
 
+    // 將目前所在頁數轉換至對應群組
     const currentPageGroup = Math.ceil(currentPage / PAGES_PER_PAGE_GROUP)
+
+    // 將總頁數轉換成最後群組
     const lastPageGroup = Math.ceil(allPages / PAGES_PER_PAGE_GROUP)
 
+    // 定義 pageIndex 物件
     let pageIndex = {
       isLastPageGroup: false,
       start: 1,
       end: 1
     }
 
+    // 評估目前所在群組是否為最後群組
     pageIndex.isLastPageGroup = currentPageGroup === lastPageGroup
+
+    // 獲取目前所在群組的起始頁數和結尾頁數
     pageIndex.start = (currentPageGroup - 1) * PAGES_PER_PAGE_GROUP + 1
     pageIndex.end = pageIndex.isLastPageGroup ?
       allPages :
@@ -152,15 +163,15 @@ const model = {
 
 
 
-
+// 定義視覺呈現
 const view = {
-  // initializeView(listType, currentPage) {
-  // 初始化一開始的頁面，第一個參數是指目前頁數的資料，第二個參數是指多少筆資料
+  // 根據目前對應頁數的朋友資料和pageIndex來建立一個一開始的朋友清單畫面和分頁器畫面
   initializeView(currentPageData, pageIndex) {
 
     this.renderPaginator(pageIndex)
     this.renderFriendList(currentPageData)
   },
+  // 渲染分頁器本身會有的元件以及該元件的事件綁定
   initPaginator() {
     paginator.innerHTML = ''
 

@@ -142,7 +142,7 @@ const model = {
     // 將總頁數轉換成最後群組
     const lastPageGroup = Math.ceil(allPages / PAGES_PER_PAGE_GROUP)
 
-    // 定義pageIndex 物件
+    // 定義 pageIndex 物件
     let pageIndex = {
       isLastPageGroup: false,
       start: 1,

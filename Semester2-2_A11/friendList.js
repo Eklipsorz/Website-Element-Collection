@@ -489,6 +489,7 @@ const controller = {
 
     // 設定搜尋後的目前頁數為1
     this.currentPage = 1
+    
     // 根據搜尋結果來設定總頁數
     this.totalPages = model.parsePage(model.listLengthGetter(LIST_TYPE.FilteredFriendList))
 
@@ -507,6 +508,7 @@ const controller = {
     if (this.currentPage === this.totalPages) {
       return
     }
+
     // 若目前頁數不為總頁數的話，就將目前頁數往後面移動，比如目前頁數=目前頁數+1
 
     const target = event.target
@@ -589,6 +591,7 @@ const controller = {
     if (target.tagName !== 'A') {
       return
     }
+    
     // 渲染目前頁數以及對應頁數的朋友清單，另外將currentPage設定數字是為了型別統一，不讓系統隨意更改為其他型別
     this.currentPage = parseInt(target.dataset.page, 10)
     view.renderCurrentPage('' + this.currentPage)

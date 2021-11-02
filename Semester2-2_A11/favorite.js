@@ -118,9 +118,6 @@ const model = {
     const currentPageGroup = Math.ceil(currentPage / PAGES_PER_PAGE_GROUP)
     const lastPageGroup = Math.ceil(allPages / PAGES_PER_PAGE_GROUP)
 
-
-    console.log(`currentPage: ${currentPageGroup}`)
-    console.log(`lastGroup: ${lastPageGroup} `)
     let pageIndex = {
       isLastPageGroup: false,
       start: 1,
@@ -327,6 +324,7 @@ const controller = {
     // 獲取資料並建立朋友清單
     const favoriteFriendList = JSON.parse(localStorage.getItem('favoriteFriends')) || []
     model.listAdder(this.currentListType, favoriteFriendList)
+
     this.totalPages = model.parsePage(model.listLengthGetter(this.currentListType))
 
 
@@ -358,7 +356,7 @@ const controller = {
 
       model.listSetter(LIST_TYPE.FilteredFriendList, [])
 
-      const currentPageData = model.getFriendsByPage(this.currentListType, 1)
+      const currentPageData = model.getFriendsByPage(this.currentListType, this.currentPage)
       const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
 
       view.initPaginator()
@@ -450,8 +448,29 @@ const controller = {
       view.renderFriendModal(+(target.dataset.id))
     } else if (target.matches('.fa-star')) {
 
+      const pastLastPage = this.totalPages
       model.removeFavoriteFriend(+(target.dataset.id))
-      view.renderFriendList(model.listGetter(LIST_TYPE.FavoriteFriendList))
+      this.totalPages = model.parsePage(model.listLengthGetter(this.currentListType))
+      const lastPageData = model.getFriendsByPage(this.currentListType, pastLastPage)
+
+      if (this.totalPages === 0) {
+        paginator.innerHTML = ''
+        view.renderFriendList(lastPageData)
+        return
+      } else if (lastPageData.length === 0 && pastLastPage === this.currentPage) {
+        this.currentPage--
+      }
+
+      const currentPageData = model.getFriendsByPage(this.currentListType, this.currentPage)
+      const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
+
+
+      view.renderFriendList(currentPageData)
+      view.initPaginator()
+      view.renderPaginator(pageIndex)
+      view.renderCurrentPage('' + this.currentPage)
+
+      // view.renderFriendList(model.listGetter(LIST_TYPE.FavoriteFriendList))
 
     }
 
@@ -462,9 +481,8 @@ const controller = {
     if (target.tagName !== 'A') {
       return
     }
-    console.log(target)
-    this.currentPage = target.dataset.page
 
+    this.currentPage = parseInt(target.dataset.page, 10)
     view.renderCurrentPage('' + this.currentPage)
     view.renderFriendList(model.getFriendsByPage(this.currentListType, this.currentPage))
 

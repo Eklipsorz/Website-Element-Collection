@@ -135,8 +135,6 @@ const model = {
     const lastPageGroup = Math.ceil(allPages / PAGES_PER_PAGE_GROUP)
 
 
-    console.log(`currentPage: ${currentPageGroup}`)
-    console.log(`lastGroup: ${lastPageGroup}`)
     let pageIndex = {
       isLastPageGroup: false,
       start: 1,
@@ -362,6 +360,7 @@ const controller = {
 
         // 獲取資料並建立朋友清單
         model.listAdder(this.currentListType, response.data.results)
+
         this.totalPages = model.parsePage(model.listLengthGetter(LIST_TYPE.NormalFriendList))
 
         // 設定我的最愛
@@ -508,8 +507,8 @@ const controller = {
     if (target.tagName !== 'A') {
       return
     }
-    console.log(target)
-    this.currentPage = target.dataset.page
+
+    this.currentPage = parseInt(target.dataset.page, 10)
 
     view.renderCurrentPage('' + this.currentPage)
     view.renderFriendList(model.getFriendsByPage(this.currentListType, this.currentPage))

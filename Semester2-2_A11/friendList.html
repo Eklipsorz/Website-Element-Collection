@@ -26,26 +26,27 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <!-- 導覽列 -->
+  <nav class="navbar navbar-expand-lg navbar-light">
     <a class="navbar-brand" href="friendList.html">Friend List</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-
-
       <ul class="navbar-nav mr-auto">
+        <!-- HOME -->
         <li class="nav-item active">
           <a class="nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
         </li>
+        <!-- Favorite -->
         <li class="nav-item">
           <a class="nav-link" href="./favorite.html">Favorite</a>
         </li>
       </ul>
+      <!-- 搜尋輸入欄 -->
       <form class="form-inline my-2 my-lg-0">
         <div class="search-bar-group">
 
@@ -61,7 +62,7 @@
     </div>
   </nav>
 
-
+  <!-- 資料面板 -->
   <div class="container card-container">
     <div class="row" id="data-panel">
       <!-- Render Movie List -->
@@ -69,19 +70,14 @@
     </div>
   </div>
 
-  <!-- Pagination -->
+  <!-- 分頁器 -->
   <nav aria-label="Page navigation">
     <ul class="pagination justify-content-center align-items-center" id="paginator">
-      <!-- <span class="material-icons-outlined" aria-label="Previous" id="previous">
-        chevron_left
-      </span>
-      <span class="material-icons-outlined" id="next">
-        navigate_next
-      </span> -->
+
     </ul>
   </nav>
 
-  <!-- Modal-START -->
+  <!-- 互動視窗 -->
   <div class="modal fade" id="friend-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -110,7 +106,7 @@
       </div>
     </div>
   </div>
-  <!-- Modal-END -->
+
 
 
 

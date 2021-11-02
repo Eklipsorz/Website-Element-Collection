@@ -517,31 +517,41 @@ const controller = {
     if (target.matches('.card-avatar')) {
       view.renderFriendModal(+(target.dataset.id))
     } else if (target.matches('.fa-star')) {
+      // 當點擊實心星號圖示時，就在model層面上從最愛朋友清單上刪除指定朋友並重新渲染刪除後的畫面
+      // 在這裡會根據最後一頁的項目是否被清光，
 
-
+      // 取得刪除前的最後一頁之頁數
       const pastLastPage = this.totalPages
+
+      // 在model層面從最愛朋友清單刪除指定朋友
       model.removeFriend(this.currentListType, +(target.dataset.id))
+
+      // 獲取總頁數
       this.totalPages = model.parsePage(model.listLengthGetter(this.currentListType))
+
+      // 取得刪除前的最後一頁的資料數
       const lastPageData = model.getFriendsByPage(this.currentListType, pastLastPage)
 
-
+      // 在搜尋中進行刪除並把(搜尋結果上)項目全刪光時就重新渲染搜尋前的畫面並清空搜尋輸入欄
       if (this.currentListType === LIST_TYPE.FilteredFriendList && this.totalPages === 0) {
         this.currentPage = 1
         this.currentListType = LIST_TYPE.FavoriteFriendList
         searchControl.value = ''
       } else if (this.totalPages === 0) {
-
+        // 當把最愛朋友清單上的朋友全刪光完時，就將分頁器和資料面板呈現成空值
         paginator.innerHTML = ''
         view.renderFriendList(lastPageData)
         return
       } else if (lastPageData.length === 0 && pastLastPage === this.currentPage) {
+        // 當最後一頁的項目全刪光且目前頁數是最後一頁的話，就將目前所在頁數往前減
         this.currentPage--
       }
 
+      // 獲取渲染分頁、朋友清單的資料
       const currentPageData = model.getFriendsByPage(this.currentListType, this.currentPage)
       const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
 
-
+      // 渲染朋友清單、分頁器、目前頁數
       view.renderFriendList(currentPageData)
       view.initPaginator()
       view.renderPaginator(pageIndex)

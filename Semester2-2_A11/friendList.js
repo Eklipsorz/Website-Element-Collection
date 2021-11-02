@@ -271,7 +271,7 @@ const view = {
     const pages = [...paginator.querySelectorAll('.page-item')]
     let currentPage = 0
 
-
+    // 將同一群組上的所有頁數一併移除active類別並尋找指定頁面的元件
     pages.forEach(page => {
       if (page.dataset.page === id) {
         currentPage = page
@@ -279,6 +279,7 @@ const view = {
       page.classList.remove('active')
     })
 
+    // 設定指定頁數的類別為active
     currentPage.classList.add('active')
 
   },

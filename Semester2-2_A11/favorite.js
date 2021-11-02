@@ -175,6 +175,7 @@ const view = {
   initPaginator() {
     paginator.innerHTML = ''
 
+    // 建立兩個元件來移動頁數，第一個元件是左箭頭(往前移動頁數)，第二個元件是右箭頭(往後移動頁數)
     const newLeftArrow = document.createElement('span')
     const newRightArrow = document.createElement('span')
 
@@ -186,9 +187,11 @@ const view = {
     newLeftArrow.innerHTML = 'chevron_left'
     newRightArrow.innerHTML = 'navigate_next'
 
+    // 添加兩個元件至分頁器中
     paginator.append(newLeftArrow)
     paginator.append(newRightArrow)
 
+    // 設定兩個元件上的點擊處理器
     newRightArrow.addEventListener('click', (event) => {
       controller.dispatchNextBtnClickedAction(event)
     })
@@ -199,15 +202,17 @@ const view = {
 
 
   },
-  /* 渲染分頁器，根據項目數量amount來決定渲染多少頁 */
+  // 根據pageIndex所指定的頁群組來渲染分頁器一次渲染指定頁數
   renderPaginator(pageIndex) {
 
-    // const numberOfPage = Math.ceil(amount / FRIENDS_PER_PAGE)
+    // 定義起始頁數、結尾頁數
     const startIndex = pageIndex.start
     const endIndex = pageIndex.end
+
+    // 定義一個元件來放置頁數元件
     const nextButton = document.querySelector('#next')
 
-
+    // 起始頁數和結尾頁數來當for迴圈的起始值和結尾值，以此建立並渲染指定數量的頁數
     for (let page = startIndex; page <= endIndex; page++) {
 
       const newListItem = document.createElement('li')
@@ -220,6 +225,7 @@ const view = {
 
     }
 
+    // 當目前所在頁群組不是最後一個頁群組時，就渲染能表示"..."的元件，代表後面還有頁數
     if (!pageIndex.isLastPageGroup) {
       const newListItem = document.createElement('span')
       newListItem.classList.add('material-icons')
@@ -227,21 +233,22 @@ const view = {
       paginator.insertBefore(newListItem, nextButton)
     }
 
-    // paginator.innerHTML = rawHTML
+
   },
+  // 根據指定的頁面(每一頁會用id來代表)來渲染分頁器上的目前頁數
   renderCurrentPage(id) {
 
     const pages = [...paginator.querySelectorAll('.page-item')]
     let currentPage = 0
 
-
+    // 將同一群組上的所有頁數一併移除active類別並尋找指定頁面的元件
     pages.forEach(page => {
       if (page.dataset.page === id) {
         currentPage = page
       }
       page.classList.remove('active')
     })
-
+    // 設定指定頁數的類別為active
     currentPage.classList.add('active')
 
   },

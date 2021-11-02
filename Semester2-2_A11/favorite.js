@@ -141,22 +141,32 @@ const model = {
     return pageIndex
 
   },
+  // 在model層面上，從指定清單中刪除指定朋友(用id表示)
+  // 在這裡會考量到搜尋時刪除和不用搜尋來刪除這兩個情況，因此會根據lisType來從最愛朋友清單或儲存搜尋結果清單中刪除朋友
+  // 當listType為FilteredFriendList，就代表著目前是搜尋中，若要在這情況下刪除，會從最愛朋友清單和儲存搜尋結果清單來刪除
+  // 當listType為FavoriteFriendList，就代表正常清單，若要在這情況下刪除，只會從最愛朋友清單刪除
   removeFriend(listType, id) {
 
+    // 根據listType獲取清單
     const list = this.listGetter(listType)
+
+    // 獲取最愛朋友清單
     const favoriteList = this.favoriteList
 
     let favoriteFriendIndex = 0
     let listFriendIndex = 0
 
+    // 從最愛朋友清單找尋指定朋友(用id表示)並刪除
     favoriteFriendIndex = favoriteList.findIndex(item => item.id === id)
     favoriteList.splice(favoriteFriendIndex, 1)
 
+    // 若目前是搜尋中，就會跟著從儲存搜尋結果清單來刪除
     if (listType != LIST_TYPE.FavoriteFriendList) {
       listFriendIndex = list.findIndex(item => item.id === id)
       list.splice(listFriendIndex, 1)
     }
 
+    // 將model層面的最愛朋友清單更新至localStorage
     localStorage.setItem('favoriteFriends', JSON.stringify(favoriteList))
   }
 }

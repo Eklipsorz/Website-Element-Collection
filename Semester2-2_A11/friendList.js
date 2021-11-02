@@ -41,6 +41,26 @@ const model = {
   friendList: [],
   favoriteList: [],
   filteredFriendList: [],
+  // 根據清單類型 listType 來獲取對應清單
+  listGetter(listType) {
+
+    let list = null
+
+    switch (listType) {
+      case LIST_TYPE.NormalFriendList:
+        list = this.friendList
+        break
+      case LIST_TYPE.FilteredFriendList:
+        list = this.filteredFriendList
+        break
+      case LIST_TYPE.FavoriteFriendList:
+        list = this.favoriteList
+        break
+    }
+
+    return list
+
+  },
   // 根據清單類型 listType 來將資料增加至對應清單
   listAdder(listType, data) {
 
@@ -63,26 +83,6 @@ const model = {
         this.favoriteList = newList
         break
     }
-
-  },
-  // 根據清單類型 listType 來獲取對應清單
-  listGetter(listType) {
-
-    let list = null
-
-    switch (listType) {
-      case LIST_TYPE.NormalFriendList:
-        list = this.friendList
-        break
-      case LIST_TYPE.FilteredFriendList:
-        list = this.filteredFriendList
-        break
-      case LIST_TYPE.FavoriteFriendList:
-        list = this.favoriteList
-        break
-    }
-
-    return list
 
   },
   // 根據清單類型 listType 來獲取對應清單的大小
@@ -109,6 +109,8 @@ const model = {
       return
     }
 
+    // 根據最愛朋友清單來看看下載回來的朋友清單中有哪些朋友是在最愛朋友清單
+    // 若有的話就設定isFavorite為true，否則為false
     this.friendList.forEach(friend => {
 
       friend.isFavorite = favoriteFriendList.some(item => {
@@ -119,26 +121,38 @@ const model = {
     })
 
   },
-  // allPages = amount / FRIENDS_PER_PAGE
-  // const FRIENDS_PER_PAGE = 8
-  // const PAGES_PER_PAGE_GROUP = 5
-  // model.getPageIndexByPageGroup(10, 6)
+  // 將總頁數分成好幾個群組(Page Group)，每一個群組都有各自頁數來實現分頁器一次
+  // 只渲染指定頁數，比如第一組為1-5頁，第二組為6-10頁，後面以此類推，其中1是第一組
+  // 的起始頁數，而5就是第一組的結尾頁數，該函式會根據目前清單類型和目前所在頁數來換
+  // 算目前頁數所在的群組在哪，然後再回傳 pageIndex 物件，該物件會代表該群組的起始
+  // 頁數、結尾頁數、該群組是否為最後一個群組。
+  //
+  // 該物件會存三種值，isLastPageGroup、start、end
+  // isLastPageGroup 為布林值，當是true的時候，就代表目前群組為最後群組
+  // start 為數字，代表著目前所在群組的起始頁數
+  // end 為數字，代表著目前所在群組的結尾頁數
   getPageIndexByPageGroup(listType, currentPage) {
 
+    // 獲取總頁數
     let allPages = model.parsePage(model.listLengthGetter(listType))
 
+    // 將目前所在頁數轉換至對應群組
     const currentPageGroup = Math.ceil(currentPage / PAGES_PER_PAGE_GROUP)
+
+    // 將總頁數轉換成最後群組
     const lastPageGroup = Math.ceil(allPages / PAGES_PER_PAGE_GROUP)
 
-
-
+    // 定義pageIndex 物件
     let pageIndex = {
       isLastPageGroup: false,
       start: 1,
       end: 1
     }
 
+    // 評估目前所在群組是否為最後群組
     pageIndex.isLastPageGroup = currentPageGroup === lastPageGroup
+
+    // 獲取目前所在群組的起始頁數和結尾頁數
     pageIndex.start = (currentPageGroup - 1) * PAGES_PER_PAGE_GROUP + 1
     pageIndex.end = pageIndex.isLastPageGroup ?
       allPages :
@@ -148,17 +162,21 @@ const model = {
     return pageIndex
 
   },
+  // 增加指定朋友至最愛朋友清單 (在Model層面)
   addToFavoriteFriend(id) {
-
 
     const list = this.favoriteList
     const friend = this.friendList.find(friend => friend.id === id)
 
     this.listAdder(LIST_TYPE.FavoriteFriendList, [friend])
     friend.isFavorite = true
+
+
+
     localStorage.setItem('favoriteFriends', JSON.stringify(list))
 
   },
+  // 從最愛朋友清單中移除指定朋友 (在Model層面)
   removeFavoriteFriend(id) {
 
     const list = this.favoriteList
@@ -176,18 +194,19 @@ const model = {
 
 
 
-
+// 定義視覺呈現
 const view = {
-  // initializeView(listType, currentPage) {
-  // 初始化一開始的頁面，第一個參數是指目前頁數的資料，第二個參數是指多少筆資料
+  // 根據目前對應頁數的朋友資料和pageIndex來建立一個一開始的朋友清單畫面和分頁器畫面
   initializeView(currentPageData, pageIndex) {
 
     this.renderPaginator(pageIndex)
     this.renderFriendList(currentPageData)
   },
+  // 渲染分頁器本身會有的元件以及該元件的事件綁定
   initPaginator() {
     paginator.innerHTML = ''
 
+    // 建立兩個元件來移動頁數，第一個元件是左箭頭(往前移動頁數)，第二個元件是右箭頭(往後移動頁數)
     const newLeftArrow = document.createElement('span')
     const newRightArrow = document.createElement('span')
 
@@ -199,29 +218,32 @@ const view = {
     newLeftArrow.innerHTML = 'chevron_left'
     newRightArrow.innerHTML = 'navigate_next'
 
+    // 添加兩個元件至分頁器中
     paginator.append(newLeftArrow)
     paginator.append(newRightArrow)
+
+    // 設定兩個元件上的點擊處理器
+    newLeftArrow.addEventListener('click', (event) => {
+      controller.dispatchPreviousBtnClickedAction(event)
+    })
 
     newRightArrow.addEventListener('click', (event) => {
       controller.dispatchNextBtnClickedAction(event)
     })
 
-    newLeftArrow.addEventListener('click', (event) => {
-      controller.dispatchPreviousBtnClickedAction(event)
-    })
-
-
   }
   ,
-  /* 渲染分頁器，根據項目數量amount來決定渲染多少頁 */
+  // 根據pageIndex所指定的頁群組來渲染分頁器一次渲染指定頁數
   renderPaginator(pageIndex) {
 
-    // const numberOfPage = Math.ceil(amount / FRIENDS_PER_PAGE)
+    // 定義起始頁數、結尾頁數
     const startIndex = pageIndex.start
     const endIndex = pageIndex.end
+    // 定義一個元件來放置頁數元件
     const nextButton = document.querySelector('#next')
 
 
+    // 起始頁數和結尾頁數來當for迴圈的起始值和結尾值，以此建立並渲染指定數量的頁數
     for (let page = startIndex; page <= endIndex; page++) {
 
       const newListItem = document.createElement('li')
@@ -234,6 +256,7 @@ const view = {
 
     }
 
+    // 當目前所在頁群組不是最後一個頁群組時，就渲染能表示"..."的元件，代表後面還有頁數
     if (!pageIndex.isLastPageGroup) {
       const newListItem = document.createElement('span')
       newListItem.classList.add('material-icons')
@@ -241,8 +264,8 @@ const view = {
       paginator.insertBefore(newListItem, nextButton)
     }
 
-    // paginator.innerHTML = rawHTML
   },
+  // 根據指定的頁面(每一頁會用id來代表)來渲染分頁器上的目前頁數
   renderCurrentPage(id) {
 
     const pages = [...paginator.querySelectorAll('.page-item')]
@@ -259,12 +282,13 @@ const view = {
     currentPage.classList.add('active')
 
   },
+  // 根據資料來渲染朋友資料(data)
   renderFriendList(data) {
 
     let rawHTML = ''
-
+    // 根據每位朋友的資料來渲染
     data.forEach(item => {
-
+      // 根據每位朋友是否在最愛朋友清單中來渲染標記最愛朋友的符號
       const iconContext = item.isFavorite ?
         `<i class="fa fa-star btn-show-favorite" aria-hidden="true" data-id=${item.id}></i>` : `<i class="fa fa-star-o btn-show-favorite" aria-hidden="true" data-id=${item.id}></i>`
 
@@ -293,6 +317,7 @@ const view = {
     dataPanel.innerHTML = rawHTML
 
   },
+  // 根據指定朋友(用id來表示朋友)來渲染出互動視窗
   renderFriendModal(id) {
 
 
@@ -320,6 +345,9 @@ const view = {
       })
 
   },
+  // 渲染標記最愛朋友的圖示，每呼叫一次會在空心圖示和實心圖示之間做轉換
+  // 其中fa-star代表實心圖示，被標記的朋友代表要加進最愛朋友清單
+  // 其中fa-star代表空心圖示，被標記的朋友代表不在最愛朋友清單
   renderFavoriteIcon(targetIcon) {
 
 
@@ -329,6 +357,7 @@ const view = {
     targetIcon.classList.add(targetClass)
 
   },
+  // 渲染找不到指定朋友時的畫面
   renderNotFoundPage(dataPanel) {
 
     let rawHTML = ''

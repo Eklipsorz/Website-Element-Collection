@@ -456,8 +456,7 @@ const controller = {
       model.removeFriend(this.currentListType, +(target.dataset.id))
       this.totalPages = model.parsePage(model.listLengthGetter(this.currentListType))
       const lastPageData = model.getFriendsByPage(this.currentListType, pastLastPage)
-      console.log(this.currentListType)
-      console.log(target)
+
 
       if (this.currentListType === LIST_TYPE.FilteredFriendList && this.totalPages === 0) {
         this.currentPage = 1
@@ -475,7 +474,6 @@ const controller = {
       const currentPageData = model.getFriendsByPage(this.currentListType, this.currentPage)
       const pageIndex = model.getPageIndexByPageGroup(this.currentListType, this.currentPage)
 
-      console.log(currentPageData)
 
       view.renderFriendList(currentPageData)
       view.initPaginator()

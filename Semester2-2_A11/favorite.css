@@ -1,3 +1,4 @@
+
 * {
   /* Box Model */
   margin: 0;
@@ -22,11 +23,7 @@ body {
 }
 
 
-
-
-
-
-
+/* 導覽列 */
 .navbar {
 
   /* Positioning */
@@ -45,18 +42,26 @@ body {
 
 }
 
+/* 導覽列項目連結 */
 .nav-link {
   /* Font or other */
   color: #707A82;
 }
 
+/* 導覽列項目 */
 .nav-item.active {
 
   /* Font or other */
   border-bottom: 3px solid #403A39;
 } 
 
+/* 導覽列項目 */
+.nav-item:hover {
+    /* Font or other */
+  border-bottom: 3px solid #A3A1A8;
+}
 
+/* 存放資料面板的容器 */
 .card-container {
 
   /* Box Model */
@@ -74,7 +79,7 @@ body {
 
 
 
-
+/* 存放搜尋輸入欄的容器 */
 .search-bar-group {
 
     /* Font or other */
@@ -87,62 +92,13 @@ body {
 
 
 }
-
+/* 存放搜尋輸入欄的容器：當滑鼠滑到容器就會變顏色 */
 .search-bar-group:hover {
   background: #2f3640;
 
 }
 
-
-/* 滑鼠滑到搜尋輸入欄時，輸入欄就拉長 */
-.search-bar-group:hover > .search-bar-control {
-    /* Box Model */
-    width: 50vw;
-    padding: 0 6px;
-}
-
-/* 滑鼠滑到搜尋輸入欄，搜尋按鈕會變顏色 */
-.search-bar-group:hover > .search-bar-button {
-
-  /* Display */
-  background: #2f3640;
-  color: #ffffff;
-  border: none;
-}
-
-
-
-.search-bar-button {
-
-  /* Box Model */
-  width: 40px;
-  height: 40px;
-  
-  border: none;
-  border-radius: 50%;
-
-
-  /* Positioning */ 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-
-  /* 將按鈕置強制浮貼在輸入欄右邊，避免因為Block的輸入欄而導致按鈕放不了同一行 */
-  float: right;
-
-  /* Font or other */
-
-  background-color: #F5F7F8;
-    
-
-   
-  /* Animation: */
-  /* 指定滑鼠滑過去的渲染過程以x秒來呈現 */
-
-  transition: 0.8s;
-}
-
+/* 搜尋輸入欄 */
 .search-bar-control {
 
   /* Positioning */
@@ -171,7 +127,52 @@ body {
 }
 
 
+/* 搜尋輸入欄：當滑鼠滑到搜尋輸入欄時，輸入欄就拉長 */
+.search-bar-group:hover > .search-bar-control {
+    /* Box Model */
+    width: 50vw;
+    padding: 0 6px;
+}
 
+/* 搜尋按鈕：當滑鼠滑到搜尋輸入欄，搜尋按鈕會變顏色 */
+.search-bar-group:hover > .search-bar-button {
+
+  /* Display */
+  background: #2f3640;
+  color: #ffffff;
+  border: none;
+}
+
+
+/* 搜尋按鈕 */
+.search-bar-button {
+
+  /* Box Model */
+  width: 40px;
+  height: 40px;
+  
+  border: none;
+  border-radius: 50%;
+
+
+  /* Positioning */ 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  float: right;
+
+  /* Font or other */
+  background-color: #F5F7F8;
+    
+  /* Animation: */
+  /* 指定滑鼠滑過去的渲染過程以x秒來呈現 */
+
+  transition: 0.8s;
+}
+
+
+
+/* 存放每個朋友的容器 */
 .profile-card {
 
   /* Positioning */
@@ -185,11 +186,19 @@ body {
 
 }
 
+/* 容器存放標題的部分 */
+.profile-card .profile-card-title {
+  /* Box Model */
+  margin: 0;
+}
+
+/* 每個朋友的頭像 */
 .profile-card .card-avatar {
   /* Box Model */
   border-radius: 5% 5% 0px 0px;
 }
 
+/* 每個朋友的加進最愛按鈕 */
 .profile-card .btn-show-favorite {
   
   /* Positioning */
@@ -204,38 +213,47 @@ body {
   cursor: pointer;
 }
 
-.profile-card .profile-card-title {
-  /* Box Model */
-  margin: 0;
-}
+/* 搜尋不到東西時的頁面容器(含訊息和動畫) */
+.not-found-page {
 
+    /* Display */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-
-#main{
-    display: table;
+    /* Box Model ok*/
     width: 100%;
     height: 50vh;
+
+    /* Font or other ok*/
     text-align: center;
 }
 
-.fof{
-	  display: table-cell;
-	  vertical-align: middle;
-}
+/* 搜尋不到東西時的顯示訊息 */
+.not-found-page h1 {
+    /* Display */
+    display: inline-block;
 
-.fof h1{
-	  font-size: 50px;
-	  display: inline-block;
-	  padding-right: 12px;
+    /* Box Model */
+    padding-right: 8px;
+
+    /* Font or other ok*/
+	font-size: 50px;
     color: #888;
-	  animation: type .5s alternate infinite;
+
+    /* Animation */
+    /* 設定一輪0.5秒長度的動畫，並且無限循環，每一次動畫結束後都跟上一輪動畫效果呈現顛倒 */
+	animation: typing .5s alternate infinite;
 }
 
-@keyframes type{
-	  from{box-shadow: inset -3px 0px 0px #888;}
-	  to{box-shadow: inset -3px 0px 0px transparent;}
+/* 搜尋不到東西時的顯示訊息後的陰影動畫 */
+@keyframes typing {
+    /* 陰影出現在文字之後 */
+	from{box-shadow: inset -3px 0px 0px #888;}
+    /* 陰影變透明 */
+	to{box-shadow: inset -3px 0px 0px transparent;}
 }
-
+/* 存放頁數的容器 */
 .page-item.active .page-link.profile-link-item {
 
 
@@ -246,7 +264,7 @@ body {
   background: #2f3640;
 
 }
-
+/* 分頁器上的頁數本身 */
 .page-link.profile-link-item{
 
   /* Box Model */
@@ -257,11 +275,9 @@ body {
   background: none;
 }
 
+/* 分頁器上的箭頭符號 */
 .material-icons-outlined.arrow-icon {
 
   cursor: pointer;
 }
 
-.navbar-toggler-icon{
-  float: left;
-}

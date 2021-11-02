@@ -326,10 +326,8 @@ const view = {
     let rawHTML = ''
 
     rawHTML = `
-      <div id="main">
-        <div class="fof">
+      <div class="not-found-page">
           <h1>${keyword} is not found!!!</h1>
-        </div>
       </div>
     `
     dataPanel.innerHTML = rawHTML

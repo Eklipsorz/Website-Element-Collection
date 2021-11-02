@@ -364,10 +364,8 @@ const view = {
     let rawHTML = ''
 
     rawHTML = `
-      <div id="main">
-    	  <div class="fof">
+      <div class="not-found-page">
         		<h1>${keyword} is not found!!!</h1>
-    	  </div>
       </div>
     
     `
@@ -489,7 +487,7 @@ const controller = {
 
     // 設定搜尋後的目前頁數為1
     this.currentPage = 1
-    
+
     // 根據搜尋結果來設定總頁數
     this.totalPages = model.parsePage(model.listLengthGetter(LIST_TYPE.FilteredFriendList))
 
@@ -591,7 +589,7 @@ const controller = {
     if (target.tagName !== 'A') {
       return
     }
-    
+
     // 渲染目前頁數以及對應頁數的朋友清單，另外將currentPage設定數字是為了型別統一，不讓系統隨意更改為其他型別
     this.currentPage = parseInt(target.dataset.page, 10)
     view.renderCurrentPage('' + this.currentPage)

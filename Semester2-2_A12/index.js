@@ -1,11 +1,15 @@
 // 存放電影的空間
 const dataPanel = document.querySelector('#data-panel')
+
 // 搜尋表單(包含輸入欄、按鈕)
 const searchForm = document.querySelector('#search-form')
+
 // 搜尋表單中的輸入欄
 const searchInput = document.querySelector('#search-input')
+
 // 分頁器
 const paginator = document.querySelector('#paginator')
+
 // 存放顯示模式按鈕的區塊
 const modePanel = document.querySelector('#mode-panel')
 
@@ -14,20 +18,25 @@ const BASE_URL = 'https://movie-list.alphacamp.io'
 
 // 使用 INDEX API
 const INDEX_URL = BASE_URL + '/api/v1/movies/'
+
 // 使用 POSTER API
 const POSTER_URL = BASE_URL + '/posters/'
 
 // 定義每頁要顯示多少個項目
 const MOVIES_PER_PAGE = 12
 
-// 設定Data-Panel的顯示模式
+// 設定Data-Panel的顯示模式(主要有card和list這兩種模式)
 let currentMode = 'card'
 
-let currentPage = 1
 
+// 存放從API Server下載回來的電影
 const movies = []
+
+// 存放搜尋結果
 let filteredMovies = []
-const directors = []
+
+
+// Part1： 建立一開始的畫面、資料構建、元件的事件綁定
 
 
 axios.get(INDEX_URL)
@@ -44,20 +53,32 @@ axios.get(INDEX_URL)
     console.log(error)
   })
 
-
+// 將 onPanelClicked 綁定在資料面板(顯示電影清單)的點擊事件
 dataPanel.addEventListener('click', onPanelClicked)
+
+// 將 onSearchFormSubmitted 綁定在搜尋輸入欄的提交事件
 searchForm.addEventListener('submit', onSearchFormSubmitted)
+
+// 將 onPaginatorClicked 綁定在分頁器的點擊事件
 paginator.addEventListener('click', onPaginatorClicked)
+
+// 將 onModePanelClicked 綁定在模式面板(存放清單和卡片模式的容器)的點擊事件
 modePanel.addEventListener('click', onModePanelClicked)
 
+
+// Part2： 定義部分商業邏輯、渲染部分
+
+// 根據顯示模式(卡片、清單)來渲染電影清單
 function renderMovieList(data, mode) {
   let rawHTML = ''
 
   switch (mode) {
     case 'list':
+      // 獲取以清單模式來渲染的HTML
       rawHTML += getRawHTMLByList(data)
       break
     case 'card':
+      // 獲取以卡片模式來渲染的HTML
       rawHTML += getRawHTMLByCard(data)
       break
   }
@@ -66,7 +87,7 @@ function renderMovieList(data, mode) {
   dataPanel.innerHTML = rawHTML
 }
 
-// 實現清單顯示
+// 獲取以清單模式來渲染的HTML
 function getRawHTMLByList(data) {
 
   let rawHTML = `
@@ -98,6 +119,7 @@ function getRawHTMLByList(data) {
 
 }
 
+// 獲取以卡片模式來渲染的HTML
 function getRawHTMLByCard(data) {
 
   let rawHTML = ''
@@ -152,18 +174,30 @@ function renderPaginator(amount) {
   let rawHTML = ''
 
   for (let page = 1; page <= numberOfPages; page++) {
+    // 預設第一頁為目前頁數
+    if (page === 1) {
+      rawHTML += `
+        <li class="page-item active"> <a class="page-link" href="#" data-page=${page}>${page}</a></li>
+      `
+      continue
+    }
+
+    // 除了第一頁以外的頁數渲染
     rawHTML += `
-      <li class="page-item" > <a class="page-link" href="#" data-page=${page}>${page}</a></li>
-        `
+      <li class="page-item"> <a class="page-link" href="#" data-page=${page}>${page}</a></li>
+    `
+
+
   }
+
+
 
   paginator.innerHTML = rawHTML
 
 }
 
 
-
-
+// 渲染每個電影的互動視窗
 function showMovieModal(id) {
 
   const modalTitle = document.querySelector('#movie-modal-title')
@@ -184,39 +218,16 @@ function showMovieModal(id) {
           `
   })
 
-
-
-
 }
 
-
-
-
-
-function onPanelClicked(event) {
-
-  const target = event.target
-
-  if (target.matches('.btn-show-movie')) {
-
-    showMovieModal(+(target.dataset.id))
-
-  } else if (target.matches('.btn-show-favorite')) {
-
-
-    addToFavoriteMovies(+(target.dataset.id))
-
-  }
-
-
-}
-
+// 將指定電影(以id來表示)加進收藏清單中
 function addToFavoriteMovies(id) {
 
   // 獲取最愛電影清單，避免使用者關掉頁面或者瀏覽器而清掉他原本選定的電影
   const list = JSON.parse(localStorage.getItem('favoriteMovies')) || []
   const movie = movies.find(movie => movie.id === id)
 
+  // 檢查電影是否在收藏清單中
   if (list.some(item => item.id === id)) {
     return alert('此電影已在收藏清單中')
   }
@@ -227,6 +238,51 @@ function addToFavoriteMovies(id) {
 
 
 }
+
+// 重新渲染目前頁數
+function renderCurrentPage(targetPage) {
+
+  const activePage = paginator.querySelector('.page-item.active')
+
+  activePage.classList.remove('active')
+  targetPage.classList.add('active')
+
+}
+
+// 重新渲染目前顯示模式
+function renderModeIcon(targetIcon) {
+  const currentActiveIcon = document.querySelector('.mode-switch-btn.active')
+
+  currentActiveIcon.classList.remove('active')
+  targetIcon.classList.add('active')
+}
+
+
+
+// Part3： 定義事件處理的內容
+
+
+// 資料面板的點擊事件處理內容
+function onPanelClicked(event) {
+
+  const target = event.target
+
+  // 當使用者點擊more按鈕時，就顯示對應的互動視窗
+  if (target.matches('.btn-show-movie')) {
+
+    showMovieModal(+(target.dataset.id))
+
+  } else if (target.matches('.btn-show-favorite')) {
+    // 當使用者點擊收藏時，就加進收藏清單中
+
+    addToFavoriteMovies(+(target.dataset.id))
+
+  }
+
+
+}
+
+
 
 /* 搜尋表單提交事件：內容 */
 function onSearchFormSubmitted(event) {
@@ -253,27 +309,28 @@ function onSearchFormSubmitted(event) {
 
 
 
+
 /* 分頁器點擊事件：當使用點選指定頁數時，就會依照指定頁數來印出對應項目 */
 function onPaginatorClicked(event) {
 
+
   const target = event.target
+
 
   if (target.tagName !== 'A') {
     return
   }
 
-  currentPage = target.dataset.page
+  const currentPage = target.dataset.page
+
+  renderCurrentPage(target.parentElement)
   renderMovieList(getMoviesByPage(currentPage), currentMode)
 
 
 }
 
-function renderModeIcon(targetIcon) {
-  const currentActiveIcon = document.querySelector('.mode-switch-btn.active')
 
-  currentActiveIcon.classList.remove('active')
-  targetIcon.classList.add('active')
-}
+
 
 function onModePanelClicked(event) {
 

@@ -268,6 +268,12 @@ function onPaginatorClicked(event) {
 
 }
 
+function renderModeIcon(targetIcon) {
+  const currentActiveIcon = document.querySelector('.mode-switch-btn.active')
+
+  currentActiveIcon.classList.remove('active')
+  targetIcon.classList.add('active')
+}
 
 function onModePanelClicked(event) {
 
@@ -275,7 +281,9 @@ function onModePanelClicked(event) {
 
   if (target.matches('.mode-switch-btn')) {
     currentMode = target.dataset.mode
+    renderModeIcon(target)
+    renderMovieList(getMoviesByPage(currentPage), currentMode)
   }
 
-  renderMovieList(getMoviesByPage(currentPage), currentMode)
+
 }

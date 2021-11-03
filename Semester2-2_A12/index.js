@@ -25,9 +25,11 @@ const POSTER_URL = BASE_URL + '/posters/'
 // 定義每頁要顯示多少個項目
 const MOVIES_PER_PAGE = 12
 
+// 定義目前頁數
+let currentPage = 1
+
 // 設定Data-Panel的顯示模式(主要有card和list這兩種模式)
 let currentMode = 'card'
-
 
 // 存放從API Server下載回來的電影
 const movies = []
@@ -284,24 +286,24 @@ function onPanelClicked(event) {
 
 
 
-/* 搜尋表單提交事件：內容 */
+/* 搜尋表單的提交事件內容 */
 function onSearchFormSubmitted(event) {
 
+  // 移除預設行為
   event.preventDefault()
 
+  // 根據keyword來從電影清單中找尋與keyword相關的電影
   const keyword = searchInput.value.trim().toLowerCase()
-
-
   filteredMovies = movies.filter(movie => {
     return movie.title.toLowerCase().includes(keyword)
   })
 
-
+  // 找不到就顯示錯誤訊息
   if (!filteredMovies.length) {
     alert(`抱歉，我們找不到與${keyword}相關的電影`)
   }
 
-  // 渲染目前篩選的項目、分頁器
+  // 根據目前搜尋結果來渲染電影項目、分頁器
   renderPaginator(filteredMovies.length)
   renderMovieList(getMoviesByPage(1), currentMode)
 
@@ -310,32 +312,31 @@ function onSearchFormSubmitted(event) {
 
 
 
-/* 分頁器點擊事件：當使用點選指定頁數時，就會依照指定頁數來印出對應項目 */
+/* 分頁器的點擊事件內容 */
 function onPaginatorClicked(event) {
 
 
   const target = event.target
 
-
+  // 當點擊不是<a>標籤就返回
   if (target.tagName !== 'A') {
     return
   }
 
-  const currentPage = target.dataset.page
-
+  // 根據點擊的頁數來重新渲染頁數和電影清單內容
+  currentPage = target.dataset.page
   renderCurrentPage(target.parentElement)
   renderMovieList(getMoviesByPage(currentPage), currentMode)
 
 
 }
 
-
-
-
+// 模式面板的點擊事件處理內容
 function onModePanelClicked(event) {
 
   const target = event.target
 
+  // 當使用者點擊模式按鈕時，就按照點擊模式來切換成對應模式的內容
   if (target.matches('.mode-switch-btn')) {
     currentMode = target.dataset.mode
     renderModeIcon(target)

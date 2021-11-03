@@ -1,0 +1,16 @@
+.mode-switch-btn {
+  /* Font or other */
+  cursor: pointer;
+}
+
+
+.mode-switch-btn:hover {
+  /* Font or other */
+  opacity: .5;
+}
+
+.mode-switch-btn.active {
+
+  /* Font or other */
+  background: brown;
+}

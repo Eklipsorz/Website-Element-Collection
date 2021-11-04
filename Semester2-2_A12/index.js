@@ -175,24 +175,15 @@ function renderPaginator(amount) {
   const numberOfPages = Math.ceil(amount / MOVIES_PER_PAGE)
   let rawHTML = ''
 
+  // 除了預設第一頁先被點擊以外，剩餘頁數保持未點擊的狀態
   for (let page = 1; page <= numberOfPages; page++) {
-    // 預設第一頁為目前頁數
-    if (page === 1) {
-      rawHTML += `
-        <li class="page-item active"> <a class="page-link" href="#" data-page=${page}>${page}</a></li>
-      `
-      continue
-    }
 
-    // 除了第一頁以外的頁數渲染
     rawHTML += `
-      <li class="page-item"> <a class="page-link" href="#" data-page=${page}>${page}</a></li>
-    `
-
-
+        <li class="page-item ${page === 1 ? "active" : ""}"> 
+          <a class="page-link" href="#" data-page=${page}>${page}</a>
+        </li>
+      `
   }
-
-
 
   paginator.innerHTML = rawHTML
 
@@ -298,9 +289,19 @@ function onSearchFormSubmitted(event) {
     return movie.title.toLowerCase().includes(keyword)
   })
 
-  // 找不到就顯示錯誤訊息
+  // 找不到就重渲染成搜尋前的畫面、輸入欄清空、給予錯誤訊息
   if (!filteredMovies.length) {
+
+    // 重新渲染成搜尋前的畫面
+    renderPaginator(movies.length)
+    renderMovieList(getMoviesByPage(1), currentMode)
+
+    // 輸入欄清空
+    searchInput.value = ""
+
+    // 錯誤訊息
     alert(`抱歉，我們找不到與${keyword}相關的電影`)
+    return
   }
 
   // 根據目前搜尋結果來渲染電影項目、分頁器
